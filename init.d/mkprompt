@@ -1,0 +1,114 @@
+#
+# FYI: file 'mkprompt' generates 'prompt' so edit the former
+#
+# remakes raw PS for sourcing after this file is changed,
+# otherwise just reads it in as-is
+make_prompt_nocolors () { make_prompt color=0; }
+make_prompt_colors   () { make_prompt color=1; }
+
+make_prompt ()
+{
+	local color=1 # default
+	local colors=~/.bash/colors
+
+	local src_ps=~/.bash/mkprompt
+	local raw_ps=~/var/bash/prompt
+
+	eval ${1}
+
+	if [[ $src_ps -nt $raw_ps ]]
+	then
+		printf "make_prompt: source changed, rebuilding PS1, "
+		if ((color))
+		then
+			source $colors
+			printf "is "
+		else
+			printf "is not "
+		fi
+		echo "using color"
+		cat >| $raw_ps << EOF
+#
+
+# you want to be editing (and sourcing) the \"mkprompt\" file
+# the \"prompt\" file file serves only as the cached output
+#
+# remember to SAVE RETURN CODE if do subshell, and exit with it
+# (see 'rval' in examples below), to avoid overwrite of command rcode
+#
+esetenv PS1								\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"	"\n"				\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	" \t "				\\
+"\[$CLR_solid_bold_fggreen_bgblack\]"	"\\\${SSH_TTY:+"		\\
+					"\\\${LHOST:-"			\\
+					"\\\${HOSTNAME%%.*}}}"		\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	"\\\${SSH_TTY:+:}"		\\
+"\[$CLR_solid_bold_fgcyan_bgblack\]"	"\\\${GOASSOC} "		\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"l"				\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	"\\\${GOTTY_NUM} "		\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"h"				\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	"\! "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"c"				\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	"\# "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"q\\\$(
+	rval=\\\$?
+	depth=\\\${#DIRSTACK[@]}
+	if ((depth == 1))
+	then printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$depth
+	else printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$depth
+	fi
+	exit \\\$rval
+)"									\\
+					" "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"s\\\$(
+	rval=\\\$?
+	shlvl=\\\$SHLVL
+	if ((shlvl == 1)) || (((shlvl == 2)) && [[ \"\\\$DISPLAY\" ]])
+	then printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$shlvl
+	else printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$shlvl
+	fi
+	exit \\\$rval
+)"									\\
+					" "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"j\\\$(
+	rval=\\\$?
+	njobs=\\\$(jobs | wc -l)
+	if ((njobs))
+	then printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$njobs
+	else printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$njobs
+	fi
+	exit \\\$rval
+)"									\\
+					" "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"r\\\$(
+	rval=\\\${?}
+	if ((rval))
+	then printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$rval
+	else printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$rval
+	fi
+	exit \\\$rval
+)"									\\
+					" "				\\
+"\[$CLR_solid_bold_fgwhite_bgblack\]"	"["				\\
+"\[$CLR_solid_bold_fgcyan_bgblack\]"	"\W"				\\
+"\[$CLR_solid_bold_fgwhite_bgblack\]"	"]"				\\
+					"\n"				\\
+"\[$CLR_solid_bold_fgyellow_bgblack\]"	" \\\\$ "			\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"
+
+esetenv PS2								\\
+"\[$CLR_solid_bold_fgyellow_bgblack\]"	""				\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"	"   "
+
+EOF
+	else
+		# use the cached prompt
+		:
+	fi
+
+	source $raw_ps
+}
+
+make_prompt
+
+# vim:syn=sh:

@@ -1,0 +1,24 @@
+#
+
+# select processes by name or full process table without arg
+psa ()
+{
+	test "$1" &&
+		local grep_arg="[${1:0:1}]${1:1}"
+
+	# hack around each OS having its own `ps' that we might run this on
+	case `uname -s` in
+		SunOS)
+			local ps_cmd=-ef
+			;;
+		Linux)
+			local ps_cmd=-efwwwwww
+			;;
+		*)
+	esac
+
+	ps $ps_cmd |
+	egrep "$grep_arg"
+}
+
+psf () { ps -H -s $(pgrep -d, $@) -F; }

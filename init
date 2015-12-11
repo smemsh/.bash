@@ -1,0 +1,39 @@
+#
+# - set up preliminary environment
+# - prepares to source rest of bash setup in sane env
+# - files we source are specified by rcfile, as our args
+#
+
+unset -f $(compgen -A function)
+
+# this is not portable
+#ulimit	-n 4096 # max possible from -nH, default -nS is 1024
+#ulimit	-u 8192 # we hit 1024 pretty easily and had issues
+
+umask 002 # share with group, typically 'sysadmin'
+
+unset IFS # defaults it
+
+# this should go somewhere else but we get run eg ssh logins that don't pass
+# the environment and don't get a terminal, and sometimes we use
+# /usr/local/bin/ stuff from the remote side (such as from a mosh-client,
+# needing to invoke mosh-server).
+#
+# not sure if this really is the right approach because it forces all login
+# shells to get a certain path to start with
+#
+export PATH=/usr/local/bin:/bin:/sbin:/usr/bin:/usr/sbin
+
+# posix mode causes too much wasted time debugging word
+# splitting issues and other surprises
+#
+if test -v POSIXLY_CORRECT; then
+	echo "bash: init: overrode posix mode" >&2
+	set +o posix; fi
+
+# source as instructed by rcfile via our args
+#
+for f; do source $f || {
+	echo "bash: init: sources: $f: failed" >&2
+	return 4
+}; done

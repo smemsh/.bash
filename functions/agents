@@ -1,0 +1,91 @@
+#
+# quick hack to get session dbus working in my shell inits
+# - forked from do_ssh_agent() # --smm20130823123744
+# 
+#
+##############################################################################
+
+return
+
+init_agents ()
+{
+	do_agent ssh \
+	"ssh-agent" \
+	"ssh-add $HOME/.ssh/id_dsa" \
+	SSH_{AGENT_PID,AUTH_SOCK}
+
+# XXX TODO trying to see if we just do dbus-launch once, are we ok without anything special in our shell?
+	return
+
+	do_agent dbus \
+	"dbus-daemon --fork --session --print-pid --print-address" \
+	'sed -i -n \
+	 -e "1{s,.*,export DBUS_SESSION_BUS_ADDRESS=&,p}" \
+	 -e "2{s,.*,export DBUS_SESSION_BUS_PID=&,p}" \
+	' \
+	DBUS_SESSION_BUS_{PID,ADDRESS}
+}
+
+do_agent ()
+{
+	local name=$1
+	eval "local cmdline=($2)" # bad hack, close your eyes!
+	eval "local runafter=($3)"
+	shift 3
+
+	local vars=($@)
+	local exe=$cmdline
+	local pidvar=$vars # first one in array always holds pid
+	local agentdir=~/var/agent
+	local tmpfile=`mktemp`
+	local pidfile=$agentdir/${HOSTNAME:?}/$name
+
+	# we don't want these to end up in the root shellfunc
+	# namespace so make them nested functions (really we
+	# should be using library routines anyways)
+	#
+	__eprint () { echo "$0: $@" >&2; }
+	_err () { __eprint $1; false; }
+
+	# is an agent already running?
+	#
+	local agentpid=($(pgrep -u ${UID:?} $exe))
+	((${#agentpid[@]} > 1)) &&
+		{ _err "more than one $name agent running"; return; }
+
+	# would we be able to run it if we wanted to?
+	#
+	type -P $exe &>/dev/null ||
+		{ _err "$exe not found in path"; return; }
+
+	# presence of pidfile indicates that we should run on this host
+	#
+	test -f $pidfile || return
+
+	# do not run if the one running already is known to us
+	#
+	source $pidfile &>/dev/null
+	((agentpid && agentpid == ${!pidvar:-0})) && return
+
+	# otherwise we have a stale one laying around, or haven't
+	# started one yet, so do so
+	#
+	unset ${vars[@]}
+
+	# <wince> but seems to be necessary since even
+	#    array=('"*"')
+	# tries to expand the glob???
+	#
+	eval '"${cmdline[@]}" >| $tmpfile' ||
+		{ _err "bad start: $name"; return; }
+	eval '"${runafter[@]}" $tmpfile' ||
+		{ _err "bad after for $name"; return; }
+
+	mv $tmpfile $pidfile || { _err "cound not rename $tmpfile"; return; }
+
+	# now that we have created the file, bring it into the environment
+	#
+	source $pidfile &>/dev/null || { _err "bad pidf: $pidfile"; return; }
+
+	echo "started new $name agent for host $HOSTNAME"
+}

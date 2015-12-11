@@ -1,0 +1,10 @@
+#
+# Have the shell invoke routines on init.
+#
+# Any such routine should already be defined from sourcing
+# "functions/*" or elsewhere.
+#
+
+# see comments in functions/ssh and functions/agents, we do old way now
+#init_agents
+do_ssh_agent

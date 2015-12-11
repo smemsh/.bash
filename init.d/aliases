@@ -1,0 +1,270 @@
+#
+
+alias ()
+{
+	local -i i
+	local +i commands
+	local +i name
+
+	(($# < 2)) && {
+		echo "$FUNCNAME: requires at least two arguments"
+		return 1
+	}
+
+	name=$1
+	shift
+
+	for ((i = 1; i <= $#; i++)); do
+		commands+="${!i}"
+	done
+
+	builtin alias -- $name &>/dev/null &&
+		unalias -- $name &>/dev/null
+
+	eval builtin alias '"$name"="$commands"'
+}
+
+builtin unalias -a # for renames
+
+### bash
+
+alias j			"jobs -l"
+alias lj		"jobs -l | fmt -ts | pycolor"
+alias m			"fg -"
+alias f			"fg"
+alias fm		"fg -"
+alias fp		"fg +"
+
+alias realias		"source ~/.bash/aliases"
+alias recomplete	"source ~/.bash/completions"
+alias rebind		"echo re-read-init-file | bind"
+alias reenv		"source ~/.bash/env"
+alias reinit		"source ~/.bash/rc"
+alias initbash		"source ~/.bash/rc"
+alias bashinit		"source ~/.bash/rc"
+alias bashrc		"source ~/.bash/rc"
+
+alias disable		"enable -n"
+
+alias .			"cd \$OLDPWD"
+alias ..		"cd .."
+alias ...		"cd ../.."
+alias ....		"cd ../../.."
+alias .....		"cd ../../../.."
+alias ......		"cd ../../../../.."
+alias .......		"cd ../../../../../.."
+alias ........		"cd ../../../../../../.."
+alias .........		"cd ../../../../../../../.."
+
+alias dirs		"command dirs -p -v"
+
+### list
+
+alias lsvar		"compgen -A variable"
+alias lsfile		"compgen -A file"
+alias lsdir		"compgen -A directory"
+alias lsarr		"compgen -A arrayvar"
+alias lstags		"grep '^[[:alnum:]_-]+:' Makefile"
+alias pstree		"pstree -nGuhl | less -XEr"
+
+### utility
+
+alias nowdatefmt	"date +\$HISTTIMEFORMAT"
+#alias wordcount	"wc -w"
+#alias count		"wc -l"
+#alias linecount	"wc -l"
+alias addrof		"gethostip -d"
+alias lastmodf		"ls -1t \$("					\
+				"find "					\
+					"-mindepth 1 "			\
+					"-maxdepth 1 "			\
+					"-type f"			\
+			") | "						\
+			"head -1 | "					\
+			"sed 's,^\./,,'"
+
+alias lastmodd		"ls -1dt \$("					\
+				"find "					\
+					"-mindepth 1 "			\
+					"-maxdepth 1 "			\
+					"-type d"			\
+			") | "						\
+			"head -1 | "					\
+			"sed 's,^\./,,'"
+
+### history
+
+alias histon		"source ~/.bash/history; "			\
+			"source ~/.bash/goto"
+
+alias histoff		"unset HISTFILE; "				\
+			"GOASSOC=\${GOASSOC:+histoff}; "		\
+			"unset \${GOASSOC:-GOASSOC} "
+
+alias histwrite		"history -w"
+alias histread		"history -r"
+alias histadd		"history -s"
+alias rml		"histrmlast"
+alias rml2		"histrm2ndlast"
+alias rm2l		"histrm2ndlast"
+alias lhistory		'HISTTIMEFORMAT="${HISTTIMEFORMAT} " history'
+
+### terminal
+
+alias cls		"cd; clear; reset"
+alias lock		"clear; su -c 'vlock -a'"
+alias wrapon		"setterm -linewrap on"
+alias wrapoff		"setterm -linewrap off"
+alias upper		"head -\$((LINES - 3))" # vertical size of PS1
+alias bottom		"tail -\$((LINES - 3))"
+alias half		"head -\$(((LINES - 3) / 2))"
+alias cutwrap		"expand | cut -b 1-\$COLUMNS"
+alias nowrap		"cutwrap "
+alias firstline		"head -1"
+alias lastline		"tail -1"
+alias nocolors		"touch ~/.bash/mkprompt; make_prompt_nocolors"
+alias colors		"touch ~/.bash/mkprompt; make_prompt_colors"
+
+### grep
+
+alias _grep		"/bin/grep "				\
+			"--exclude='*.svn-base' "		\
+			"--exclude='entries' "			\
+			"--binary-files=without-match "		\
+			"--devices=skip "			\
+			"--directories=skip "			\
+			"--extended-regexp "			\
+			"--no-messages"
+
+alias cgrep		"_grep --color=always"
+alias rgrep		"_grep --directories=recurse"
+
+### mail
+
+alias fml		"fetchmail | fml.awk"
+alias sml		"sendmail -q"
+alias yml		"mailsync -t md5 work-all"
+alias work		"mutt -f =work"
+alias personal		"mutt -f =personal"
+alias private		"mutt -f =private"
+alias sent		"mutt -f =sent"
+alias inbox		"mutt"
+alias muttdoc		"zless /usr/share/doc/mutt*/manual.txt.gz"
+
+### package management
+
+alias yumdev		"yum -q --disablerepo='*' --enablerepo=rawhide"
+alias yumsrc		"yum -q --disablerepo='*' --enablerepo=fedora-source"
+alias rpmi		"rpm -qi"
+alias rpminfo		"rpmi "
+alias rpmlist		"rpm -ql"
+
+### goto
+
+alias ga		"goassoc"
+alias goa		"goassoc"
+alias ganf		"goassocnf"
+alias gal		"goassoclast"
+alias gor		"gorecent | head"
+alias gofilter		"grep -v 'go(cron|vt|which|ls*|cur|x)'"
+alias golastas		"("						\
+				"cd ~/var/bash/history; "		\
+				"ls -1t \$("				\
+					"find "				\
+						"-mindepth 1 "		\
+						"-maxdepth 1 "		\
+						"-type f"		\
+				") | "					\
+				"sed 's,^\./,,' | "			\
+				"column -x"				\
+			")"
+alias godolast		"godolastn 1"
+alias gam		"goassoc misc"
+alias gam		"goassoc ccom:misc"
+
+### administration
+
+alias s			"sudo"
+alias svim		"sudo -e"
+alias permsave		"(cd /etc; sudo metastore -s /etc; cd \$OLDPWD)"
+alias permrestore	"(cd /etc; sudo metastore -ae /etc; cd \$OLDPWD)"
+alias permchk		"(cd /etc; sudo metastore -c /etc; cd \$OLDPWD)"
+
+### subversion
+
+alias svndifff		"svn diff --diff-cmd=/usr/bin/diff -x -U\ 3 "
+alias svndiffff		"svn diff --diff-cmd=/usr/bin/diff -x -U\ 9 "
+alias svndifffff	"svn diff --diff-cmd=/usr/bin/diff -x -U\ 27 "
+alias svndiffffff	"svn diff --diff-cmd=/usr/bin/diff -x -U\ 81 "
+
+### net
+
+alias pon '('								       \
+			'now="$('					       \
+				'date | '				       \
+				'colrm 1 4 | '				       \
+				'colrm 16 99'				       \
+			')"; '						       \
+			'if sudo ifup ppp0; '				       \
+			'then '						       \
+				'sstrength=$('				       \
+					'sudo tail -1000 /var/log/messages | ' \
+					'grep -A 999 ^"$now" | '	       \
+					'grep chat | '			       \
+					'grep -A 1 " AT\+CSQ" | '	       \
+					'tail -1 | '			       \
+					'awk "{print \$6}" | '		       \
+					'sed s/,//'			       \
+				'); '					       \
+				'printf "connected; signal: %2.0f%%\n" $('     \
+					'echo "($sstrength / 32) * 100" | '    \
+					'bc -ql'			       \
+				'); '					       \
+			'else '						       \
+				'echo "connection failed"; '		       \
+			'fi ; '						       \
+')'
+
+alias poff		"s ifdown ppp0"
+
+### ssh
+
+alias sshr		"ssh -ql root"
+
+### job control
+
+for ((i = 1; i < 128; i++)) { alias $i "fg $i"; }
+
+### taskwarrior
+
+alias taskgc		"task rc.gc=on rc.verbose=nothing // list"
+
+### uncategorized / TODO
+
+alias g			"elinks www.google.com"
+alias cvim		"vim -S ~/.cvimrc"
+alias lds		"ldapsearch -LLLx"
+alias mix		"alsamixer -c 0"
+alias eq		"alsamixer -D eq"
+#alias man		"pinfo -m"
+alias mann		"command man"
+alias manw		"MANWIDTH= command man"
+alias rpn		"orpie"
+alias pht		"TZ=Asia/Manila date +\$HISTTIMEFORMAT"
+alias pst		"TZ=US/Pacific date +\$HISTTIMEFORMAT"
+alias xrun		"DISPLAY=:0"
+alias vimhelp		"vim -c help"
+alias vimro		"vim -R"
+
+alias rel		"lsb_release -si"
+alias ncal		"ncal -Mw"
+alias xv		"pqiv -f"
+alias thisweek		"date +%G%V"
+alias thismonth		"date +%Y%m"
+alias lastmonth		"date -d 'last month' +%Y%m"
+alias lastweek		"date -d 'last week' +%G%V"
+alias shred		"shred -zun 50"
+
+alias aptpats		"elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
+
+alias a                 "tmux attach"

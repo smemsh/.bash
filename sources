@@ -1,0 +1,4 @@
+#
+
+for file in rc.d/*; do source $file; done
+return

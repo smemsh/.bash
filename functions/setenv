@@ -1,0 +1,32 @@
+#
+# Manipulate the environment.
+#
+# Uses simple commands and shell argument lists instead of
+# the traditional Bourne assignment syntax.
+#
+#   - sets variable identifiers, attributes, and values
+#   - provides a Bourne Simple Command interface
+#   - hooks throughout for installation of user callbacks
+#   - collapse behavior for value arguments is configurable
+#   - full control over scope and inheritance
+#
+
+# we don't actually want to use these yet
+return
+
+# backend to setenv: takes routines to mangle the variable
+# name before doing the setenv (use "echo" for unchanged)
+do_setenv ()
+{
+	local _f=$1;		shift
+	local _n=$($_f $1);	shift
+	IFS=${SETENVSEP:-}	eval ${SETENVLOCAL:-} $_n="\$*"
+}
+
+esetenv		() { export $1;	do_setenv echo		echo "$@"; }
+ecasetenv	() { export $1;	do_setenv toupper	echo "$@"; }
+setenv		() { 		do_setenv echo		echo "$@"; }
+casetenv	() { 		do_setenv toupper	echo "$@"; }
+
+lsetenv		() { SETENVLOCAL=local setenv "$@"; }
+lcasetenv	() { SETENVLOCAL=      setenv "$@"; }

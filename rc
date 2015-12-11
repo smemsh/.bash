@@ -1,0 +1,33 @@
+
+
+# needed for bash var init order bug and misnomer
+# todo: ~/upsrc/bash/bash-history-bug
+#
+histchars='!^#'
+
+cd ~/.bash || { echo "no bash rcdir" >&2; return 3; }
+
+shopt -u sourcepath
+srcfiles=(options goassoc)
+source init || return
+source ${srcfiles[@]} || return
+
+if ! [[ $PS1 ]]; then cd; return; fi
+
+### interactive shells only ###################################################
+
+#debug
+#echo "SHLVL=$SHLVL, BASHPID=$BASHPID, \$\$=$$, PPID=$PPID" >> /tmp/this-foo-file
+
+source ~/lib/sh/include || { echo "include init failed"; return 15; }
+source ~/lib/sh/interactive || { echo "interactive failed";  return 17; }
+for file in rc.d/*; do source ${file:?}; done
+
+allinclude || { echo "includes failure"; return 30; }
+#goassoclast || { echo "assoc failure"; return 40; }
+
+cd
+
+# TODO HACK
+goassoc omnius4
+source newprompt
