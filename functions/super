@@ -1,0 +1,12 @@
+#
+
+# this is just a convenience rather than typing it all the
+# time.  used to have an alias `s' that did this same
+# thing but then it wouldn't work if there were shell
+# redirects and such.  just surround it in quotes and
+# give it to nested shell invocation
+#
+r ()
+{
+	sudo sh -c "${@}"
+}

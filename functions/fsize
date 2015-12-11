@@ -1,0 +1,30 @@
+#
+
+fsize ()
+{
+	local -i b
+	local -i k
+	local +i h
+	local -a f
+
+	(($# == 0)) && { echo no arguments; return 1; }
+
+	# stat(1) won't give us anything except bytes so as
+	# a shortcut, instead of doing it now by hand (which
+	# XXX TODO should be done in ~/lib/sh/ somewhere by
+	# new function) we're just going to use `ls' to do
+	# it for us
+	#
+	f=("$@")
+	b=($(ls -l  "$@" | field 4))
+	k=($(ls -lk "$@" | field 4))
+	h=($(ls -lh "$@" | field 4))
+
+	for ((i = 0; i < ${#@}; i++)); do
+		echo							\
+			"${f[i]}:"					\
+			"${b[i]}b,"					\
+			"${k[i]}k,"					\
+			"${h[i]}"
+	done
+}

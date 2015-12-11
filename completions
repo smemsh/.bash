@@ -1,0 +1,130 @@
+#
+
+source ~/lib/sh/include
+
+install_completions_host ()
+{
+	# use hostname completion in bash for all of these programs.
+	_uses_host_completions=(	\
+		ssh			\
+		sshr			\
+		telnet			\
+		rsh			\
+		scp			\
+		ping			\
+		vncviewer		\
+		rdesktop		\
+	);
+
+	local completion_source_file=~/.ssh/known_hosts
+	local completion_file=~/var/ssh/completions
+
+	if test $completion_source_file -nt $completion_file; then
+		echo -n make_host_completions: hosts known to ssh changed,
+		echo \ rebuilding completions
+		# generates an /etc/hosts format file out of known_hosts in
+		# order to be useful to readline for hostname completion
+		awk '{
+			split($1, aliases, ",");
+			asort(aliases);
+			for (alias in aliases)
+				printf("%s ", aliases[alias]);
+			printf("\n");
+		}' < ~/.ssh/known_hosts >| ~/var/ssh/completions
+	else
+		# use the cached completions
+		:
+	fi
+
+	for program in ${_uses_host_completions[@]}; do
+		complete -A hostname $program
+	done
+}
+
+install_completions_file ()
+{
+	_uses_file_completions=(	\
+		scp			\
+	);
+
+	for program in ${_uses_file_completions[@]}; do
+		existing_completion=(`complete -p $program`);
+		unset "existing_completion[0]";
+		complete -f ${existing_completion[@]}
+	done
+}
+
+do_completions_go ()
+{
+	local completion_command="$1"
+	local to_complete=${COMP_WORDS[COMP_CWORD]}
+
+	if [[ "$to_complete" =~ : ]]
+	then
+		# we have already completed at least one
+		# level of hierarchy so just complete the
+		# whole rest of it
+		#
+		COMPREPLY=($(
+			eval $completion_command |
+			command grep ^"$to_complete"
+		))
+	else
+		# we are still completing the first
+		# component so only consider through the
+		# first hierarchy delimiter
+		#
+		COMPREPLY=($(
+			eval $completion_command |
+			awk -F : '{print $1}' |
+			uniq |
+			command grep ^"$to_complete"
+		))
+	fi
+}
+
+do_completions_goassoc	() { do_completions_go "(cd $GOBASE_ASSOC; ls -1t)"; }
+do_completions_godo	() { do_completions_go "gorecent";		     }
+
+install_completions_goassoc ()
+{
+	_uses_assoc_completions=(
+		goassoc
+		goto
+		ga
+	)
+
+	for program in ${_uses_assoc_completions[@]}; do
+		complete -r $program 2> /dev/null
+		complete -F do_completions_goassoc $program
+	done
+}
+
+install_completions_godo ()
+{
+	_uses_do_completions=(
+		godo
+	)
+
+	for program in ${_uses_do_completions[@]}; do
+		complete -r $program 2> /dev/null
+		complete -F do_completions_godo $program
+	done
+}
+
+install_completions_host
+install_completions_file
+install_completions_goassoc
+install_completions_godo
+
+unset -f install_completions_host
+unset -f install_completions_file
+unset -f install_completions_goassoc
+unset -f install_completions_godo
+
+# sudo just prefixes any ordinary command
+#
+complete -c -f sudo
+complete -c -f s # complete builtin is not alias-aware
+
+# vim:syn=sh

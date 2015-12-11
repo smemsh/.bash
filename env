@@ -1,0 +1,155 @@
+#
+# this is sourced for both interactive and non-interactive shells
+# (login only though, I think?) (unlike most others; see 'init')
+
+source ~/.bash/setenv
+
+export LINES
+export COLUMNS
+
+#[[ "$TERM" == linux ]] && TERM=lx	# linux with status line cabability
+
+esetenv USER		${LOGNAME:-nologname}
+
+unset MAIL MAILPATH MAILCHECK
+
+esetenv TERMINAL	$(tty)
+esetenv TERMINAL       ${TERMINAL#/dev/}
+
+esetenv HOSTFILE	~/var/ssh/completions
+
+esetenv PROMPT_COMMAND	'source $HOME/bin/promptcmd.sh $?'
+
+# basic stuff we want on all machines
+esetenv PATH				\
+	$HOME/bin:			\
+	/opt/local/bin:			\
+	/usr/local/bin:			\
+	/usr/bin:			\
+	/bin:				\
+	/opt/local/sbin:		\
+	/usr/local/sbin:		\
+	/sbin:				\
+	/usr/sbin
+
+esetenv LD_LIBRARY_PATH			\
+	$HOME/lib:			\
+	/opt/local/lib:			\
+	/usr/X11R6/lib:			\
+	/usr/local/lib
+
+#esetenv MAIL				\
+#	$HOME/Maildir/
+
+esetenv SCM			file://$HOME/var/scm
+esetenv VISUAL			vim
+esetenv EDITOR			vim
+esetenv PAGER			"less -iR"
+esetenv MANPAGER		"${PAGER}s"
+esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
+esetenv BLOCK_SIZE		human-readable # df, du, ls
+
+esetenv BC_ENV_ARGS		"-ql $HOME/.bc"
+
+esetenv CVSROOT			cvs.replaceme.com:/home/sysadmin/cvs
+esetenv CVS_RSH			ssh
+esetenv PDSH_RCMD_TYPE		ssh
+esetenv PDSH_MISC_MODULES	netgroup
+esetenv PDSH_SSH_ARGS		"-A"
+esetenv SSH_ASKPASS		/bin/true # for pdsh
+
+esetenv PERLLIB			/usr/local/lib/perl5/site_perl/5.8.8: \
+				/usr/local/lib/perl5/vendor_perl/5.8.8
+esetenv PYTHONPATH		/usr/local/lib/python2.3: \
+				/usr/local/lib/python2.5: \
+				/usr/local/lib/python2.5/site-packages
+
+esetenv RI			"-f ansi"
+
+#esetenv MOZ_DISABLE_PANGO	1
+
+esetenv LESS			"-nSR"
+esetenv LESSPIPE		"|lesspipe.sh %s"
+
+esetenv ORACLE_BASE		/var/oracle
+esetenv ORACLE_HOME		/opt/oracle/9i
+esetenv ORACLE_OWNER		oracle
+esetenv PGUSER			postgres
+
+esetenv LDAPTLS_CACERT		$HOME/.cacerts
+
+# platform specific stuff
+case `uname -s` in
+	(Linux)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin		\
+	;
+	esetenv AWT_TOOLKIT		\
+		MToolkit		\
+	;
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib		\
+	;
+	;;
+
+	(SunOS)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/openwin/bin:	\
+		/usr/ccs/bin:		\
+		/usr/ucb		\
+	;
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/openwin/lib	\
+	;
+	;;
+
+	(HP-UX)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/contrib/bin:	\
+		/opt/sudo/bin:		\
+		/opt/tusc/bin:		\
+		/usr/local/pa20_64/bin	\
+	;
+	;;
+
+	(SunOS)
+	;;
+
+	(CYGWIN*)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib
+	esetenv PAGER			"${PAGER}C"
+	esetenv MANPAGER		"${MANPAGER}C"
+	;;
+esac
+
+for basedir in						\
+	$HOME/share/vim					\
+	/usr/local/share/vim				\
+	/usr/share/vim
+do
+	test -d $basedir && break
+done
+
+if ! (($?))
+then
+	esetenv VIM $(
+		ls \
+			-1rXd \
+			$basedir/vim[[:digit:]]* |
+		head -1
+	)
+else
+	echo warning: no VIM environment variable was set >&2
+fi
+
+# vim:syn=sh:

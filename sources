@@ -1,0 +1,16 @@
+#
+
+source setenv
+source initfuncs
+source env
+source aliases
+source builtins
+source history
+source goto
+#source mkprompt
+#source ~/newprompt
+source newprompt
+source terminal
+source completions
+source callfuncs
+source traps

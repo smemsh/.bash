@@ -1,0 +1,94 @@
+#
+
+lsa ()
+{
+	ls -nhlAF --color=always --sort=size --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	less -XER
+}
+
+lst () { lstc $FUNCNAME "$@"; } # lists individuals by time
+lsc () { lstc $FUNCNAME "$@"; } # lists by category by time
+
+lstc ()
+{
+	invocation_name=$1; shift
+
+	ls -1Flt \
+		--color=never \
+		--time-style=+$HISTTIMEFORMAT \
+		"$@" |
+	grep -v /\$ |
+	tail -n +2 |
+	awk '{print $6, $7}' | (
+		if [[ "$invocation_name" == 'lsc' ]]; then
+			awk -F : '{print $1}' |
+			sort -sk 2 |
+			uniq -f 1 |
+			sort -nrk 1,2
+
+		elif [[ "$invocation_name" == 'lst' ]]; then
+			# no more changes before outputting
+			cat
+		else
+			return 1
+		fi
+	) |
+	head -$((LINES - 3))
+}
+
+
+# all, long, unsorted, page
+lsu ()
+{
+	ls -lAF --color=always --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	less -ER
+}
+
+# lsa but wide
+lsf ()
+{
+	ls -CAFw $COLUMNS --color=always \
+	"$@" |
+	less -ERX
+}
+
+# lsf but without dotfiles, useful in a home dir
+lsh ()
+{
+	ls -CFw $COLUMNS --color=always \
+	"$@" |
+	less -ERX
+}
+
+# lsa just dirs
+lsd ()
+{
+	ls -lAF --color=always --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	grep /\$ |
+	less -ER
+}
+
+# lsa wide nopage; lsr instead of lsw for faster typing
+lsr ()
+{
+	ls -CAF --color=always \
+	"$@" |
+	less -ER
+}
+
+llatest ()
+{
+	ls -1t ${@} |
+	head -1
+}
+
+loldest ()
+{
+	ls -1t ${@} |
+	tail -1
+}
+
+# vim:syn=sh:

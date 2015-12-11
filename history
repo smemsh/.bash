@@ -1,0 +1,30 @@
+#
+
+esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
+
+# these aren't used anymore because we bypass the shell's
+# logging system -- everything is logged -- but we should fix
+#
+esetenv HISTSIZE	$(($((2**31)) - 1))
+esetenv HISTFILESIZE	$HISTSIZE
+esetenv HISTCONTROL	"ignorespace"
+esetenv HISTIGNORE	"f:f *:"					\
+			"m:m *:"					\
+			"fg:fg *:"					\
+			"gf:gf *:"					\
+			"fm:mf:"					\
+			"j:"						\
+			"hist*:"					\
+			"rml:rml2:"					\
+			"1:2:3:4:5:6:7:8:9:10:"				\
+			"11:12:13:14:15:16:17:18:19:20:"		\
+			"21:22:23:24:25:26:27:28:29:30"
+
+# This is still used by the shell to determine where to
+# append (-o histappend) or to overwrite (+o histappend)
+# when it exits; it then dumps the history contents here.
+# We are doing it ourselves so we want bash to write it to
+# nowhere, but there is no way to shut it off.
+# XXX TODO think just "unset HISTFILE" works to disable
+#
+export HISTFILE=/dev/null

@@ -1,0 +1,27 @@
+#
+
+histchars='!^#' # due to bash init order bug, currently fixing
+
+declare -px GOASSOC &> /dev/null || export GOASSOC=none
+
+shopt -u sourcepath # see r727
+
+# huh? it's true! try "env - bash -lc printenv" if you dont believe me!
+export HOME="${HOME:-${BASH_SOURCE%*/*}}"
+
+### interactive and non-interactive shells ####################################
+
+pushd ~/.bash &>/dev/null || { echo "where is the bashrc dir?";  return  3; }
+source init		  || { echo "init failed";		 return  5; }
+source options		  || { echo "failed option sourcing";	 return 10; }
+source env		  || { echo "failed env sourcing";	 return 11; }
+[[ $- =~ i ]]		  || { popd &> /dev/null; cd;		 return  0; }
+
+### interactive shells only ###################################################
+
+source ~/lib/sh/include	  	|| { echo "include init failed"; return 15; }
+source ~/lib/sh/interactive	|| { echo "interactive failed";  return 17; }
+source sources			|| { echo "source failure";	 return 20; }
+allinclude			|| { echo "includes failure";	 return 30; }
+#goassoclast			|| { echo "assoc failure";	 return 40; }
+popd &>/dev/null		|| { cd;				    }

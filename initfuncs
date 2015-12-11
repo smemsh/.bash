@@ -1,0 +1,23 @@
+#
+# Establish our custom functions in the interactive
+# shell environment.
+#
+
+# these are early ones the others might rely on and can
+# override if they want
+#
+source setenv # sourced by 'env' only for non-interactive login shells
+bomb	() { echo "$1" >&2; return 1;			}
+verbose () { [[ "$VERBOSE" ]] && echo "$@";		}
+
+# source all the "functions/*" to get them defined.
+#
+cd functions
+
+for file in *; do
+#	verbose initfunc $file
+	source $file
+#	verbose return_was $?
+done
+
+cd - &>/dev/null
