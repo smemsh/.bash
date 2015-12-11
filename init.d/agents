@@ -1,0 +1,108 @@
+#
+# todo: this is probably entirely unnecessary even with ssh, use same sockfile
+#       IN PROGRESS, THIS FILE NO LONGER LINKED TO SHELL INIT
+#		--smm20140731
+#
+# quick hack, forked from do_ssh_agent() to generalize,
+# since the same paradigm was needed for a dbus agent
+#     --smm20130823123744
+#
+# todo: start a dtach session for elinks this way too, problem solved
+#
+##############################################################################
+
+init_agents ()
+{
+	do_agent ssh \
+		"ssh-agent" \
+		"ssh-add" \
+		SSH_{AGENT_PID,AUTH_SOCK}
+	#
+	# skip this routine for now, trying to see if we just do dbus-launch
+	# once, are we ok without anything special in our shell?
+	#
+	# do_agent dbus \
+	#	"dbus-daemon --fork --session --print-pid --print-address" \
+	#	'sed -i -n \
+	#	 -e "1{s,.*,export DBUS_SESSION_BUS_ADDRESS=&,p}" \
+	#	 -e "2{s,.*,export DBUS_SESSION_BUS_PID=&,p}" \
+	#	' \
+	#	DBUS_SESSION_BUS_{PID,ADDRESS}
+	#
+}
+
+do_agent ()
+{
+	set -x
+
+	local name=$1
+	eval "local cmdline=($2)" # bad hack, close your eyes!
+	eval "local runafter=($3)"
+	shift 3
+
+	local vars=($@)
+	local exe=$cmdline
+	local pidvar=$vars # first one in array always holds pid
+	local agentdir=~/var/agents
+	local pidfile=$agentdir/${HOSTNAME:?}/$name
+
+	# berkeley does not have a default template, we must supply one
+	#
+	local tmpfile=`mktemp /tmp/tmp.XXXXXXXXXXXX`
+
+	# we don't want these to end up in the root shellfunc
+	# namespace so make them nested functions
+	# todo: use library routines from libsh?
+	#
+	eprint () { echo "$0: $@" >&2; }
+	err () { eprint $1; false; }
+
+	# is an agent already running?
+	#
+	local agentpid=($(pgrep -u ${UID:?} $exe))
+	((${#agentpid[@]} > 1)) &&
+		{ err "more than one $name agent running"; set +x; return; }
+
+	# would we be able to run it if we wanted to?
+	#
+	type -P $exe &>/dev/null ||
+		{ err "$exe not found in path"; set +x; return; }
+
+	# presence of pidfile indicates that we should run on this host
+	#
+	test -f $pidfile || { set +x; return; }
+
+	# do not run if the one running already is known to us
+	#
+	source $pidfile &>/dev/null
+	((agentpid && agentpid == ${!pidvar:-0})) && { set +x; return; }
+
+	# otherwise we have a stale one laying around, or haven't
+	# started one yet, so do so
+	#
+	unset ${vars[@]}
+
+	# <wince> but seems to be necessary since even
+	#    array=('"*"')
+	# tries to expand the glob???
+	#
+	eval '"${cmdline[@]}" >| $tmpfile' ||
+		{ err "bad start: $name"; set +x; return; }
+	eval '"${runafter[@]}" $tmpfile' ||
+		{ err "bad return: $name"; set +x; return; }
+
+	mv $tmpfile $pidfile ||
+		{ err "cound not rename $tmpfile"; set +x; return; }
+
+	# now that we have created the file, bring it into the environment
+	#
+	source $pidfile &>/dev/null ||
+		{ err "bad pidfile: $pidfile"; set +x; return; }
+
+	echo "started new $name agent for host $HOSTNAME"
+
+	set +x
+}
+
+init_agents
+unset -f init_agents do_agent

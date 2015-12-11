@@ -1,0 +1,7 @@
+#
+# this is sourced by both "bash -l" and "bash -i" (via
+# "env" which is called by "bash ­l") but other stuff in
+# "initfuncs" (which also sources this) will not be
+#
+setenv  () { local _v=$1; shift; IFS= eval $_v="\$*";   }
+esetenv () { export $1; setenv "$@";                    }

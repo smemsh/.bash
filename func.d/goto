@@ -1,0 +1,215 @@
+#
+# TODO: this is very linux and me-specific at the moment, even
+# including my window manager
+
+goassoc ()
+{
+	local oldassoc=${GOASSOC:-none}
+	local newassoc=$1
+	local pid
+	local disp
+
+	# user just wants to know what the association is
+	#
+	(($# == 0)) && { echo $GOASSOC; return 0; }
+
+	# redo all the GO* variables with the new association
+	#
+	GOASSOC=$newassoc
+	source $GORC
+
+	# the time this association was started is used to
+	# avoid relogging commands from the history that we
+	# preloaded before any new commands have entered the
+	# history
+	#
+	GOSTART=$(date +%s)
+
+	# create the dirs and such our infrastructure uses
+	#
+	mkdir -p $GOASSOCDIR || return 1
+	mkdir -p $GOINSTANCE || return 1
+	touch $GOLOG_CMDS || return 1
+	touch $GOLOG_BASH || return 1
+
+	# allow lookup of the association by tty...
+	#
+	if {
+		# sanity checks: be careful any time we use `rm -f' !!
+		((${#GOINSTANCE} > 3)) &&
+		test -d "$GOINSTANCE" &&
+		test -e $GOINSTANCE/assoc
+	}; then
+		rm -f $GOINSTANCE/*
+	fi
+
+	# ...by way of this link
+	#
+	ln -nsf $GOASSOCDIR $GOINSTANCE/assoc
+
+	function \
+	wait_atmost_kill ()
+	{
+		local atmost=$1; shift
+		local torun=("$@")
+		local sleeppid
+		local commandpid
+
+		if trap -p | grep USR2\$
+		then echo "usr2 handler already" &>2; return 1
+		else trap 'echo "continuing without ratpoison"' USR2
+		fi
+
+		# ok ready to race...
+		#
+		(sleep $atmost; kill -USR2 $$) & sleeppid=$!
+		"${torun[@]}" & commandpid=$!
+
+		# and they're off! which one finishes first?
+		#
+		wait $commandpid
+		if (($? > 127))
+		then killpid=$commandpid
+		else killpid=$sleeppid
+		fi
+
+		# loser dies
+		kill_pid_wait $killpid || return 1
+	}
+
+	# ratpoison title should mirrors the shell goreason
+	# association
+	#
+	if [[ "$DISPLAY" ]]
+	then
+		displpat='DISPLAY=:([[:digit:]]+)' # for ancient bash
+		#
+		# only if a ratpoision instance is running (as 'rpwm')
+		#
+		for pid in $(pgrep -x rpwm)
+		do
+			# and it's attached to our display,
+			# meaning it's ours and not another
+			# X server wm (this happens when we
+			# run Xnest or Xephyr, for instance)
+			#
+			disp=$(
+				tr '\0' '\n' < /proc/$pid/environ |
+				grep DISPLAY
+			)
+			[[ $disp =~ $displpat ]]
+			if [[ :${BASH_REMATCH[1]} == ${DISPLAY%.*} ]]; then
+				ratpoison -c "title $GOASSOC"
+			fi
+		done
+	fi
+
+	# flush whatever is in the history buffer and
+	# preload our shell history with that already
+	# recorded for this assoc (in the default case), or
+	# don't if the user requested not to (usually this
+	# happens when we change our mind about what the
+	# association name should be, after already starting
+	# the shell)
+	#
+	if [[ "$2" == noflush ]]; then
+		:
+	else
+		savedfmt="$HISTTIMEFORMAT"
+		HISTTIMEFORMAT=%s
+		history -cr $GOLOG_BASH
+		HISTTIMEFORMAT="$savedfmt"
+	fi
+
+	# enable go by last next time but don't update it if
+	# just some junk
+	#
+	[[ $GOASSOC != "(none|misc|$(<~/.gowhich):misc)" ]]  &&
+		printf $GOASSOC >| ~/var/go/assoc/last
+}
+
+goassocnf ()
+{
+	goassoc $1 noflush
+}
+
+# hack to work around goassoc-in-existing-shell bug
+# mentioned in ".bash/goto"
+#
+goassoclast ()
+{
+	goassoc ${GOASSOCLAST:-none}
+}
+
+gac ()
+{
+	goassoc $(<~/.gowhich):$1
+}
+
+godmatch ()
+{
+	gorecent | egrep "$1"
+}
+
+godmatchls2 ()
+{
+	gorecent | awk -F : '{printf("%s:%s\n", $1, $2)}' | sort | uniq -c
+}
+
+godmatchls ()
+{
+	gorecent | awk -F : '{print($1)}' | sort | uniq -c
+}
+
+godmatchfirst ()
+{
+	gorecent | egrep -m 1 "$1"
+}
+
+gomatch ()
+{
+	(godmatch "$1"; goamatch "$1";) | sort -d
+}
+
+goamatch ()
+{
+	ls $GOBASE_ASSOC |
+	egrep "$1" |
+	awk '{printf("+%s\n", $0)}'
+}
+
+goamatchfirst ()
+{
+	ls $GOBASE_ASSOC | egrep -m 1 "$1"
+}
+
+godolastn ()
+{
+	local n=$1
+	local t=$2
+
+	local t=$(gorecent | head -$((n+1)) | tail -1)
+	if godo $t
+	then echo "$t"
+	else echo "error doing $t"
+	fi
+}
+
+##############################################################################
+
+godosince ()
+{
+	{ echo "implementation not finished"; return 1; }
+	local dowhat=$1
+	local dolast
+	if dolast=$(ls -t tasks/$dowhat.* &>/dev/null | head -1); then :; fi
+	# this fails on bash3, can it be done a different way?
+	#ls -X work/log/tasks/$dowhat.* | sort -nr -t . -k 2,3 | head -1
+	touch -t $1 tasks/alert:sudden.0
+}
+
+goman ()
+{
+	{ echo "implementation not finished"; return 1; }
+	goassoc 
+}

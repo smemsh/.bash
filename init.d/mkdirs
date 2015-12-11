@@ -1,0 +1,12 @@
+#
+# directories we assume to exist on the host system for interactive shells
+
+mkdir -p ~/var/{bash,agents,log}
+#mkdir -p ~/var/{bash,vim,ssh,agent,log}
+
+# TODO: is this handled by ~/.bash/init.d/goto? should it be here?
+# ^^^^ confirmed: it seems to be handled by aforementioned, but waiting
+# until this is proven to be thorough by using some of the goto commands
+# on a virgin, unconfigured host
+#
+#mkdir -p ~/var/go/$HOSTNAME/assoc

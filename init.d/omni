@@ -1,0 +1,67 @@
+#
+# bash shell component of an omnisession
+# to be run on interactive sessions
+#
+# via tmux -> omnilogin -> bash -> term.d
+#
+##############################################################################
+
+[[ $TMUX_PANE ]] || { true; return; }
+[[ $OMNILOGIN ]] || { true; return; }
+
+new_omni_uuid ()
+{
+	# set the terminal title
+	#
+	# this ends up getting put by tmux into #{pane_title} and shown
+	# as event on tmux control channel.  we overload the title
+	# string with some metadata, making it available to omnisessd
+	# when it notices the tltle change event on its control socket
+	# interface to tmux (todo: omnisessd not implemented yet)
+	#
+	# todo: implement a tmux escape to send this, like it does
+	# window name or title already, making a general mechanism for
+	# sending data like hostname from the remotest nested shell,
+	# this way the toplevel can know about it and all nested
+	# instances can retain communication with the root parent tmux,
+	# which is after all the terminal session where the user is
+	# (and has status bar, etc).  usage is to have tmux status bar
+	# have remote host and working directory, for example, really
+	# any out of band data can be sent if this kind of mechanism is
+	# implemented
+	#
+	# todo: race with dumping if we haven't completed yet, somehow
+	# tmux (or omnisessd) tmux needs some kind of lock
+	#
+	# todo: not including hostname component right now
+	# todo: need to actually make the whole thing here
+	#
+	declare -x OMNIUUID=`$HOME/bin/mkuuid`
+
+	# todo: we need to test for collision? this should not happen, see notes in
+
+	#
+	mkdir $OMNIPANEDIR/$OMNIUUID || return 27
+
+	# todo: not setting title to anything right now
+	#
+	#$HOME/bin/termtitle $OMNIUUID/$HOSTNAME
+
+	# make the metasession dir if it does not exist already
+	#
+	# todo: maybe the login shell should not be the one making this
+	# directory (omnisessd should probably do this, or wherever the
+	# session is made), but it's analogous to old 'goassoc' in this
+	# sense, which we did from the shell, so leave the code here
+	# while transitioning to omnisessd
+
+	# todo: not including hostname component right now
+	#
+	#[[ $HOSTNAME =~ \. ]] ||
+	#		{ echo "omnisession: hostname not qualified"; break 2; }
+}
+
+if ! [[ $OMNIUUID ]]; then
+	new_omni_uuid; fi
+
+declare -x OMNILOGIN

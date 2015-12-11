@@ -1,0 +1,23 @@
+#
+
+# select processes by name or full process table without arg
+#
+psa ()
+{
+	local psargs grepargs
+
+	(($#)) && grepargs="[${1:0:1}]${1:1}" # TODO does work? such old code!
+
+	# TODO: use *TYPE variables provided by bash
+	#
+	case `uname -s` in
+	(SunOS) psargs=ef ;;
+	(Linux) psargs=efwwwwww ;;
+	(Darwin) psargs=efwwwwww ;;
+	(*) ;;
+	esac
+
+	ps -$psargs | egrep "$grepargs"
+}
+
+psf () { ps -H -s $(pgrep -d, $@) -F; }

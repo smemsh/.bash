@@ -1,0 +1,77 @@
+#
+
+do_ssh_agent ()
+{
+	local sshdir=~/.ssh
+	local agentdir=~/var/agents
+	local sockfile=$sshdir/agent.sock
+	local statefile=$agentdir/${HOSTNAME:?}/ssh
+
+	eprint () { echo "$0: $@" >&2; }
+	err    () { eprint $1; false; }
+
+	test -d $sshdir || { err "ssh not yet configured"; return; }
+	test -f $statefile || return # agent not to be used this host
+
+	if ! test -S $sockfile
+	then
+		#
+		# we should be running on the host (ie, statefile exists),
+		# but we are not (no socket), so run the agent and
+		# create statefile (typical for first login after boot)
+		#
+
+		# maybe it's a new machine without ssh?
+		#
+		if ! type -P ssh-agent &>/dev/null
+		then err "ssh-agent not found in path"; return; fi
+
+		# start the agent
+		# this usually happens once at login
+		# todo: this should probably be moved into the user
+		# session management plumbing (such as upstart and
+		# systemd are now providing to users)
+		#
+		# XXX TODO
+		# we should expire keys or use SSH_ASKPASS or something
+		# like that, just leaving it in memory forever is
+		# obviously an issue, but an attacker that can read
+		# memory has us anyways so this has not been something
+		# given much attention, maybe there is some class of
+		# attacks this could prevent
+		#
+		if ssh-agent -sa $sockfile >| $statefile
+		then echo "started new ssh key agent for host $HOSTNAME"
+		else err "bogus exit from ssh-agent"; return; fi
+
+		# now we can add all the identities
+		#
+		if ! \
+			SSH_AUTH_SOCK=$sockfile \
+			ssh-add
+		then
+			err "failure adding ssh keys to agent"
+			return
+		fi
+	fi
+
+	# "cached" case, agent is running already, and proper env
+	# variables are in the state file created for agent-using
+	# programs to source.
+	#
+	# we do not actually need this:
+	#
+	#   - the socketfile, as specified by $SSH_AUTH_SOCK is
+	#     known already since we use an explicit, fixed path
+	#   - the pid var $SSH_AGENT_PID is not really needed
+	#     because "pkill -u self ssh-agent" works just fine)
+	#
+	# however, it remains useful to have such a file created,
+	# because we use its presence or absence to determine if we
+	# should run an agent on this host
+	#
+	source $statefile >/dev/null || err "ssh agent statefile bad"
+}
+
+do_ssh_agent
+unset -f do_ssh_agent

@@ -1,0 +1,217 @@
+#
+
+source ~/.bash/init.d/setenv
+
+export LINES
+export COLUMNS
+export USER=${LOGNAME:-nologname}
+
+#[[ "$TERM" == linux ]] && TERM=lx	# linux with status line cabability
+
+unset MAIL MAILPATH MAILCHECK
+#esetenv MAIL				# $HOME/Maildir/
+
+# this is for tools not to use dbus and not to use systemd
+# and to stop dbus from launching automatically
+#
+#esetenv DBUS_SESSION_BUS_ADDRESS	:${USER:?}@${HOSTNAME:?}
+esetenv SYSTEMCTL_SKIP_REDIRECT		1
+
+# see http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+# these are all [ugly] defaults
+# todo: move these all to a tree rooted at ~/.xdg/
+#
+esetenv XDG_DATA_HOME			~/.local/share
+esetenv XDG_CONFIG_HOME			~/.config
+esetenv XDG_CACHE_HOME			~/.cache
+esetenv XDG_DATA_DIRS			/usr/local/share:/usr/share
+esetenv XDG_CONFIG_DIRS			/etc/xdg
+#esetenv XDG_RUNTIME_DIR
+
+# todo: unnecessary? think the defaults are all correct
+#	perhaps we did this to export them?
+#
+export_xdg_user_dirs ()
+{
+	local v=$XDG_CONFIG_HOME/user-dirs.dirs
+	test -e $v && source $v
+	declare -x $(compgen -A variable XDG)
+}
+export_xdg_user_dirs
+
+esetenv TERMINAL			$(tty)
+esetenv TERMINAL			${TERMINAL#/dev/}
+
+# grep 2.9 default on fedora 15 manual page says:
+# ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36
+# XXX TODO option to output default or add to --version, upstream
+#
+# sl: selected lines
+# cx: context lines
+# mt: matched
+# ms: selected (huh? diff with mt?)
+# mc: context line
+# fn: filenames when -l
+# ln: line numbers when -n
+# bn: byte offsets when -b
+# se: separators
+#
+esetenv GREP_COLORS \
+	sl=: \
+	cx=: \
+	ms=01\;31: \
+	mc=01\;31: \
+	fn=01\;36: \
+	ln=32: \
+	bn=32: \
+	se=36: \
+;
+
+esetenv HOSTFILE			~/var/ssh/completions
+
+esetenv PROMPT_COMMAND			'source $HOME/bin/promptcmd.sh $?'
+
+# basic stuff we want on all machines
+esetenv PATH				\
+	$HOME/bin:			\
+	/lib/upstart:			\
+	/opt/local/bin:			\
+	/usr/local/bin:			\
+	/usr/bin:			\
+	/bin:				\
+	/opt/local/sbin:		\
+	/usr/local/sbin:		\
+	/sbin:				\
+	/usr/sbin
+
+esetenv LD_LIBRARY_PATH			\
+	$HOME/lib:			\
+	/opt/local/lib:			\
+	/usr/X11R6/lib:			\
+	/usr/local/lib
+
+esetenv SCM			file://$HOME/var/scm
+esetenv VISUAL			vim
+esetenv EDITOR			vim
+esetenv PAGER			"less -iR"
+esetenv MANPAGER		"${PAGER}s"
+esetenv MAN_KEEP_FORMATTING	1 # man-db uses 'col' in pipe, breaks pinfo
+esetenv MANWIDTH		80
+esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
+esetenv BLOCK_SIZE		human-readable # df, du, ls
+
+esetenv BC_ENV_ARGS		"-ql $HOME/.bc"
+
+esetenv CVSROOT			cvs.replaceme.com:/home/sysadmin/cvs
+esetenv CVS_RSH			ssh
+esetenv PDSH_RCMD_TYPE		ssh
+esetenv PDSH_MISC_MODULES	netgroup
+esetenv PDSH_SSH_ARGS		"-A"
+esetenv SSH_ASKPASS		/bin/true # for pdsh
+
+esetenv PERLLIB			\
+				/usr/local/lib/perl5/site_perl/5.8.8: \
+				/usr/local/lib/perl5/vendor_perl/5.8.8 \
+;
+esetenv PYTHONPATH		\
+				/usr/local/lib/python2.7/site-packages: \
+				/usr/local/lib/python2.6/site-packages: \
+				/usr/local/lib/python2.5/site-packages: \
+				/usr/local/lib/python2.5: \
+				/usr/local/lib/python2.3 \
+;
+
+esetenv RI			"-f ansi"
+
+esetenv NCURSES_NO_PADDING	1
+esetenv NCURSES_NO_SETBUF	1
+
+type -p lesspipe.sh &>/dev/null &&
+esetenv LESSPIPE		"|lesspipe.sh %s"
+esetenv LESS			"-nSQR#3"
+
+esetenv ORACLE_BASE		/var/oracle
+esetenv ORACLE_HOME		/opt/oracle/9i
+esetenv ORACLE_OWNER		oracle
+esetenv PGUSER			postgres
+
+esetenv LDAPTLS_CACERT		$HOME/.cacerts
+
+shell_init_arch_specific ()
+{
+	case `uname -s` in
+
+	(Linux) #########################
+
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin		\
+	;
+	esetenv AWT_TOOLKIT		\
+		MToolkit		\
+	;
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib		\
+	; ;;
+
+	(SunOS) #########################
+
+	esetenv PATH			\
+		$PATH:			\
+		/usr/openwin/bin:	\
+		/usr/ccs/bin:		\
+		/usr/ucb		\
+	;
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/openwin/lib	\
+	; ;;
+
+	(HP-UX) #########################
+
+	esetenv PATH			\
+		$PATH:			\
+		/usr/contrib/bin:	\
+		/opt/sudo/bin:		\
+		/opt/tusc/bin:		\
+		/usr/local/pa20_64/bin	\
+	; ;;
+
+	(SunOS) #########################
+
+	;;
+
+	(CYGWIN*) #######################
+
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib
+	esetenv PAGER			"${PAGER}C"
+	esetenv MANPAGER		"${MANPAGER}C"
+
+	;;
+
+	esac
+}
+
+shell_init_vim ()
+{
+	export shell_init_sharedir # to run outside
+
+	for basedir in $HOME /usr/local /usr; do
+		shell_init_sharedir=$basedir/share/vim
+		test -d $shell_init_sharedir && break
+	done
+
+	if (($? == 0)); then
+		local -a vimtmp=($shell_init_sharedir/vim[[:digit:]]*)
+		export VIM=$vimtmp
+	else echo "warning: no VIM environment variable was set" >&2; fi
+}
+
+for f in $(compgen -A function shell_init); do $f; unset -f $f; done
+for f in $(compgen -A variable shell_init); do $v; unset $v; done

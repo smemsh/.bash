@@ -1,0 +1,80 @@
+#
+
+builtin alias histrm=histdel
+histdel ()
+{
+	local n
+	local to
+	local from
+	local range
+
+	if (($# == 1)); then
+		# delete a single record
+		from=$1
+		to=$1
+
+	elif (($# == 2)); then
+		# delete at X for Y times (i.e. range X-Y)
+		from=$1
+		to=$2
+	else
+
+		echo -e "$FUNCNAME:\n" \
+			"\trequires from and to range args\n" \
+			"\tOR the single entry to delete"
+		return 1
+	fi
+
+	range=$(($to - $from))
+	((range < 0)) && {
+		echo "$FUNCNAME: range is negative! "
+		return 1
+	}
+
+	for ((n = 0; n <= $range; n++)); do
+		history -d $from || {
+			echo "$FUNCNAME: history deletion failed"
+			return 1
+		}
+	done
+}
+
+# delete the last N records
+# defaults to 1 (i.e. the last one)
+#
+histrmlast ()
+{
+	local from=$((HISTCMD - ${1:-1}))
+	local to=$HISTCMD
+
+	histdel $from $to
+}
+
+histrm2ndlast ()
+{
+	histdel $((HISTCMD - 2))
+}
+
+histsyncw ()
+{
+	history -a
+}
+
+histsyncr ()
+{
+	history -n
+}
+
+histsync ()
+{
+	histsyncw
+	histsyncr
+}
+
+hist ()
+{
+	if (($# == 0))
+	then history 10
+	else history "$@"
+	fi
+}

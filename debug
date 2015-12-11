@@ -1,0 +1,36 @@
+#
+# Assist in debugging.
+#
+# Source when debugging should be turned on.
+#
+
+logdir=~/var/log/bash
+mkdir -p $logdir
+
+debug_add_traplog ()
+{
+	local	type=$1
+	local	info="$2"
+	local	file=$logprefix/$type
+
+	trap "							\
+		eval echo -n					\
+		\"$type: $info\"				\
+		>> $file					\
+	" RETURN
+}
+
+set	-							\
+calls	'$BASH_SOURCE/$FUNCNAME/$BASH_COMMAND'			\
+parms	'$BASH_ARGV'						\
+traps	'$(trap -l)'
+
+while $#; do
+	eval $1="\${2\[@\]}"
+	debug_add_traplog $1 "$2"
+	shift 2
+done
+
+# ok now we are ready to actually enable them
+shopt -s extdebug
+set   -o functrace

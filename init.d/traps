@@ -1,0 +1,8 @@
+#
+# Initialize shell signal and special event traps
+#
+
+# allow us to give arbitrary commands to running instances
+# via signals; reserve USR2 for local invocations
+#
+trap "source ~/var/bash/sigusr1" USR1

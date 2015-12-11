@@ -1,0 +1,9 @@
+#
+
+info ()
+{
+	local info=info
+	type -t pinfo &> /dev/null && info=pinfo
+
+	command $info "$@"
+}
