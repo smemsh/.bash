@@ -1,0 +1,68 @@
+#
+# Used for both "shopt" and "set -o" options
+#
+
+### shopts ###################################################################
+
+OPT_SHOPTS_SET=(
+	failglob
+	cdable_vars
+	cdspell
+	checkhash
+	checkwinsize
+	expand_aliases
+	extglob
+	histappend
+	histreedit
+	hostcomplete
+	huponexit
+	interactive_comments
+	mailwarn
+	promptvars
+	shift_verbose
+	cmdhist
+
+)
+
+OPT_SHOPTS_UNSET=(
+	nullglob
+	execfail
+	histverify
+	nocaseglob
+	sourcepath
+	lithist		# currently history parsing stuff is line-based
+)
+
+### options ##################################################################
+
+OPT_SETOPTS_UNSET=()
+OPT_SETOPTS_SET=(
+	noclobber
+)
+
+# instead just always define the pattern as var='pattern' and use
+# [[ $foo =~ $pattern ]]
+#
+#if (((${BASH_VERSINFO[0]} == 3 && \
+#      ${BASH_VERSINFO[1]} >= 2 && \
+#      ${BASH_VERSINFO[2]} >= 39) || \
+#     (${BASH_VERSINFO[0]} > 3)))
+#then
+#	OPTS_SHOPTS_SET+=(compat31)
+#fi
+
+# new bash4 features
+if ((${BASH_VERSINFO[0]} >= 4)); then
+	OPT_SHOPTS_SET+=(globstar)
+fi
+
+##############################################################################
+
+# now actually set the values; only errors will be reported
+#
+shopt -qs	${OPT_SHOPTS_SET[@]}			|| return 1
+shopt -qu	${OPT_SHOPTS_UNSET[@]}			|| return 2
+set -o		${OPT_SETOPTS_SET[@]}	> /dev/null	|| return 3
+set +o		${OPT_SETOPTS_UNSET[@]}	> /dev/null	|| return 4
+
+unset OPT_{SET,SH}OPTS_{,UN}SET

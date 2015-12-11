@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# execute tmux with a specific arg set if no args are given
+# otherwise, pass the given arguments along and make no changes
+#
+
+tmux ()
+{
+	local defargs="new-session -l -v -A -2u -L / -n / -P"
+	local realexe=`type -P tmux`
+
+	# XXX TODO incomplete, so just always do the true case
+	#if (($#))
+	if true
+	then $realexe "$@"
+	else $realexe ${defargs[@]}
+	fi
+}

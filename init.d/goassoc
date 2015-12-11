@@ -1,0 +1,8 @@
+#
+
+if ! [[ $GOASSOC ]]; then
+	GOASSOC=default
+	test -f ~/.godefault && GOASSOC=$(<~/.godefault)
+fi
+
+export GOASSOC

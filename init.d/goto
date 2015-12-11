@@ -1,0 +1,73 @@
+#
+# cooperate with goto scripts
+# only to be loaded on hosts with goto
+# just return true for all errors so we do not show-stop
+#
+
+GORC=~/.gorc
+
+test -e $GORC   || return 0
+test -r $GORC   || return 0
+source $GORC    || return 0
+
+test -e $GOBASE || return 0
+test -r $GOBASE || return 0
+
+# we do this instead of the commented out block that follows
+# because we have the problem where the history reads all
+# the lines with the `??' prepended, making no sense of the
+# `#' comment lines in the shell history file.  This does
+# NOT happen on subsequent `goassoc' and we do not
+# understand why this is happening.  Same thing happens when
+# we just type `bash' even *with* this, because it then does
+# "goassoc <association of parent shell>" and then the
+# strange `??' problem again.  This needs to be be traced
+# and stepped through in the debugger to be understood.  For
+# now we're just going to have to manually run the `goassoc'
+# command after shell invocation every time we login (too
+# busy right now to spend time on this).  This ends up
+# saving only the first level shell, because of the above
+# mentioned problem when typing `bash' and loading the old
+# history.  This problem is very perplexing.
+# XXX UPDATE: ~/bash-history-bug
+#
+# Note that setting to `none' by default when `$GOASSOC' is
+# not already set, means that the first level shell is
+# *always* set to `none' and therefore, will overwrite the
+# "~/go2/tty" stuff, and we actually end up losing the
+# record of our old assocation.  So we have to type
+# `golsassoc' somewhere *before* we login and use its output
+# to re-set the association after login (because it's set to
+# none after that).  This is a real pain, and totally
+# broken, but no time to fix right now.
+#
+# XXX UPDATE: we are now setting `$GOLASTASSOC' using the
+# commented block of code so we can write a command to
+# quickly go to the last known association in the current
+# shell environment and at least work around the problem
+# this way, requiring just one quick `goassoc last' (or
+# `gal' alias, or what have you) instead of having to look
+# it up and retype the whole thing.  This also makes it
+# optional and starts off with `none' which has its own
+# advantages as well.  Just replace the `$GOASSOCLAST' with
+# a direct set of `$GOASSOC' to re-demonstrate the problem.
+#
+GOASSOC=${GOASSOC:-none}
+if test -d "$GOINSTANCE" 2> /dev/null; then
+	GOASSOCLAST=$(basename $(readlink $GOINSTANCE/assoc))
+else
+	GOASSOCLAST=none
+fi
+
+all_go_vars=($(compgen -A variable GO))
+export ${all_go_vars[@]}
+
+# allow a prefix which makes sense on the local workstation,
+# but not on a group of remote machines, to be stripped
+#
+if test -e ~/.goprefix
+then GOPREFIX=$(<~/.goprefix)
+else GOPREFIX=
+fi
+
+goassoc ${GOASSOC/#$GOPREFIX:/}

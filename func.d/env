@@ -1,0 +1,22 @@
+#
+# these cannot be in bin/*.sh because they must execute in the current process
+# environment to make sense
+#
+
+lsenv ()
+{
+	set \
+	| grep -E '^([[:alnum:]_])+=' \
+	| awk '{
+		valoff = index($0, "=")
+		name = substr($0, 1, valoff - 1)
+		value = substr($0, valoff + 1)
+		printf("%-24s %s\n", name, value)
+	}'
+}
+
+lsenvv ()
+{
+	lsenv \
+	| grep -E -v -e '\(' -e / -e '^[^[:space:]]+[[:space:]]*$'
+}

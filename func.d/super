@@ -1,0 +1,4 @@
+#
+# this is just a convenience rather than typing it constantly
+#
+r () { sudo sh -c "${@}"; }

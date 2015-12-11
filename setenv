@@ -1,0 +1,11 @@
+#
+# TODO: add to libsh, or somewhere else... it's used in a couple of places,
+# really should be a builtin or... or... or...
+#
+
+setenv   () { local v=$1; shift; IFS= eval $v="\$*"; }
+esetenv  () { local v=$1; shift; IFS= eval $v="\$*"; }
+
+# not sure there is a use case for epsetenv, so export is default
+#
+psetenv  () { local v=$1; shift; IFS=: eval $v="\$*"; export $v; }

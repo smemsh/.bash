@@ -1,0 +1,10 @@
+#
+# posix mode causes too much wasted time debugging word
+# splitting issues and other surprises
+#
+# TODO: where was this getting set from that caused me to force it?
+#
+
+[[ $POSIXLY_CORRECT ]] && set +o posix
+
+true

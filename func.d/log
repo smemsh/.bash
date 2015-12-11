@@ -1,0 +1,7 @@
+#
+
+bomb ()
+{
+	echo ${FUNCNAME[1]}: ${@}, aborting
+	exit 1
+}

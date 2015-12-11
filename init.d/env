@@ -1,0 +1,267 @@
+#
+# - set up shell environment
+# - only sourced for interactive shells
+# - may assume $HOME, $LOGNAME, $USER set (confer 'init.d/identity')
+# - assumes setenv() et al are available (confer 'setenv')
+#
+# TODO: should we also be sourced for non-interactive?
+# TODO: factor some/all of this out into ~/.bash/env.d/
+#
+
+export LINES
+export COLUMNS
+
+#[[ "$TERM" == linux ]] && TERM=lx	# linux with status line cabability
+
+unset MAIL MAILPATH MAILCHECK
+#psetenv MAIL				# $HOME/Maildir/
+
+# this is for tools not to use dbus and not to use systemd
+# and to stop dbus from launching automatically
+#
+#psetenv DBUS_SESSION_BUS_ADDRESS	:${USER:?}@${HOSTNAME:?}
+psetenv SYSTEMCTL_SKIP_REDIRECT		1
+
+# see http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+# these are all [ugly] defaults
+# TODO: move these all to a tree rooted at ~/.xdg/
+#
+psetenv XDG_DATA_HOME			~/.local/share
+psetenv XDG_CONFIG_HOME			~/.config
+psetenv XDG_CACHE_HOME			~/.cache
+psetenv XDG_DATA_DIRS			/usr/local/share:/usr/share
+psetenv XDG_CONFIG_DIRS			/etc/xdg
+#psetenv XDG_RUNTIME_DIR
+
+# grep 2.9 default on fedora 15 manual page says:
+# ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36
+# XXX TODO option to output default or add to --version, upstream
+#
+# sl: selected lines
+# cx: context lines
+# mt: matched
+# ms: selected (huh? diff with mt?)
+# mc: context line
+# fn: filenames when -l
+# ln: line numbers when -n
+# bn: byte offsets when -b
+# se: separators
+#
+psetenv GREP_COLORS \
+	sl= \
+	cx= \
+	ms=01\;31 \
+	mc=01\;31 \
+	fn=01\;36 \
+	ln=32 \
+	bn=32 \
+	se=36 \
+;
+
+psetenv HOSTFILE			~/var/ssh/completions
+psetenv TERMINAL			$(tty)
+psetenv TERMINAL			${TERMINAL#/dev/}
+psetenv PROMPT_COMMAND			'source $HOME/bin/promptcmd.sh $?'
+
+psetenv shell_init_path_generic		\
+	/usr/local/bin			\
+	/opt/local/bin			\
+	/usr/bin			\
+	/bin				\
+	/usr/local/sbin			\
+	/opt/local/sbin			\
+	/sbin				\
+	/usr/sbin			\
+;
+psetenv LD_LIBRARY_PATH			\
+	$HOME/lib			\
+	/usr/local/lib			\
+	/opt/local/lib			\
+;
+
+# XXX TODO complete hack here for macports
+# XXX TODO not sure why it installs like this
+# XXX TODO now getting segfaults *with* it
+# XXX TODO removing for now
+#
+#psetenv PERLLIB						\
+#	/opt/local/lib/perl5/vendor_perl/5.16.1/darwin-thread-multi-2level \
+#	/opt/local/lib/perl5/vendor_perl		\
+#	/opt/local/lib/perl5/vendor_perl/5.16.1		\
+#	/usr/local/lib/perl5/site_perl/5.8.8		\
+#	/usr/local/lib/perl5/vendor_perl/5.8.8		\
+#	/usr/local/lib/perl5/vendor_perl/5.8.8		\
+#;
+
+# XXX TODO trying this with python now too, maybe they've advanced enough that
+# they don't need me specifying this anymore, but probably not
+#
+#psetenv PYTHONPATH \
+#	/usr/local/lib/python2.7/site-packages		\
+#	/usr/local/lib/python2.6/site-packages		\
+#	/usr/local/lib/python2.5/site-packages		\
+#	/usr/local/lib/python2.5			\
+#	/usr/local/lib/python2.3			\
+#;
+
+psetenv SCM			file://$HOME/var/scm
+
+# overridden later if vim found
+psetenv VISUAL			vi
+psetenv EDITOR			$VISUAL
+
+psetenv PAGER			"less -iR"
+
+psetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
+psetenv BLOCK_SIZE		human-readable # df, du, ls
+psetenv BC_ENV_ARGS		"-ql $HOME/.bc"
+
+psetenv RI			"-f ansi" # ruby rdoc ri
+
+psetenv LYNX_CFG		$HOME/.lynxrc
+
+psetenv MANPAGER		"${PAGER}s"
+psetenv MAN_KEEP_FORMATTING	1 # man-db uses 'col' in pipe, breaks pinfo
+psetenv MANWIDTH		80
+
+psetenv CVSROOT			cvs.replaceme.com:/home/sysadmin/cvs
+psetenv CVS_RSH			ssh
+
+psetenv PDSH_RCMD_TYPE		ssh
+psetenv PDSH_MISC_MODULES	netgroup
+psetenv PDSH_SSH_ARGS		"-A"
+psetenv SSH_ASKPASS		/bin/true # for pdsh
+
+psetenv NCURSES_NO_PADDING	1
+psetenv NCURSES_NO_SETBUF	1
+
+psetenv LESS			"-nSQR#3"
+
+psetenv ORACLE_BASE		/var/oracle
+psetenv ORACLE_HOME		/opt/oracle/9i
+psetenv ORACLE_OWNER		oracle
+psetenv PGUSER			postgres
+
+psetenv LDAPTLS_CACERT		$HOME/.cacerts
+
+# TODO: LESSOPEN, not LESSPIPE
+# TODO: needs to be looked at, including use of '||' and '-|' (see manual)
+# TODO: there is an upstream version lesspipe.sh with many features
+#
+#type -p lesspipe.sh &>/dev/null &&
+#	psetenv LESSPIPE "|lesspipe.sh %s"
+
+##############################################################################
+
+shell_init_arch_specific ()
+{
+	case `uname -s` in # TODO: use HOSTTYPE, MACHTYPE, OSTYPE
+
+	(Linux) #########################
+
+	psetenv shell_init_path_pre	\
+		/lib/upstart		\
+	;
+	psetenv shell_init_path_post	\
+		/usr/X11R6/bin		\
+	;
+	psetenv AWT_TOOLKIT		\
+		MToolkit		\
+	;
+	psetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH	\
+		/usr/X11R6/lib		\
+	;
+	;;
+
+	(SunOS) #########################
+
+	psetenv shell_init_path_post	\
+		/usr/openwin/bin	\
+		/usr/ccs/bin		\
+		/usr/ucb		\
+	;
+	psetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH	\
+		/usr/openwin/lib	\
+	;
+	;;
+
+	(HP-UX) #########################
+
+	psetenv shell_init_path_post	\
+		/usr/contrib/bin	\
+		/opt/sudo/bin		\
+		/opt/tusc/bin		\
+		/usr/local/pa20_64/bin	\
+	;
+	;;
+
+	(CYGWIN*) #######################
+
+	psetenv shell_init_path_post	\
+		/usr/X11R6/bin		\
+		;
+	psetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH	\
+		/usr/X11R6/lib		\
+		;
+	psetenv PAGER			"${PAGER}C"
+	psetenv MANPAGER		"${MANPAGER}C"
+
+	;;
+
+	(Darwin) ########################
+
+	psetenv shell_init_path_pre		\
+		/opt/local/libexec/gnubin	\
+	;
+	# todo: this probably should be in the generic path, not
+	# Darwin-specific.  possibly, nodejs stuff should be in a globally
+	# accessible path.  but then there's xyz language and where those
+	# binaries are installed... maybe these links should all end up in
+	# ~/bin/, but that doesn't allow easy separation of local code and
+	# upstream code
+	#
+	# todo: this should not be here, maybe eg PYTHONPATH, etc
+	#
+	psetenv shell_init_path_post		\
+		$HOME/node_modules/.bin		\
+		$HOME/Library/Python/2.7/bin	\
+	;
+	;;
+
+	esac
+}
+
+shell_init_path ()
+{
+	psetenv PATH				\
+		$HOME/bin			\
+		$shell_init_path_pre		\
+		$shell_init_path_generic	\
+		$shell_init_path_post		\
+	;
+}
+
+shell_init_vim ()
+{
+	local base vim
+
+	set $HOME /usr/local /opt/local /usr
+	if for base; do vim=$base/share/vim; test -d $vim && break
+	done; then set $vim/vim[[:digit:]]*; export VIM=${!#}; fi
+}
+
+# TODO: unnecessary? think the defaults are all correct,
+# perhaps we did this to export them?
+#
+shell_init_xdg_dirs ()
+{
+	local v=$XDG_CONFIG_HOME/user-dirs.dirs
+	test -e $v && source $v
+	declare -x $(compgen -A variable XDG)
+}
+
+source ~/.bash/initfuncs
+unset -f psetenv
