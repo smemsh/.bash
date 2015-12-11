@@ -1,0 +1,4 @@
+#
+
+# maintain group permissions, for sharing with group, typically 'sysadmin'
+umask 002

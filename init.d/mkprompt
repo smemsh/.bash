@@ -1,0 +1,154 @@
+#
+# rebuilds cache file '~/var/bash/prompt' for sourcing
+# (after '~/.bash/prompt' has changed, tested during shell init)
+#
+##############################################################################
+
+# TODO: put these booleans in a configuration file somewhere
+# TODO: perhaps combine this and the ~/bin/prompt script
+# TODO: there is no ~/bin/prompt (?), dne ---^
+#
+shell_init_prompt_color=${PROMPT_COLORS:-'1'}
+shell_init_prompt_dollar=${PROMPT_DOLLAR:-'1'}
+shell_init_prompt_details=${PROMPT_DETAILS:-'0'}
+shell_init_prompt_rebuild=${PROMPT_REBUILD:-'0'}
+
+export HOSTNAME=`hostname`
+
+###
+
+shell_init_prompt ()
+{
+	local color=$((shell_init_prompt_color))
+	local dollar=$((shell_init_prompt_dollar))
+	local details=$((shell_init_prompt_details))
+	local rebuild=$((shell_init_prompt_rebuild))
+
+	local colors=~/.bash/colors
+	local infile=~/.bash/init.d/mkprompt
+	local outfile=~/var/bash/prompt
+
+	if test $infile -nt $outfile || ((rebuild))
+	then
+		echo "$FUNCNAME: source changed, rebuilding PS1"
+		((color)) && source ~/.bash/colors
+
+		# TODO: put the below in a separate file that's sourced.
+		#       tried a few variations and could not get the evaluation
+		#       right to output a sourcable file.  maybe maintain this
+		#       in an external language?
+		#
+		######################################################################
+
+		cat >| $outfile <<- .
+			#
+			# \"mkprompt\": source file, for editing and sourcing
+			# \"prompt\": cached output, rebuilt when \"mkprompt\" changes
+			#
+			# SAVE RETURN CODE if doing a subshell, and exit with
+			# it (see 'rval' in examples below), so exit status is
+			# correct for the outermost [interactive] shell
+			#
+			esetenv PS1 \\
+			"\[$CLR_solid_flat_fgwhite_bgblack\]" "\n" \\
+		.
+		if ((details))
+		then cat >> $outfile <<- .
+			\\
+			"\[$CLR_solid_flat_fgcyan_bgblack\]" " \t " \\
+			"\[$CLR_solid_bold_fggreen_bgblack\]" \\
+				"\\\${SSH_TTY:+" \\
+				"\\\${LHOST:-" \\
+				"\\\${HOSTNAME%%.*}}}" \\
+			"\[$CLR_solid_flat_fgcyan_bgblack\]" "\\\${SSH_TTY:+:}" \\
+			"\[$CLR_solid_bold_fgcyan_bgblack\]" "\\\${GOASSOC} " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "l" \\
+			"\[$CLR_solid_flat_fgcyan_bgblack\]" "\\\${GOTTY_NUM} " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "h" \\
+			"\[$CLR_solid_flat_fgcyan_bgblack\]" "\! " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "c" \\
+			"\[$CLR_solid_flat_fgcyan_bgblack\]" "\# " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "q\\\$(
+				rval=\\\$?
+				depth=\\\${#DIRSTACK[@]}
+				if ((depth == 1))
+				then printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$depth
+				else printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$depth
+				fi
+				exit \\\$rval
+			)" \\
+			" " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "s\\\$(
+				rval=\\\$?
+				shlvl=\\\$SHLVL
+				if ((shlvl == 1)) || (((shlvl == 2)) && [[ \"\\\$DISPLAY\" ]])
+				then printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$shlvl
+				else printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$shlvl
+				fi
+				exit \\\$rval
+			)" \\
+			" " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "j\\\$(
+				rval=\\\$?
+				njobs=\\\$(jobs | wc -l)
+				if ((njobs))
+				then printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$njobs
+				else printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$njobs
+				fi
+				exit \\\$rval
+			)" \\
+			" " \\
+			"\[$CLR_solid_bold_fgblue_bgblack\]" "r\\\$(
+				rval=\\\${?}
+				if ((rval))
+				then printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$rval
+				else printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$rval
+				fi
+				exit \\\$rval
+			)" \\
+			" " \\
+			"\[$CLR_solid_bold_fgwhite_bgblack\]" "[" \\
+			"\[$CLR_solid_bold_fgcyan_bgblack\]" "\W" \\
+			"\[$CLR_solid_bold_fgwhite_bgblack\]" "]" \\
+			"\n" \\
+		.
+		fi
+
+		if ((dollar))
+		then cat >> $outfile <<- .
+			" " \\
+			"\\\$(
+				rval=\\\${?}
+				[[ \\\$(jobs) ]]
+				jobsbool=\\\$?
+				if   ((rval == 0 && jobsbool == 0)); then printf \"\[$CLR_solid_bold_fgyellow_bgblack\]\"
+				elif ((rval == 0 && jobsbool == 1)); then printf \"\[$CLR_solid_bold_fggreen_bgblack\]\"
+				elif ((rval  > 0 && jobsbool == 0)); then printf \"\[$CLR_solid_bold_fgmagenta_bgblack\]\"
+				elif ((rval  > 0 && jobsbool == 1)); then printf \"\[$CLR_solid_bold_fgred_bgblack\]\"
+				fi
+				printf %c \\\\$
+				exit \\\$rval
+			)" \\
+			" " \\
+			"\[$CLR_solid_flat_fgwhite_bgblack\]"
+
+			esetenv PS2 \\
+			"\[$CLR_solid_bold_fgyellow_bgblack\]" "" \\
+			"\[$CLR_solid_flat_fgwhite_bgblack\]" "   " \\
+			""
+		.
+		fi
+
+##############################################################################
+
+	else
+		# use the cached prompt
+		:
+	fi
+
+	source $outfile
+}
+
+source ~/.bash/initfuncs
+
+# vim:syn=sh:

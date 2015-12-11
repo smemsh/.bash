@@ -1,0 +1,149 @@
+#
+# TODO: integrate this with the upstream code that provides
+# these in places like /etc/completions.d/ and /etc/profile.d/
+#
+# TODO: use the 124 exit code mentioned in man page to
+# implement a ~/.bash/completions.d/
+#
+
+shell_init_completions_host="
+	ssh
+	sshr
+	telnet
+	rsh
+	scp
+	ping
+	vncviewer
+	rdesktop
+"
+shell_init_completions_file="
+	scp
+"
+
+###
+
+shell_init_completions_goassoc="
+	goassoc
+	goassocnf
+	goto
+	ga
+	ganf
+"
+shell_init_completions_godo="
+	godo
+	gorename
+	gomerge
+"
+shell_init_completions_gowhich="
+	gac
+"
+
+##############################################################################
+
+#
+# relies on ssh (only) as the source for host completions,
+# (by extraction from known_hosts) and sets them up to be
+# used for a number of commands
+#
+# TODO: does not handle '[ipaddr]:port' lines in known_hosts
+# TODO: nor "markers" (ie lines beginning with '@')
+#
+shell_init_completions_host ()
+{
+	local cmd
+	local completion_infile=~/.ssh/known_hosts
+	local completion_outfile=$HOSTFILE
+
+	if test \
+		$completion_infile -nt $completion_outfile
+	then
+		echo -n make_host_completions: hosts known to ssh changed,
+		echo \ rebuilding completions
+
+		# generates an /etc/hosts format file out of
+		# known_hosts in order to be useful to
+		# readline for hostname completion
+		#
+		awk '{
+			split($1, aliases, ",");
+			asort(aliases);
+			for (alias in aliases)
+				printf("%s ", aliases[alias]);
+			printf("\n");
+		}' < $completion_infile >| $completion_outfile
+	else
+		# use the cached completions
+		:
+	fi
+
+	set -- ${!FUNCNAME}
+	for cmd; do complete -A hostname $cmd; done
+}
+
+shell_init_completions_file ()
+{
+	local cmd
+	set -- ${!FUNCNAME}
+	for cmd; do complete -A file $cmd; done
+}
+
+shell_init_completions_go ()
+{
+	local gotype gosuffix gocmd
+
+	for gotype in ${!shell_init_completions_go*}; do
+		for gocmd in ${!gotype}; do
+			gosuffix=${gotype##*_go}
+			complete -F do_completions_go$gosuffix $gocmd
+		done
+	done
+}
+
+##############################################################################
+#
+# these are retained after we exit, used by the completion
+# routines themselves each time (ie we are complete -F)
+#
+
+do_completions_go ()
+{
+	local completion_command="$1"
+	local to_complete=${COMP_WORDS[COMP_CWORD]}
+
+	if [[ "$to_complete" =~ : ]]
+	then
+		# we have already completed at least one
+		# level of hierarchy so just complete the
+		# whole rest of it
+		#
+		COMPREPLY=($(
+			eval "$completion_command" |
+			command grep ^"$to_complete"
+		))
+	else
+		# we are still completing the first
+		# component so only consider through the
+		# first hierarchy delimiter
+		#
+		COMPREPLY=($(
+			eval "$completion_command" |
+			awk -F : '{print $1}' |
+			uniq |
+			command grep ^"$to_complete"
+		))
+	fi
+}
+
+do_completions_godo	() { do_completions_go "gorecent";		     }
+do_completions_goassoc	() { do_completions_go "(cd $GOBASE_ASSOC; ls -1t)"; }
+do_completions_gowhich	() { do_completions_go "(cd $GOBASE_ASSOC; \
+						 ls -1dt $(<~/.gowhich):* )"; }
+
+##############################################################################
+
+source ~/.bash/initfuncs
+
+# sudo just prefixes any ordinary command
+#
+complete -c -A file sudo
+complete -c -A file s # complete builtin is not alias-aware

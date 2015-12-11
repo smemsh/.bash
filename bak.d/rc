@@ -1,0 +1,32 @@
+#
+
+histchars='!^#' # todo: ~/upsrc/bash/bash-history-bug
+
+cd ~/.bash || { echo "no bash rcdir" >&2; return 3; }
+
+for file in rc.d/*; do
+	if ! source ${file:?}; then
+		echo "bash: init: sources: $f: failed" >&2
+		return 4; fi; do; done
+
+srcfiles=(options goassoc)
+
+source ./init ${srcfiles[@]} || return
+
+if ! [[ $PS1 ]]; then cd; return; fi
+
+### interactive shells only ###################################################
+
+source ~/lib/sh/include || { echo "include init failed"; return 15; }
+source ~/lib/sh/interactive || { echo "interactive failed";  return 17; }
+for file in rc.d/*; do source ${file:?}; done
+
+allinclude || { echo "includes failure"; return 30; }
+#goassoclast || { echo "assoc failure"; return 40; }
+
+cd
+
+##
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH

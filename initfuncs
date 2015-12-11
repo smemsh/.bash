@@ -1,0 +1,22 @@
+#
+# define initialization functions, execute, and unset
+#
+# - any script which wants to do this should simply source
+#   this file at the end of setting up the so-named
+#   functions/variables
+#
+# - all functions with the prefix "shell_init_" will be
+#   executed and then erased from the environment, along with
+#   variables sharing this same prefix
+#
+# - execution occurs in lex order
+#
+
+for shell_init_func in $(
+	compgen -A function shell_init
+); do
+	$shell_init_func
+	unset -f $shell_init_func
+done
+
+unset ${!shell_init*}

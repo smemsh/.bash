@@ -1,0 +1,31 @@
+#
+# make sure the shell has important identity variables set
+# in the environment
+#
+##############################################################################
+
+# HOME, LOGNAME and USER can get unset: they are typically
+# exported by 'login' but ie 'env - bash' can start a new
+# shell without it, and a user can unset these variables
+# themselves.  *Only* in the case of a login shell,
+# 'bash' sets HOME itself from the user pwent.  This code is
+# used in tilde expansion, via tilde_expand_word() ->
+# sh_get_home_dir(), which we use ourselves to set it for
+# the mentioned uncovered cases
+#
+# UID is always set by the shell to the real UID
+#
+# TODO: should we be using EUID?
+# TODO: how to do this without calling an executable? if so,
+#       should probably be in rc.d/ instead of term.d/
+#       NOTE: checked in freenode#bash, this facility is simply not available.
+#       TODO: submit bug to bashbug with patch to prefill HOME, USER, UID
+#	(UID already done).  in meantime, use the 'id' callout, out of necessity
+#
+[[ $LOGNAME ]] || export LOGNAME=$(id -un $UID)
+[[ $USER ]] || export USER=$LOGNAME
+
+# use bash tilde expansion lib to read pw-specified homedir
+#
+[[ $HOME ]] || eval HOME=~$USER
+export HOME

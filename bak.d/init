@@ -1,0 +1,26 @@
+#
+# - set up preliminary environment
+# - we are sourced second after main rcfile (by it)
+# - prepares sane env to source rest of bash setup files
+# - run for both interactive and non-interactive shells
+#
+##############################################################################
+
+unset -f $(compgen -A function)
+
+# this is not portable
+#ulimit -n 4096 # max possible from -nH, default -nS is 1024
+#ulimit -u 8192 # we hit 1024 pretty easily and had issues
+
+umask 002 # share with group, typically 'sysadmin'
+
+unset IFS # defaults it
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+# posix mode causes too much wasted time debugging word
+# splitting issues and other surprises
+#
+if [[ $POSIXLY_CORRECT ]]; then
+	echo "bash: init: overrode posix mode" >&2
+	set +o posix
+fi

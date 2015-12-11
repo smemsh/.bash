@@ -1,0 +1,13 @@
+#
+
+squeeze_str ()
+{
+	local result=$(
+		echo "${@}"		|
+		sed 's,\n, ,g'		|
+		sed 's,\t, ,g'		|
+		tr -s ' '
+	)
+
+	echo "$result"
+}

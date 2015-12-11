@@ -1,0 +1,5 @@
+#
+
+svnurl     () { svn info $1 | grep -i ^url: | awk '{print $2}'; }
+svnrev     () { svn info $1 | grep -i ^revision: | awk '{print $2}'; }
+svnlastmod () { svn info $1 | grep -i ^last.changed.rev: | awk '{print $4}'; }

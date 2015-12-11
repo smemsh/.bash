@@ -1,0 +1,23 @@
+#
+
+free ()
+{
+	# if arguments are provided, use the standard one
+	#
+	if (($#))
+	then command free "$@"; return; fi
+
+	szval=${szval:-'m'}
+
+	# otherwise use our own that squeezes the columns
+	# and removes the "shared" column as obsolete
+	# (according to man page)
+	#
+	command free -o$szval \
+	| awk '{if (NR == 1) printf("- ") print }' \
+	| awk '{$5 = ""; print;}' \
+	| column -t
+}
+
+freem () { local szval=m free "$@"; }
+freeg () { local szval=g free "$@"; }

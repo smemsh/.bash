@@ -1,0 +1,8 @@
+#
+# Have the shell invoke routines on init.
+#
+# Any such routine should already be defined from sourcing
+# "functions/*" or elsewhere.
+#
+
+init_agents
