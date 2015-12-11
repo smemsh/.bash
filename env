@@ -1,0 +1,114 @@
+#
+
+export LINES
+export COLUMNS
+
+esetenv USER		${LOGNAME:-nologname}
+
+esetenv MAILPATH	~/Maildir/
+esetenv MAILCHECK	60
+
+esetenv HOSTFILE	~/var/ssh/completions
+
+# (history environment is in .bash/history)
+
+# basic stuff we want on all machines
+esetenv PATH				\
+	$HOME/bin:			\
+	/opt/local/bin:			\
+	/usr/local/bin:			\
+	/usr/bin:			\
+	/bin:				\
+	/opt/local/sbin:		\
+	/usr/local/sbin:		\
+	/sbin:				\
+	/usr/sbin
+
+esetenv LD_LIBRARY_PATH			\
+	$HOME/lib:			\
+	/opt/local/lib:			\
+	/usr/X11R6/lib:			\
+	/usr/local/lib
+
+#esetenv MAIL				\
+#	$HOME/Maildir/
+
+esetenv PERLLIB		/usr/local/lib/perl5/site_perl/5.8.8
+
+esetenv SCM		file://$HOME/var/scm
+esetenv VISUAL		vim
+esetenv EDITOR		vim
+esetenv PAGER		"less -iR"
+esetenv MANPAGER	"${PAGER}s"
+esetenv CVSROOT		cvs.replaceme.com:/home/sysadmin/cvs
+esetenv CVS_RSH		ssh
+esetenv LESS		"-nSR"
+
+esetenv LESSPIPE	"|lesspipe.sh %s"
+esetenv ORACLE_BASE	/var/oracle
+esetenv ORACLE_HOME	/opt/oracle/9i
+esetenv ORACLE_OWNER	oracle
+
+esetenv LDAPTLS_CACERT $HOME/.cacerts
+
+# platform specific stuff
+case `uname -s` in
+	(Linux)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib
+	;;
+
+	(SunOS)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/openwin/bin:	\
+		/usr/ccs/bin:		\
+		/usr/ucb
+	;;
+
+	(HP-UX)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/contrib/bin:	\
+		/opt/sudo/bin:		\
+		/opt/tusc/bin:		\
+		/usr/local/pa20_64/bin
+	;;
+
+	(SunOS)
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/openwin/lib
+	;;
+
+	(CYGWIN*)
+	esetenv PATH			\
+		$PATH:			\
+		/usr/X11R6/bin
+	esetenv LD_LIBRARY_PATH		\
+		$LD_LIBRARY_PATH:	\
+		/usr/X11R6/lib
+	esetenv PAGER			"${PAGER}C"
+	esetenv MANPAGER		"${MANPAGER}C"
+	;;
+esac
+
+for basedir in						\
+	$HOME/share/vim					\
+	/usr/local/share/vim				\
+	/usr/share/vim
+do
+	test -d $basedir && break
+done
+
+(($?)) || esetenv VIM $basedir/vim[[:digit:]]*
+unset basedir
+
+test $? -eq 0 ||
+	echo warning: no VIM environment variable was set
+
+# vim:syn=sh:

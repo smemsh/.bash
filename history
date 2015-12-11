@@ -1,0 +1,46 @@
+#
+
+esetenv TERMINAL	$(tty)
+esetenv TERMINAL	${TERMINAL#/dev/}
+esetenv TERMINAL	${TERMINAL/pts\//pts_}
+esetenv HISTSIZE	$(($((2**31)) - 1))
+esetenv HISTFILESIZE	$HISTSIZE
+esetenv HISTCONTROL	"ignorespace"
+esetenv HISTTIMEFORMAT	"%Y%m%d%H%M%S "
+esetenv HISTIGNORE	"f:f *:"					\
+			"fg:fg *:"					\
+			"gf:gf *:"					\
+			"fm:mf:"					\
+			"j:"						\
+			"man *:"					\
+			"info *:"					\
+			"hist*:"					\
+			"rml:"						\
+			"1:2:3:4:5:6:7:8:9:10:"				\
+			"11:12:13:14:15:16:17:18:19:20:"		\
+			"21:22:23:24:25:26:27:28:29:30"
+
+export GOREASON HISTFILE
+
+if [[ "$USER" == root ]]
+then
+	unset GOREASON
+	HISTFILE=~root/.bash_history
+
+# only play with history file locations if we are running in
+# a goto environment
+#
+elif test -d ~/var/goto/reasons
+then
+	GOREASON=${GOREASON:-$(< ~/var/goto/reasons/$(< ~/var/goto/vt/current))}
+
+	# *must* be rooted in our history dir: goassoc()
+	# assumes it
+	#
+	if ! [[ $HISTFILE =~ var/bash/history ]]; then
+		HISTFILE=~/var/bash/history/$LOGNAME.$TERMINAL.$GOREASON
+	fi
+else
+	HISTFILE=~/var/bash/history/$LOGNAME.$TERMINAL # XXX FIXME probably DNE
+fi
+

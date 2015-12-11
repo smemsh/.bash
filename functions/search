@@ -1,0 +1,43 @@
+#
+
+# these could cause a security problem because we do an
+# "eval" of the string; they may also be significant in HTML
+urlencode ()
+{
+	local s="$1"
+
+	s=${s// /%20}
+	s=${s//\\/%5c}
+	s=${s//\`/%60}
+	s=${s//\$/%24}
+	s=${s//\&/%26}
+	s=${s//\"/%22}
+	s=${s//\'/%27}
+	s=${s//\</%3c}
+	s=${s//\>/%3e}
+
+	echo $s
+}
+
+do_gg ()
+{
+	local search
+	local param
+	local quote
+	local browser_to_use="$1"; shift
+
+	while (($# > 0)); do
+		param=`urlencode "$1"`
+		[[ $param =~ %20 ]] && quote=%22
+		search=$search+$quote$param$quote
+		unset quote
+		shift
+	done
+	search=${search/+/}
+
+	sbase="www.google.com/search\?q="
+	eval $browser_to_use $sbase$search
+}
+
+gg  () { do_gg elinks "$@";		}
+ggg () { do_gg "links2 -g" "$@";	}

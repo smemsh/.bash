@@ -1,0 +1,51 @@
+#
+
+lsa ()
+{
+	ls -nhlAF --color=always --sort=size --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	less -XER
+}
+
+# all, long, unsorted, page
+lsu ()
+{
+	ls -lAF --color=always --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	less -ER
+}
+
+# lsa but wide
+lsf ()
+{
+	ls -CAFw $COLUMNS --color=always \
+	"$@" |
+	less -ERX
+}
+
+# lsf but without dotfiles, useful in a home dir
+lsh ()
+{
+	ls -CFw $COLUMNS --color=always \
+	"$@" |
+	less -ERX
+}
+
+# lsa just dirs
+lsd ()
+{
+	ls -lAF --color=always --time-style=+$HISTTIMEFORMAT \
+	"$@" |
+	grep /\$ |
+	less -ER
+}
+
+# lsa wide nopage; lsr instead of lsw for faster typing
+lsr ()
+{
+	ls -CAF --color=always \
+	"$@" |
+	less -ER
+}
+
+# vim:syn=sh:

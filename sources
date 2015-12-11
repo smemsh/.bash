@@ -1,0 +1,17 @@
+#
+
+trap 'echo sources:$LINENO: returned $?' ERR
+
+source initfuncs
+source env
+source aliases
+source builtins
+source history
+source goto
+source prompt
+source terminal
+source completions
+source callfuncs
+source traps
+
+trap "" ERR

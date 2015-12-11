@@ -1,0 +1,101 @@
+#
+# Implement function types, the registration, maintenance
+# and actual handler functions for those types.
+#
+# XXX TODO finish this
+return
+#
+
+# Keep track of functions we want to demolish when the shell
+# has started by using wrapper names to define functions
+# that specify if we want to keep them or not.
+#
+
+declare -a discardfuncs
+declare -a keepfuncs			# we don't use this right now
+
+
+#
+# Simulate a "static" declaration for a function.  This is
+# used always and only in source immediately prior to a
+# function declaration.  What we do is stow away our line
+# number and filename, and then later on, use them to find
+# out the function declaration that follows.  That function
+# will then be stripped of its export flag, thus simulating
+# static functions.
+#
+static ()
+{
+	register_function_as static
+	addarr static_functions ${BASH_SOURCE[1]} $((LINENO + 1))
+}
+
+alias	static		discardfunc
+
+for alias in function{,_{def,keep,nokeep}}; do
+	unalias $alias &>/dev/null
+	unset $alias &>/dev/null
+done
+
+
+keepfunc ()
+{
+	keepfuncs+=($1)
+	echo $function_def $1 '()'
+}
+
+discardfunc ()
+{
+	addarr discardfuncs $1
+}
+
+register
+discard_functions ()
+{
+	for func in ${discardfuncs[@]}; do
+		unset $func
+	done
+
+	unset discardfuncs
+	unset keepfuncs
+	trap "unset $FUNCNAME" RETURN
+	unalias function_def
+	unalias function
+}
+
+do_register_function ()
+{
+	local	registry=$1
+	local	sourcefile=$2
+	local	funcline=$3
+
+	addarr	$(registry_name $registry)
+		$(getfunc_byloc $sourcefile $funcline)
+}
+
+alias	register_function_as		\
+	do_register_function		\
+	$(sourcefile)			\
+	$(nextline)
+
+# given a source file and line number, which function is
+# declared there, returned as string
+getfunc_byloc ()
+{
+	local file=$1
+	local line=$2
+
+	shopt -s
+}
+
+# caller's source filename
+sourcefile ()
+{
+	echo ${BASH_SOURCE[1]}
+}
+
+# caller's line number + 1
+nextline ()
+{
+	echo $((${BASH_LINENO[1]} + 1))
+}

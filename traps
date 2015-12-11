@@ -1,0 +1,9 @@
+#
+# Initialize shell signal and special event traps
+#
+
+# allow us to give arbitrary commands to running instances
+# via signals
+#
+trap "source ~/var/bash/signals/usr2" USR2
+trap "source ~/var/bash/signals/usr1" USR1

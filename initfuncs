@@ -1,0 +1,18 @@
+#
+# Establish our custom functions in the interactive
+# shell environment.
+#
+
+# set up early required shell functions; may be used
+# without redefinition by some of the "functions/*"
+#
+setenv	() { local _v=$1; shift; IFS= eval $_v="\$*";	}
+esetenv	() { export $1; setenv "$@";			}
+bomb	() { echo "$1" >&2; return 1;			}
+
+# source all the "functions/*" to get them defined.
+#
+cd functions
+for file in *; do source $file; done
+
+cd - &>/dev/null

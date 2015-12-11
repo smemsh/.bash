@@ -1,0 +1,59 @@
+#
+
+fxg ()
+{
+	(test $# -eq 0 || test $# -gt 2) && {
+		  echo "$FUNCNAME: requires optional base dir (arg1)" \
+		  	"and grep pattern (arg2)"
+		  return 1
+	}
+	if test -z "$2"; then
+		directory=.
+	else
+		directory="$1"
+		shift
+	fi
+
+	find "$directory"/ -type f -print0 |
+	xargs -0 grep "$1"
+}
+
+fxgi ()
+{
+	(test $# -eq 0 || test $# -gt 2) && {
+		  echo "$FUNCNAME: requires optional base dir (arg1)" \
+		  	"and grep pattern (arg2)"
+		  return 1
+	}
+	if test -z "$2"; then
+		directory=.
+	else
+		directory="$1"
+		shift
+	fi
+
+	find "$directory"/ -type f -print0 |
+	xargs -0 grep -i "$1"
+}
+
+fdni () { local func=$FUNCNAME; local fdnarg=iname; fdn "$@"; };
+fdn ()
+{
+	local -x func=$FUNCNAME
+
+	(test $# -eq 0 || test $# -gt 2) && {
+		  echo "$func: requires optional base dir (arg1)" \
+		  	"and name pattern (arg2)"
+		  return 1
+	}
+	if test -z "$2"; then
+		directory=.
+	else
+		directory="$1"
+		shift
+	fi
+
+	find "$directory"/ -${fdnarg:-name} \*"$1"\*
+}
+
+#vim:syn=sh:

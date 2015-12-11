@@ -1,0 +1,60 @@
+#
+
+# We only want this used with interactive shells.  Make sure the caller is
+# already sure.
+do_ssh_agent()
+{
+	local _testfile
+	local _ssh_agent
+	local _ps_test
+	local _agents
+
+	# make sure there's an agent file for this host
+	_ssh_agent=~/var/ssh/agent.`hostname`
+	if test -f $_ssh_agent; then
+
+		# make sure we have the requisite programs
+		for _testfile in ssh-agent ssh-add; do
+			type $_testfile &>/dev/null || {
+				echo do_ssh_agent: requisite programs not \
+					found in path
+				return 1
+			}
+		done
+
+		# gather list of running ssh agents, but discard any that
+		# include arguments; GNOME seems to run an agent for some
+		# reason, which we don't want to use
+		_agents=($(pgrep -f ssh-agent\$))
+
+		test ${#_agents[@]} -gt 1 && {
+			echo do_ssh_agent: more than one agent running, \
+				aborting in favor of manual fix
+			return 1
+		}
+
+		# test that the running agent's PID is the same as the cached
+		# one (and force an inequality if there isn't one running or
+		# the agent cache file is empty)
+		source $_ssh_agent &>/dev/null
+		test ${_agents[0]:-0} -eq ${SSH_AGENT_PID:-1} &&
+			return 0
+
+		# otherwise we have a stale one laying around, or haven't
+		# started one yet
+		unset SSH_AUTH_SOCK SSH_AGENT_PID
+		if ssh-agent >| $_ssh_agent; then
+			echo do_ssh_agent: starting new agent for \
+				host `hostname`
+			source $_ssh_agent
+			ssh-add $HOME/.ssh/id_dsa
+		else
+			echo do_ssh_agent: errors starting new agent \
+				for host `hostname`
+		fi
+	else
+		# this host doesn't want an agent started (which means I don't
+		# typically sit at its console :)
+		:
+	fi
+}

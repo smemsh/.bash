@@ -1,0 +1,40 @@
+#
+# cooperate with goto scripts
+# only to be loaded on hosts with goto
+#
+
+
+export GOREASON
+export GOASSOC
+export HISTFILE
+
+func ()
+{
+	local +i assoc
+	local +i reason
+
+	local +i logbase=~/var/log/goto/shellhist
+	local +i whybase=~/var/goto/reasons
+
+	[[ "$GOREASON" ]] || {
+		test -d ~/var/goto || return 0
+		test -d $logbase || return 0
+		local +i curfile=~/var/goto/vt/current
+		local +i reasonfile=$whybase/$(< $curfile)
+		test -f $reasonfile && reason=$(< $reasonfile)
+		GOREASON=${reason:-none}
+	}
+
+	[[ "$GOASSOC" ]] || {
+		local -i ttyn=${TERMINAL#tty}
+		local +i assocfile=$whybase/$ttyn
+		test -f $assocfile && assoc=$(< $assocfile)
+		GOASSOC=${assoc:-none}
+	}
+
+	goassoc $GOASSOC
+}
+
+func
+
+unset -f func

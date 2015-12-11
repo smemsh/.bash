@@ -1,0 +1,58 @@
+#
+
+make_host_completions()
+{
+	# use hostname completion in bash for all of these programs.
+	_uses_host_completions=(	\
+		ssh			\
+		sshr			\
+		telnet			\
+		rsh			\
+		scp			\
+		ping			\
+		vncviewer		\
+		rdesktop		\
+	);
+
+	local completion_source_file=~/.ssh/known_hosts
+	local completion_file=~/var/ssh/completions
+
+	if test $completion_source_file -nt $completion_file; then
+		echo -n make_host_completions: hosts known to ssh changed,
+		echo \ rebuilding completions
+		# generates an /etc/hosts format file out of known_hosts in
+		# order to be useful to readline for hostname completion
+		awk '{
+			split($1, aliases, ",");
+			asort(aliases);
+			for (alias in aliases)
+				printf("%s ", aliases[alias]);
+			printf("\n");
+		}' < ~/.ssh/known_hosts >| ~/var/ssh/completions
+	else
+		# use the cached completions
+		:
+	fi
+
+	for program in ${_uses_host_completions[@]}; do
+		complete -A hostname $program
+	done
+}
+
+add_file_completions()
+{
+	_uses_file_completions=(	\
+		scp			\
+	);
+
+	for program in ${_uses_file_completions[@]}; do
+		existing_completion=(`complete -p $program`);
+		unset "existing_completion[0]";
+		complete -f ${existing_completion[@]}
+	done
+}
+
+make_host_completions
+add_file_completions
+
+# vim:syn=sh

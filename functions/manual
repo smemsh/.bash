@@ -1,0 +1,17 @@
+#
+
+man ()
+{
+	local man=man
+	type -t pman &> /dev/null && man=pman
+
+	command $man "$@"
+}
+
+info ()
+{
+	local info=info
+	type -t pinfo &> /dev/null && info=pinfo
+
+	command $info "$@"
+}

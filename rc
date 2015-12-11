@@ -1,0 +1,16 @@
+#
+
+shopt -u sourcepath
+
+### interactive and non-interactive shells ####################################
+
+pushd ~/.bash &>/dev/null || { echo "where is the bashrc dir?";  return  3; }
+source init		  || { echo "init failed";		 return  5; }
+source options		  || { echo "failed option sourcing";	 return 10; }
+[[ $- =~ i ]]		  || { popd &> /dev/null; cd;		 return  0; }
+
+### interactive shells only ###################################################
+
+source ~/lib/sh/include	  || { echo "include init failed";	 return 15; }
+source sources		  || { echo "source failure";		 return 20; }
+popd &>/dev/null	  || { cd;					    }

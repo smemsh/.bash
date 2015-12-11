@@ -1,0 +1,65 @@
+#
+
+# remakes raw PS for sourcing after this file is changed, otherwise just reads
+# it in as-is
+make_prompt()
+{
+	local src_ps=~/.bash/prompt
+	local raw_ps=~/.bash/mkprompt
+
+	if test $src_ps -nt $raw_ps; then
+		echo make_prompt: source changed, rebuilding PS1
+		source ~/.bash/colors
+		cat >| $raw_ps << EOF
+#
+
+# you want to be editing the \"prompt\" file, not this one; this file serves
+# only as the cached output
+#
+esetenv PS1								\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"	"\n"				\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	" \t "				\\
+"\[$CLR_solid_bold_fggreen_bgblack\]"	"\\\${SSH_TTY:+"		\\
+					"\\\${HOSTNAME%%.*}}"		\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"	"\\\${SSH_TTY:+:}"		\\
+"\[$CLR_solid_bold_fgcyan_bgblack\]"	"\\\$GOREASON"			\\
+"\[$CLR_solid_flat_fgcyan_bgblack\]"					\\
+"\\\$("									\\
+"	lastret=\\\$?;"							\\
+"	[[ \\\$GOREASON == \\\$GOASSOC ]] || echo -n :; "		\\
+"	exit \\\$lastret"						\\
+")"									\\
+"\[$CLR_solid_bold_fgcyan_bgblack\]"					\\
+"\\\$("									\\
+"	lastret=\\\$?;"							\\
+"	[[ \\\$GOREASON == \\\$GOASSOC ]] || echo \\\$GOASSOC; "	\\
+"	exit \\\$lastret"						\\
+")"									\\
+"\[$CLR_solid_flat_fggreen_bgblack\]"	" h\! "				\\
+"\[$CLR_solid_bold_fgmagenta_bgblack\]"	"j\j "				\\
+"\[$CLR_solid_bold_fgblue_bgblack\]"	"l\l "				\\
+"\[$CLR_solid_flat_fgmagenta_bgblack\]"	"s\\\${SHLVL} "			\\
+"\[$CLR_solid_flat_fgyellow_bgblack\]"	"r\\\${?} "			\\
+"\[$CLR_solid_bold_fgwhite_bgblack\]"	"["				\\
+"\[$CLR_solid_bold_fgcyan_bgblack\]"	"\w"				\\
+"\[$CLR_solid_bold_fgwhite_bgblack\]"	"]"				\\
+					"\n"				\\
+"\[$CLR_solid_bold_fgyellow_bgblack\]"	" \\\\$ "			\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"
+
+esetenv PS2								\\
+"\[$CLR_solid_bold_fgyellow_bgblack\]"	""				\\
+"\[$CLR_solid_flat_fgwhite_bgblack\]"
+
+EOF
+	else
+		# use the cached prompt
+		:
+	fi
+
+	source $raw_ps
+}
+
+make_prompt
+
+# vim:syn=sh:

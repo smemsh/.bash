@@ -1,0 +1,51 @@
+#
+# Used for both "shopt" and "set -o" options
+#
+
+### shopts ###################################################################
+
+OPT_SHOPTS_SET=(		\
+	cdable_vars		\
+	cdspell			\
+	checkhash		\
+	checkwinsize		\
+	expand_aliases		\
+	extglob			\
+	failglob		\
+	histappend		\
+	histreedit		\
+	hostcomplete		\
+	huponexit		\
+	interactive_comments	\
+	mailwarn		\
+	nullglob		\
+	promptvars		\
+	shift_verbose		\
+)
+
+OPT_SHOPTS_UNSET=(		\
+	cmdhist			\
+	execfail		\
+	histverify		\
+	lithist			\
+	nocaseglob		\
+	sourcepath		\
+)
+
+### options ##################################################################
+
+OPT_SETOPTS_UNSET=()
+OPT_SETOPTS_SET=(		\
+	noclobber		\
+)
+
+##############################################################################
+
+# now actually set the values; only errors will be reported
+#
+shopt -qs	${OPT_SHOPTS_SET[@]}			|| return 1
+shopt -qu	${OPT_SHOPTS_UNSET[@]}			|| return 2
+set -o		${OPT_SETOPTS_SET[@]}	> /dev/null	|| return 3
+set +o		${OPT_SETOPTS_UNSET[@]}	> /dev/null	|| return 4
+
+unset OPT_{SET,SH}OPTS_{,UN}SET

@@ -1,0 +1,63 @@
+#
+
+lsfuncs ()
+{
+	local +i pattern=""
+	local -a argv=("$@")
+
+	# a string of at least one alnum or
+	# underscore					
+	#
+	pattern+='^[[:alnum:]_]+'
+	
+	# followed by an optional string of alnums	
+	# or underscore or space			
+	#
+	pattern+='[[:alnum:]_ ]*'
+
+	# followed by optional whitespace
+	#
+	pattern+='[[:space:]]*'
+
+	# followed by an open paren			
+	#
+	pattern+='\('
+
+	# followed by any number of alnums or		
+	# underscores or asterisks or commas or		
+	# whitespace
+	#
+	pattern+='[[:alnum:]_\*,[:space:]]*'
+
+	# followed by an optional close paren		
+	#
+	pattern+='\)?'
+
+	# followed by (nest)
+	#
+	pattern+='('
+
+		# optional whitespace
+		#
+		pattern+='[[:space:]]*'
+
+		# followed by an opening brace
+		#
+		pattern+='{'
+
+		# followed by any text
+		pattern+='.*'
+
+	# end nest and make optional
+	#
+	pattern+=')?'
+
+	# followed by line end				
+	#
+	pattern+='$'
+
+	(($#)) || argv+=(*)
+
+	egrep -h "$pattern" ${argv[@]} |
+	field 0
+}

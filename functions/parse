@@ -1,0 +1,139 @@
+#
+# Parsing and splitting routines.
+#
+
+#
+# Takes a range specifier and returns all the field numbers
+# contained in the specification
+#
+# range specifier is a comma separated list of ranges, where
+# ranges are either single numbers or first-last contiguous
+# sequences, so for example:
+#
+# 	1-3,4,8,7-10
+#
+# would return "1 2 3 4 8 7 8 9 10" to the caller
+#
+# XXX TODO this should probably be a utility function
+# available to other sourcefiles without having to bring in
+# the whole parse module
+#
+expand_range ()
+{
+	local +i arg=$1
+
+	local -a result
+	local +i portion
+	local -i len
+	local -i start
+	local -i end
+	local -i i
+
+	while [[ "$arg" ]]; do
+		portion=${arg%%,*}
+		len=${#portion}
+		arg=${arg:len+1}
+		start=${portion%-*}
+		end=${portion#*-}
+		if [[ "$start" ]]; then
+			for ((i = start; i <= end; i++)); do
+				result+=($i)
+			done
+		else
+			result+=($portion)
+		fi
+	done
+
+	echo ${result[@]}
+}
+
+#
+# usage: field n (delim=whitespace, n=fieldnum)
+# usage: field d n (delim=d, n=fieldnum)
+#
+field ()
+{
+	# stow IFS in case we change it so we can reset it
+	# back to its previous setting after the function
+	# runs; we can't just reset IFS to its default
+	# because it could be set to a non-default value
+	#
+	local +i saved_ifs="$IFS"
+
+	# if 2 args, make arg2 the field specification,
+	# otherwise arg1; note that `$frange' might be a
+	# range specification so we make it a string for now
+	#
+	local +i frange=${2:-$1}
+	local -a fields=(`expand_range $frange`)
+	local -i field
+
+	# if 2 args, make arg1 the field delimiter,
+	# otherwise leave it unchanged
+	# XXX TODO make split on full strings not just chars
+	#
+	local +i fdelim=${2:+$1}
+	((${#fdelim} > 1)) && bomb "string delimiters not yet implemented"
+	IFS=${fdelim:=$IFS}
+
+	# - split up the input into fields as delimited by the
+	#   given delimiter, or just whitespace if none was given
+	#
+	# - only echo the particular fields that were
+	#   requested with the range argument
+	#
+	local -a line
+	while read -a line; do
+		for field in ${fields[@]}; do
+			echo -n "${line[field]} " \
+				2>/dev/null # suppress "broken pipe"
+		done
+		echo # trailing newline
+	done
+
+	# reset IFS to the value it had when we first
+	# entered the function
+	#
+	IFS="$saved_ifs"
+}
+
+# incomplete and may be unnecessary:
+# ... | field | field | field
+#
+# or maybe implement | split delim | field
+#
+#function \
+#record ()
+#{
+#	local -a line
+#
+#	# if two args, make arg1 the record delimiter,
+#	# otherwise leave it empty
+#	local +i delim=${2:+$1}
+#	((${#delim} > 1)) && bomb "string delimiters not yet implemented"
+#
+#	# if 2 args, make arg2 the record specification,
+#	# otherwise arg1; break down the record
+#	# specification into a list of records to select
+#	#
+#	local +i range=${2:-$1}
+#	local -a records=(`expand_range $range`)
+#	local -i record=0
+#	local -i i=0
+#
+#	#
+#	# We do this bit of trickery instead of just
+#	# "while read...do" due to the fact that `read'
+#	# returns false on the last record if it does not
+#	# have a trailing delimiter, so we miss printing the
+#	# last record if we don't do so after a false but
+#	# before breaking out of the loop.  See msgids
+#	# <47C460C8.10300@web.de> and
+#	# <47C47FBA.4000407@case.edu> in saved mail for full
+#	# explanation.
+#	#
+#	while true; do
+#		read ${delim:+"-d $delim"} || { echo $REPLY; break; }
+#		echo $REPLY
+#	done
+#}

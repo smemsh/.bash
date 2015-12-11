@@ -1,0 +1,17 @@
+#
+# Initial bash run control.
+#
+# Establishes sanity in the environment and safe values for
+# special variables, before doing anything else.
+#
+
+umask	002
+
+unset	IFS PATH
+export	IFS=$' \t\n'
+export	PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+# disable the evil posix that causes so much wasted time
+# debugging word splitting issues
+#
+set +o posix
