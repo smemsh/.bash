@@ -11,8 +11,8 @@ export LANG=en_US.UTF-8
 sources=(
 	rc.d/*
 	${PS1:+setenv}
-	${PS1:+term.d/*}
 	${PS1:+func.d/*}
+	${PS1:+term.d/*}
 	${PS1:+~/lib/sh/include}
 	${PS1:+~/lib/sh/interactive}
 )
