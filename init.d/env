@@ -328,7 +328,8 @@ shell_init_vim ()
 		${HOME:?} \
 		/usr/local \
 		/opt/local \
-		/usr
+		/usr \
+		;
 	do
 		vim=$base/share/vim
 		test -d $vim &&
