@@ -339,7 +339,7 @@ shell_init_vim ()
 	# if we found it, glob the version number dirs, find
 	# the latest by lex sort, and set up environment to use it
 	#
-	if (($? == 0))
+	if (($? == 0)); then
 		set -- $vim/vim[[:digit:]]* || return
 		export VIM=${!#}
 		export VISUAL=vim
