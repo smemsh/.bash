@@ -1,7 +1,7 @@
 #
 # quick hack, forked from do_ssh_agent() to generalize,
 # since the same paradigm was needed for a dbus agent
-# --smm20130823123744
+#       --smm20130823123744
 #
 ##############################################################################
 
@@ -9,7 +9,8 @@ init_agents ()
 {
 	do_agent ssh \
 		"ssh-agent" \
-		"ssh-add $HOME/.ssh/id_dsa" \
+		'sed -i "/^echo/d"' \
+		"ssh-add" \
 		SSH_{AGENT_PID,AUTH_SOCK}
 
 # XXX TODO trying to see if we just do dbus-launch once, are
@@ -22,21 +23,23 @@ return
 		 -e "1{s,.*,export DBUS_SESSION_BUS_ADDRESS=&,p}" \
 		 -e "2{s,.*,export DBUS_SESSION_BUS_PID=&,p}" \
 		' \
+		"" \
 		DBUS_SESSION_BUS_{PID,ADDRESS}
 }
 
 do_agent ()
 {
 	local name=$1
-	eval "local cmdline=($2)" # bad hack, close your eyes!
-	eval "local runafter=($3)"
-	shift 3
+	eval "local cmdline=($2)"       # run this, record output to tmpfile
+	eval "local transform=($3)"     # then run this, tmpfile as last arg
+	eval "local runafter=($4)"      # then run this, after sourcing tmpfile
+	shift 4
 
 	local vars=($@)
 	local exe=$cmdline
 	local pidvar=$vars # first one in array always holds pid
 	local agentdir=~/var/agents
-	local pidfile=$agentdir/${HOSTNAME:?}/$name
+	local cmdfile=$agentdir/${HOSTNAME:?}/$name
 
 	# berkeley unix does not have a default template, so
 	# we have to supply one
@@ -45,7 +48,7 @@ do_agent ()
 
 	# we don't want these to end up in the root shellfunc
 	# namespace so make them nested functions (really we
-	# should be using library routines anyways)
+	# should be using library routines anyways TODO)
 	#
 	eprint () { echo "$0: $@" >&2; }
 	err () { eprint $1; false; }
@@ -61,36 +64,45 @@ do_agent ()
 	type -P $exe &>/dev/null ||
 		{ err "$exe not found in path"; return; }
 
-	# presence of pidfile indicates that we should run on this host
+	# presence of cmdfile indicates that we should run on this host
 	#
-	test -f $pidfile || return
+	test -f $cmdfile || return
 
 	# do not run if the one running already is known to us
 	#
-	source $pidfile &>/dev/null
+	source $cmdfile
 	((agentpid && agentpid == ${!pidvar:-0})) && return
 
 	# otherwise we have a stale one laying around, or haven't
-	# started one yet, so do so
+	# started one yet, so do it, writing output to new tmpfile
 	#
 	unset ${vars[@]}
+	if ((${#cmdline[@]}))
+	then eval '"${cmdline[@]}" >| $tmpfile' ||
+		{ err "bad start: $name"; return; }; fi
 
-	# <wince> but seems to be necessary since even
-	#    array=('"*"')
-	# tries to expand the glob???
+	# transform the tmpfile with the commands if non-empty, with
+	# tmpfile given as last argument (useful for e.g. sed -i)
 	#
-	eval '"${cmdline[@]}" >| $tmpfile' ||
-		{ err "bad start: $name"; return; }
-	eval '"${runafter[@]}" $tmpfile' ||
-		{ err "bad after for $name"; return; }
+	if ((${#transform[@]}))
+	then eval '"${transform[@]}" $tmpfile' ||
+		{ err "bad transform for $name"; return; }; fi
 
-	mv $tmpfile $pidfile ||
+	# put into its proper place for next time (to source)
+	#
+	mv $tmpfile $cmdfile ||
 		{ err "cound not rename $tmpfile"; return; }
 
-	# now that we have created the file, bring it into the environment
+	# and now that we have created the cmdfile, source it ourselves
 	#
-	source $pidfile &>/dev/null ||
-		{ err "bad pidf: $pidfile"; return; }
+	source $cmdfile ||
+		{ err "bad pidf: $cmdfile"; return; }
+
+	# finally, run the given after-command if specified
+	#
+	if ((${#runafter[@]}))
+	then eval '"${runafter[@]}"' ||
+		{ err "bad runafter for $name"; return; }; fi
 
 	echo "started new $name agent for host $HOSTNAME"
 }
