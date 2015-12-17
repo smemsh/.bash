@@ -25,7 +25,9 @@ esetenv HISTIGNORE	"f:f *:"					\
 # This is still used by the shell to determine where to
 # append (-o histappend) or to overwrite (+o histappend)
 # when it exits; it then dumps the history contents here.
-# We are doing it ourselves so we want bash to write it to
-# nowhere, but there is no way to shut it off.
+# We are doing it ourselves right now in $PROMPT_COMMAND
+# so we turn it off completely
 #
-export HISTFILE=~/.bash_history
+#export HISTFILE=~/.bash_history
+#export HISTFILE=/dev/null
+unset HISTFILE
