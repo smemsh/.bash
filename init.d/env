@@ -31,8 +31,7 @@ esetenv XDG_CONFIG_DIRS			/etc/xdg
 #esetenv XDG_RUNTIME_DIR
 
 esetenv HOSTFILE			~/var/ssh/completions
-esetenv PROMPT_COMMAND			"test -f $HOME/bin/promptcmd.sh " \
-					"&& source $HOME/bin/promptcmd.sh \$?"
+esetenv PROMPT_COMMAND			'prompt_command $?'
 
 # TODO: this is really just a readlink of /proc/self/fd/0
 # (but that only works on linux), maybe we want this in OS-specific

@@ -1,0 +1,60 @@
+#
+# called by bash via $PROMPT_COMMAND after a command completes
+#
+# - expects return value of previous command as sole argument
+# - logged timestamps will reflect command completion, not start
+#
+##############################################################################
+
+prompt_command ()
+{
+	# get path settings, etc
+	#
+	[[ "$GORC" ]] || return 5
+	test -e $GORC || return 10
+	test -r $GORC || return 13
+	source $GORC  || return 15
+
+	local num time_t command file
+
+	local now_time_t="$(date +%s)"
+	local now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
+
+	# get dynamic goassoc vars
+	#
+	GOLOGVALS=(
+		$GOASSOC
+		$now_timefmt
+		$GOTTY_TYPE
+		$GOTTY_NUM
+		$SHLVL
+		$1 # passed by shell in `$PROMPT_COMMAND': previous command result code
+	)
+
+	# read in the last command from bash's history
+	# note: must use raw read (with '-r') or '\n' etc will log as 'n'
+	#
+	read -r num time_t command <<< "$(HISTTIMEFORMAT="%s "; history 1)"
+
+	# gather command and metadata that we'll write to log file
+	#
+	GOLOGLAST="$GOLOGLINE"
+	GOLOGLINE="${GOLOGVALS[*]} $command"
+
+	# check that we haven't seen it already; this happens on empty command
+	# TODO: why the check against GOSTART? when can it happen?
+	#
+	[[ $GOLOGLAST == $GOLOGLINE ]] && return
+	((time_t < GOSTART)) && return
+
+	# now write them to the log files we maintain for goassoc
+	#
+	echo "$GOLOGLINE" >> $GOLOG_CMDS		# logfile1
+	echo "$GOLOGLINE" >> $GOLOG_MOST		# logfile2
+	for file in $GOLOG_FULL $GOLOG_BASH; do		# logfile3, logfile4
+		printf "#%u\n%s\n" \
+			"$time_t" \
+			"$command" \
+		>> $file
+	done
+}
