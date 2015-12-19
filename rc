@@ -17,8 +17,11 @@ sources=(
 	${PS1:+~/lib/sh/interactive}
 )
 
-for f in ${sources[@]}; do source $f ||
-	{ echo "$f: aborted $?" >&2; return 10; }; done
+for f in ${sources[@]}
+do if test -f $f; then
+	if ! source $f; then
+		echo "$f: aborted $?" >&2
+		return 10; fi; fi; done
 
 unset f sources
 
