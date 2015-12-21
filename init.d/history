@@ -1,5 +1,5 @@
 #
-# TODO this should be an 'env' or 'env.d/' file
+# TODO this should be 'env' stanza or an 'env.d/' file
 
 esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 
