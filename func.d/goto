@@ -124,7 +124,7 @@ goassoc ()
 	# enable go by last next time but don't update it if
 	# just some junk
 	#
-	[[ $GOASSOC != "(none|misc|$(<~/.gowhich):misc)" ]]  &&
+	[[ $GOASSOC != "(none|misc|$(<~/.gowhich):misc)" ]] &&
 		printf $GOASSOC >| ~/var/go/assoc/last
 }
 
