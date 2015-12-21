@@ -3,8 +3,9 @@
 
 esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 
-# these aren't used anymore because we bypass the shell's
-# logging system -- everything is logged -- but we should fix
+# these aren't used anymore because we bypass the shell's own
+# logging system (everything is logged via $PROMPT_COMMAND)
+# but we should fix
 #
 esetenv HISTSIZE	$(($((2**31)) - 1))
 esetenv HISTFILESIZE	$HISTSIZE
