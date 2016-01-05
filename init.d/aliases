@@ -10,13 +10,13 @@ alias ()
 {
 	local name argn commands
 
-	if (($# < 2))
-	then echo "$FUNCNAME: need 2+ args ($@)" >&2; return 1; fi
+	if (($# < 2)); then
+		echo "$FUNCNAME: need 2+ args ($@)" >&2; return 1; fi
 
 	name=$1; shift
 
-	for ((argn = 1; argn <= $#; argn++))
-	do commands+="${!argn}"; done
+	for ((argn = 1; argn <= $#; argn++)); do
+		commands+="${!argn}"; done
 
 	# TODO: this may not be needed anymore because we only
 	# keep it for the lifetime of this source file, so the
@@ -42,17 +42,21 @@ alias f			"fg"
 alias fm		"fg -"
 alias fp		"fg +"
 
-for ((i = 1; i < 128; i++)) { alias $i "fg $i"; }
-
 alias realias		"source ~/.bash/init.d/aliases"
+alias rebind            "echo re-read-init-file | bind"
 alias recomplete	"source ~/.bash/init.d/completions"
 alias reenv		"source ~/.bash/setenv; source ~/.bash/init.d/env"
-alias bashrc		"source ~/.bash/rc"
-alias initbash		"source ~/.bash/rc"
-alias bashver		"echo ${BASH_VERSINFO[@]}"
+alias reinit		"source ~/.bash/rc"
+alias initbash		"reinit "
+alias bashinit		"reinit "
+alias bashrc		"reinit "
 
+alias bashver		'echo ${BASH_VERSINFO[@]}'
 
-# "cd -" with less letters and no output
+for ((i = 1; i < 32; i++)); do
+	alias $i "fg $i"; done
+
+# "cd -" with less characters and no output
 #
 enable -n .
 alias .			"cd \$OLDPWD"
@@ -163,7 +167,7 @@ alias personal		"mutt -f =personal"
 alias private		"mutt -f =private"
 alias sent		"mutt -f =sent"
 alias inbox		"mutt"
-alias muttdoc		"less /usr/share/doc/mutt*/manual.txt"
+alias muttdoc		"zless /usr/share/doc/mutt*/manual.txt.gz"
 
 ### package management
 
@@ -223,17 +227,30 @@ alias sshsvn		"SVN_SSH=\""					\
 				"-R 8080:localhost:22 "			\
 				"-o \"sendenv SVN_SSH\""
 
+### taskwarrior
+alias taskgc            "task rc.gc=on rc.verbose=nothing // list"
+
 ### uncategorized / TODO
 
-alias g			"links www.google.com"
+alias a                 "tmux attach"
+alias g			"elinks https://www.google.com/"
 alias cvim		"vim -S ~/.cvimrc" # secure vim without temp files
 alias lds		"ldapsearch -LLLx"
 alias mix		"alsamixer -c 0"
+alias eq                "alsamixer -D eq"
 #alias man		"pinfo -m"
 alias mann		"command man"
+alias manw              "MANWIDTH= command man"
 alias rpn		"orpie"
 alias xrun		"DISPLAY=:0"
 alias vimhelp		"vim -c help"
 alias vimro		"vim -R"
+
+alias rel               "lsb_release -si"
+alias ncal              "ncal -Mw"
+alias xv                "pqiv -f"
+alias shred             "shred -zun 50"
+
+alias aptpats           "elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
 
 unset -f alias
