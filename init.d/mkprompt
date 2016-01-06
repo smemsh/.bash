@@ -1,12 +1,12 @@
 #
 # rebuilds cache file '~/var/bash/ps1' for sourcing
 # (after '~/.bash/prompt' has changed, tested during shell init)
+# (see also func.d/prompt for a way to configure in-session)
 #
 ##############################################################################
 
-# TODO: put these booleans in a configuration file somewhere
-# TODO: perhaps combine this and the ~/bin/prompt script
-# TODO: there is no ~/bin/prompt (?), dne ---^
+# TODO: put these in a configuration file somewhere
+# TODO: perhaps combine this and ~/.bash/func.d/prompt ?
 #
 shell_init_prompt_color=${PROMPT_COLORS:-'1'}
 shell_init_prompt_dollar=${PROMPT_DOLLAR:-'1'}

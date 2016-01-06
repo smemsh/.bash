@@ -1,0 +1,33 @@
+#
+# force shell prompt PS1 regeneration based on args given
+# see '~/.bash/init.d/mkprompt' for details (see below)
+#
+# usage: prompt [option] [...]
+# options: nocolors, colors, details, nodetails
+#
+
+prompt ()
+{
+	local PROMPT_REBUILD=1
+	local PROMPT_COLORS PROMPT_DETAILS
+
+	__prompt_nocolors   () { PROMPT_COLORS=0; }
+	__prompt_colors     () { PROMPT_COLORS=1; }
+	__prompt_details    () { PROMPT_DETAILS=1; }
+	__prompt_nodetails  () { PROMPT_DETAILS=0; }
+
+	while [[ $1 ]]; do
+		if [[ $(declare -f __$1) ]]; then
+			eval __$1
+			shift
+		else
+			echo "usage: \"prompt [option] [...]\""
+			echo "options:"
+			for f in `compgen -A function __prompt_`; do
+				echo -e \\t${f#__prompt_}; done
+			return
+		fi
+	done
+
+	source ~/.bash/init.d/mkprompt
+}
