@@ -1,5 +1,5 @@
 #
-# rebuilds cache file '~/var/bash/prompt' for sourcing
+# rebuilds cache file '~/var/bash/ps1' for sourcing
 # (after '~/.bash/prompt' has changed, tested during shell init)
 #
 ##############################################################################
@@ -26,7 +26,7 @@ shell_init_prompt ()
 
 	local colors=~/.bash/colors
 	local infile=~/.bash/init.d/mkprompt
-	local outfile=~/var/bash/prompt
+	local outfile=~/var/bash/ps1
 
 	if test $infile -nt $outfile || ((rebuild))
 	then
@@ -42,8 +42,8 @@ shell_init_prompt ()
 
 		cat >| $outfile <<- .
 			#
-			# \"mkprompt\": source file, for editing and sourcing
-			# \"prompt\": cached output, rebuilt when \"mkprompt\" changes
+			# \"~/.bash/init.d/mkprompt\": source for editing, composes PS1
+			# \"~/var/bash/ps1\": cached PS1, rebuilt when \"mkprompt\" changes
 			#
 			# SAVE RETURN CODE if doing a subshell, and exit with
 			# it (see 'rval' in examples below), so exit status is
