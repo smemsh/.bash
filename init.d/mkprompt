@@ -149,6 +149,8 @@ shell_init_prompt ()
 	source $outfile
 }
 
+# process shell_init_*()
+#
 source ~/.bash/initfuncs
 
 # vim:syn=sh:
