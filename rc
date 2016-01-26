@@ -23,7 +23,7 @@ do if test -f $f; then
 		return 10; fi; fi; done
 
 [[ $PS1 && $(declare -F allinclude) ]] &&
-	allinclude
+	: # allinclude
 
 unset f sources
 
