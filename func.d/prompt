@@ -17,7 +17,7 @@ prompt ()
 	__prompt_nodetails  () { PROMPT_DETAILS=0; }
 
 	while [[ $1 ]]; do
-		if [[ $(declare -f __$1) ]]; then
+		if [[ $(declare -f __prompt_$1) ]]; then
 			eval __$1
 			shift
 		else
