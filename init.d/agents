@@ -55,7 +55,7 @@ do_agent ()
 
 	# is an agent already running?
 	#
-	local agentpid=($(pgrep -u ${UID:?} $exe))
+	local agentpid=($(pgrep -u ${SUDO_UID:-${UID:?}} $exe))
 	((${#agentpid[@]} > 1)) &&
 		{ err "more than one $name agent running"; return; }
 
