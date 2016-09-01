@@ -259,4 +259,6 @@ alias gcpinit_path      "source ~/sdh/gcpsdk/path.bash.inc"
 alias gcpinit           "gcpinit_compl ; gcpinit_path ;"
 alias gce               "gcloud compute"
 
+alias ansplay           "ansible-playbook"
+
 unset -f alias
