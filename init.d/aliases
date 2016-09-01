@@ -252,5 +252,6 @@ alias xv                "pqiv -f"
 alias shred             "shred -zun 50"
 
 alias aptpats           "elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
+alias ggw               "GGBROWSER=vimb gg"
 
 unset -f alias
