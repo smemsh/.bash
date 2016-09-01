@@ -145,6 +145,8 @@ do_completions_gowhich	() { do_completions_go "(cd $GOBASE_ASSOC; \
 #
 complete -r
 
+# run once and remove shell_init_foo() defined above
+#
 source ~/.bash/initfuncs
 
 # sudo just prefixes any ordinary command
