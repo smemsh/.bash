@@ -141,6 +141,10 @@ do_completions_gowhich	() { do_completions_go "(cd $GOBASE_ASSOC; \
 
 ##############################################################################
 
+# start completions fresh with a clean slate
+#
+complete -r
+
 source ~/.bash/initfuncs
 
 # sudo just prefixes any ordinary command
