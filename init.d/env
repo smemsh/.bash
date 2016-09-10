@@ -225,6 +225,8 @@ esetenv GCAL \
 	"--iso-week-number=yes " \
 ;
 
+esetenv LIBGUESTFS_CACHEDIR             /var/cache/libguestfs
+
 ##############################################################################
 
 shell_init_arch_specific ()
