@@ -5,4 +5,4 @@
 # allow us to give arbitrary commands to running instances
 # via signals; reserve USR2 for local invocations
 #
-trap "source ~/var/bash/sigusr1" USR1
+trap "source ~/var/bash/signals/usr1" USR1
