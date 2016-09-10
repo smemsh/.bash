@@ -65,6 +65,10 @@ psetenv LD_LIBRARY_PATH			\
 	/opt/local/lib			\
 ;
 
+psetenv GOPATH                          \
+	$HOME/go                        \
+;
+
 # XXX TODO: hack for macports, not sure why it installs like this
 # XXX UPDATE: now getting segfaults *with* it, removing for now
 #
