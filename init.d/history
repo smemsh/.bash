@@ -5,10 +5,14 @@ esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 
 # these aren't used anymore because we bypass the shell's own
 # logging system (everything is logged via $PROMPT_COMMAND)
-# but we should fix
+# but we still need to set the size to unlimited (empty string)
+# and this value is also inherited by HISTFILESIZE (but we want
+# to export it, so we do it explicitly here); in both cases
+# empty string means unlimited (docs say use negative values,
+# but empty string works on older shells)
 #
-esetenv HISTSIZE	$(($((2**31)) - 1))
-esetenv HISTFILESIZE	$HISTSIZE
+esetenv HISTSIZE	""
+esetenv HISTFILESIZE    "$HISTSIZE"
 #esetenv HISTCONTROL	"ignorespace"
 esetenv HISTCONTROL	""
 esetenv HISTIGNORE	"f:f *:"					\
