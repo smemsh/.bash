@@ -1,5 +1,0 @@
-#
-
-# this is not portable
-#ulimit -n 4096 # max possible from -nH, default -nS is 1024
-#ulimit -u 8192 # we hit 1024 pretty easily and had issues

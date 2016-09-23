@@ -1,9 +1,0 @@
-#
-# Stuff we do to initialize the terminal for interactive
-# shell logins.
-#
-
-#setterm -bfreq
-
-# soft cursor
-#echo -en '\033[?17;0;64c'

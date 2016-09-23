@@ -1,9 +1,0 @@
-#
-# disable/enable particular shell builtins
-#
-
-# allows use of ~/bin/suspend
-enable -n suspend
-
-# looks better anyways, and allows the `.' alias.
-enable -n .
