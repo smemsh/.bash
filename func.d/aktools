@@ -2,50 +2,50 @@
 # TODO: this is very linux and me-specific at the moment, even
 # including my window manager
 
-goassoc ()
+akassoc ()
 {
-	local oldassoc=${GOASSOC:-none}
+	local oldassoc=${AKASSOC:-none}
 	local newassoc=$1
 	local pid
 	local disp
 
 	# user just wants to know what the association is
 	#
-	(($# == 0)) && { echo $GOASSOC; return 0; }
+	(($# == 0)) && { echo $AKASSOC; return 0; }
 
-	# redo all the GO* variables with the new association
+	# redo all the AK* variables with the new association
 	#
-	GOASSOC=$newassoc
-	source $GORC
+	AKASSOC=$newassoc
+	source $AKRC
 
 	# the time this association was started is used to
 	# avoid relogging commands from the history that we
 	# preloaded before any new commands have entered the
 	# history
 	#
-	GOSTART=$(date +%s)
+	AKSTART=$(date +%s)
 
 	# create the dirs and such our infrastructure uses
 	#
-	mkdir -p $GOASSOCDIR || return 1
-	mkdir -p $GOINSTANCE || return 1
-	touch $GOLOG_CMDS || return 1
-	touch $GOLOG_BASH || return 1
+	mkdir -p $AKASSOCDIR || return 1
+	mkdir -p $AKINSTANCE || return 1
+	touch $AKLOG_CMDS || return 1
+	touch $AKLOG_BASH || return 1
 
 	# allow lookup of the association by tty...
 	#
 	if {
 		# sanity checks: be careful any time we use `rm -f' !!
-		((${#GOINSTANCE} > 3)) &&
-		test -d "$GOINSTANCE" &&
-		test -e $GOINSTANCE/assoc
+		((${#AKINSTANCE} > 3)) &&
+		test -d "$AKINSTANCE" &&
+		test -e $AKINSTANCE/assoc
 	}; then
-		rm -f $GOINSTANCE/*
+		rm -f $AKINSTANCE/*
 	fi
 
 	# ...by way of this link
 	#
-	ln -nsf $GOASSOCDIR $GOINSTANCE/assoc
+	ln -nsf $AKASSOCDIR $AKINSTANCE/assoc
 
 	function \
 	wait_atmost_kill ()
@@ -77,7 +77,7 @@ goassoc ()
 		kill_pid_wait $killpid || return 1
 	}
 
-	# ratpoison title should mirrors the shell goreason
+	# ratpoison title should mirrors the shell akreason
 	# association
 	#
 	if [[ "$DISPLAY" ]]
@@ -99,7 +99,7 @@ goassoc ()
 			)
 			[[ $disp =~ $displpat ]]
 			if [[ :${BASH_REMATCH[1]} == ${DISPLAY%.*} ]]; then
-				ratpoison -c "title $GOASSOC"
+				ratpoison -c "title $AKASSOC"
 			fi
 		done
 	fi
@@ -117,79 +117,79 @@ goassoc ()
 	else
 		savedfmt="$HISTTIMEFORMAT"
 		HISTTIMEFORMAT=%s
-		history -cr $GOLOG_BASH
+		history -cr $AKLOG_BASH
 		HISTTIMEFORMAT="$savedfmt"
 	fi
 
-	# enable go by last next time but don't update it if
+	# enable ak by last next time but don't update it if
 	# just some junk
 	#
-	[[ $GOASSOC != "(none|misc|$(<~/.gowhich):misc)" ]] &&
-		printf $GOASSOC >| ~/var/go/assoc/last
+	[[ $AKASSOC != "(none|misc|$(<~/.akwhich):misc)" ]] &&
+		printf $AKASSOC >| ~/var/ak/assoc/last
 }
 
-goassocnf ()
+akassocnf ()
 {
-	goassoc $1 noflush
+	akassoc $1 noflush
 }
 
-# hack to work around goassoc-in-existing-shell bug
-# mentioned in ".bash/goto"
+# hack to work around akassoc-in-existing-shell bug
+# mentioned in ".bash/akto"
 #
-goassoclast ()
+akassoclast ()
 {
-	goassoc ${GOASSOCLAST:-none}
+	akassoc ${AKASSOCLAST:-none}
 }
 
 gac ()
 {
-	goassoc $(<~/.gowhich):$1
+	akassoc $(<~/.akwhich):$1
 }
 
-godmatch ()
+akdmatch ()
 {
-	gorecent | egrep "$1"
+	akrecent | egrep "$1"
 }
 
-godmatchls2 ()
+akdmatchls2 ()
 {
-	gorecent | awk -F : '{printf("%s:%s\n", $1, $2)}' | sort | uniq -c
+	akrecent | awk -F : '{printf("%s:%s\n", $1, $2)}' | sort | uniq -c
 }
 
-godmatchls ()
+akdmatchls ()
 {
-	gorecent | awk -F : '{print($1)}' | sort | uniq -c
+	akrecent | awk -F : '{print($1)}' | sort | uniq -c
 }
 
-godmatchfirst ()
+akdmatchfirst ()
 {
-	gorecent | egrep -m 1 "$1"
+	akrecent | egrep -m 1 "$1"
 }
 
-gomatch ()
+akmatch ()
 {
-	(godmatch "$1"; goamatch "$1";) | sort -d
+	(akdmatch "$1"; akamatch "$1";) | sort -d
 }
 
-goamatch ()
+akamatch ()
 {
-	ls $GOBASE_ASSOC |
+	ls $AKBASE_ASSOC |
 	egrep "$1" |
 	awk '{printf("+%s\n", $0)}'
 }
 
-goamatchfirst ()
+akamatchfirst ()
 {
-	ls $GOBASE_ASSOC | egrep -m 1 "$1"
+	ls $AKBASE_ASSOC | egrep -m 1 "$1"
 }
 
-godolastn ()
+akdolastn ()
 {
 	local n=$1
 	local t=$2
 
-	local t=$(gorecent | head -$((n+1)) | tail -1)
-	if godo $t
+	local t=$(akrecent | head -$((n+1)) | tail -1)
+	if akdo $t
 	then echo "$t"
 	else echo "error doing $t"
 	fi
@@ -197,7 +197,7 @@ godolastn ()
 
 ##############################################################################
 
-godosince ()
+akdosince ()
 {
 	{ echo "implementation not finished"; return 1; }
 	local dowhat=$1
@@ -208,8 +208,8 @@ godosince ()
 	touch -t $1 tasks/alert:sudden.0
 }
 
-goman ()
+akman ()
 {
 	{ echo "implementation not finished"; return 1; }
-	goassoc 
+	akassoc 
 }

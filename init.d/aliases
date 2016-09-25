@@ -114,13 +114,13 @@ alias lastmodd		"ls -1dt \$("					\
 # PROMPT_COMMAND at the moment --smm20131213205903
 #
 #alias histon		"source ~/.bash/init.d/history; "		\
-#			"source ~/.bash/init.d/goto"
+#			"source ~/.bash/init.d/aktools"
 #
 #alias histoff		"unset HISTFILE; "				\
-#			"GOASSOC=\${GOASSOC:+histoff}; "		\
-#			"unset \${GOASSOC:-GOASSOC} "
+#			"AKASSOC=\${AKASSOC:+histoff}; "		\
+#			"unset \${AKASSOC:-AKASSOC} "
 #
-#alias histwrite		"history -w"
+#alias histwrite	"history -w"
 #alias histread		"history -r"
 #
 alias histadd		"history -s"
@@ -177,15 +177,14 @@ alias rpmi		"rpm -qi"
 alias rpminfo		"rpmi "
 alias rpmlist		"rpm -ql"
 
-### goto
+### aktools
 
-alias ga		"goassoc"
-alias goa		"goassoc"
-alias ganf		"goassocnf"
-alias gal		"goassoclast"
-alias gor		"gorecent | head"
-alias gofilter		"grep -v 'go(cron|vt|which|ls*|cur|x)'"
-alias golastas		"("						\
+alias aka		"ak assoc"
+alias aka		"ak assoc"
+alias akanf		"ak assocnf"
+alias akl		"ak assoclast"
+alias akr		"ak recent | head"
+alias aklas		"("						\
 				"cd ~/var/bash/history; "		\
 				"ls -1t \$("				\
 					"find . "			\
@@ -196,7 +195,7 @@ alias golastas		"("						\
 				"sed 's,^\./,,' | "			\
 				"column -x"				\
 			")"
-alias godolast		"godolastn 1"
+alias akdolast		"akdolast 1"
 
 ### administration
 

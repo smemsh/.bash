@@ -22,20 +22,19 @@ shell_init_completions_file="
 
 ###
 
-shell_init_completions_goassoc="
-	goassoc
-	goassocnf
-	goto
+shell_init_completions_akassoc="
+	akanf
+	akto
 	ga
 	ganf
 "
-shell_init_completions_godo="
-	godo
-	gorename
-	gomerge
+shell_init_completions_akdo="
+	akdo
+	akrename
+	akmerge
 "
-shell_init_completions_gowhich="
-	gac
+shell_init_completions_akwhich="
+	akc
 "
 
 ##############################################################################
@@ -87,14 +86,14 @@ shell_init_completions_file ()
 	for cmd; do complete -A file $cmd; done
 }
 
-shell_init_completions_go ()
+shell_init_completions_ak ()
 {
-	local gotype gosuffix gocmd
+	local aktype aksuffix akcmd
 
-	for gotype in ${!shell_init_completions_go*}; do
-		for gocmd in ${!gotype}; do
-			gosuffix=${gotype##*_go}
-			complete -F do_completions_go$gosuffix $gocmd
+	for aktype in ${!shell_init_completions_ak*}; do
+		for akcmd in ${!aktype}; do
+			aksuffix=${aktype##*_ak}
+			complete -F do_completions_ak$aksuffix $akcmd
 		done
 	done
 }
@@ -105,7 +104,7 @@ shell_init_completions_go ()
 # routines themselves each time (ie we are complete -F)
 #
 
-do_completions_go ()
+do_completions_ak ()
 {
 	local completion_command="$1"
 	local to_complete=${COMP_WORDS[COMP_CWORD]}
@@ -134,10 +133,10 @@ do_completions_go ()
 	fi
 }
 
-do_completions_godo	() { do_completions_go "gorecent";		     }
-do_completions_goassoc	() { do_completions_go "(cd $GOBASE_ASSOC; ls -1t)"; }
-do_completions_gowhich	() { do_completions_go "(cd $GOBASE_ASSOC; \
-						 ls -1dt $(<~/.gowhich):* )"; }
+do_completions_akdo	() { do_completions_ak "akrecent";		     }
+do_completions_akassoc	() { do_completions_ak "(cd $AKBASE_ASSOC; ls -1t)"; }
+do_completions_akwhich	() { do_completions_ak "(cd $AKBASE_ASSOC; \
+						 ls -1dt $(<~/.akwhich):* )"; }
 
 ##############################################################################
 
