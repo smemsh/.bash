@@ -1,0 +1,8 @@
+#
+
+if ! [[ $AKASSOC ]]; then
+	AKASSOC=default
+	test -f ~/.akdefault && AKASSOC=$(<~/.akdefault)
+fi
+
+export AKASSOC

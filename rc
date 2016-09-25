@@ -27,6 +27,6 @@ do if test -f $f; then
 
 unset f sources
 
-#goassoclast || { echo "assoc failure" >&2; return 9; }
+#ankassoclast || { echo "ankassoc failure" >&2; return 9; }
 
 cd

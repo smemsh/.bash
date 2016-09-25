@@ -1,0 +1,60 @@
+#
+# facilitate anakastic personality
+#
+# - only to be loaded on hosts with aktools
+# - return true for all errors so we do not show-stop on hosts
+#   where the full toolset is not installed
+#
+
+AKRC=~/.akrc
+
+test -e $AKRC || return 0
+test -r $AKRC || return 0
+source $AKRC || return 0
+
+test -e $AKBASE || return 0
+test -r $AKBASE || return 0
+
+# we do this instead of the commented out block that follows
+# because we have the problem where the history reads all the
+# lines with the `??' prepended, making no sense of the `#'
+# comment lines in the shell history file.  This does NOT happen
+# on subsequent `aka' and we do not understand why this is
+# happening.  Same thing happens when we just type `bash' even
+# *with* this, because it then does "aka <association of parent
+# shell>" and then the strange `??' problem again.  This ends up
+# saving only the first level shell, because of the above
+# mentioned problem when typing `bash' and loading the old
+# history.  This problem is very perplexing.
+#
+# XXX UPDATE: ~/bash-history-bug
+# we now set `$AKLASTASSOC' using the commented block of code
+# so we can write a command to quickly switch to the last known
+# association in the current shell environment and at least work
+# around the problem this way, requiring just one quick `ak
+# last' (`akl' alias) instead of having to look it up and retype
+# the whole thing.  This also makes it optional and starts off
+# with `none' which has its own advantages as well.  Just
+# replace the `$AKASSOCLAST' with a direct set of `$AKASSOC'
+# to re-demonstrate the problem.
+#
+AKASSOC=${AKASSOC:-none}
+if test -d "$AKINSTANCE" 2>/dev/null; then
+	AKASSOCLAST=$(basename $(readlink $AKINSTANCE/assoc))
+else
+	AKASSOCLAST=none
+fi
+
+all_ak_vars=($(compgen -A variable AK))
+export ${all_ak_vars[@]}
+unset all_ak_vars
+
+# allow a prefix which makes sense on the local workstation, but
+# not on a group of remote machines, to be stripped
+#
+if test -e ~/.akprefix
+then AKPREFIX=$(<~/.akprefix)
+else AKPREFIX=
+fi
+
+ak assoc ${AKASSOC/#$AKPREFIX:/}

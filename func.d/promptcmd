@@ -10,23 +10,23 @@ prompt_command ()
 {
 	# get path settings, etc
 	#
-	[[ "$GORC" ]] || return 5
-	test -e $GORC || return 10
-	test -r $GORC || return 13
-	source $GORC  || return 15
+	[[ "$AKRC" ]] || return 5
+	test -e $AKRC || return 10
+	test -r $AKRC || return 13
+	source $AKRC  || return 15
 
 	local num time_t command file
 
 	local now_time_t="$(date +%s)"
 	local now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
 
-	# get dynamic goassoc vars
+	# get dynamic akassoc vars
 	#
-	GOLOGVALS=(
-		$GOASSOC
+	AKLOGVALS=(
+		$AKASSOC
 		$now_timefmt
-		$GOTTY_TYPE
-		$GOTTY_NUM
+		$AKTTY_TYPE
+		$AKTTY_NUM
 		$SHLVL
 		$1 # passed by shell in `$PROMPT_COMMAND': previous command result code
 	)
@@ -38,20 +38,20 @@ prompt_command ()
 
 	# gather command and metadata that we'll write to log file
 	#
-	GOLOGLAST="$GOLOGLINE"
-	GOLOGLINE="${GOLOGVALS[*]} $command"
+	AKLOGLAST="$AKLOGLINE"
+	AKLOGLINE="${AKLOGVALS[*]} $command"
 
 	# check that we haven't seen it already; this happens on empty command
-	# TODO: why the check against GOSTART? when can it happen?
+	# TODO: why the check against AKSTART? when can it happen?
 	#
-	[[ $GOLOGLAST == $GOLOGLINE ]] && return
-	((time_t < GOSTART)) && return
+	[[ $AKLOGLAST == $AKLOGLINE ]] && return
+	((time_t < AKSTART)) && return
 
-	# now write them to the log files we maintain for goassoc
+	# now write them to the log files we maintain for akassoc
 	#
-	echo "$GOLOGLINE" >> $GOLOG_CMDS		# logfile1
-	echo "$GOLOGLINE" >> $GOLOG_MOST		# logfile2
-	for file in $GOLOG_FULL $GOLOG_BASH; do		# logfile3, logfile4
+	echo "$AKLOGLINE" >> $AKLOG_CMDS		# logfile1
+	echo "$AKLOGLINE" >> $AKLOG_MOST		# logfile2
+	for file in $AKLOG_FULL $AKLOG_BASH; do		# logfile3, logfile4
 		printf "#%u\n%s\n" \
 			"$time_t" \
 			"$command" \
