@@ -27,6 +27,15 @@ prompt_command ()
 		   # command result code
 	)
 
+	# was getting "bash: echo: write error: Interrupted system call"
+	# in the middle of this function because it's run while the
+	# terminal window is spawning and they both race to finish, so
+	# sometimes the WINCH can be sent right in the middle of our
+	# execution and apparently bash does not try to finish the 'echo'
+	# after it was interrupted (TODO: file upstream bug)
+	#
+	trap dowinch=1 WINCH
+
 	# read in last command from in-memory history, for saving on-disk
 	# note: must use raw read (with '-r') or '\n' etc will log as 'n'
 	# note: $HISTCMD cannot be used to keep track of cancels/dupes
@@ -54,4 +63,11 @@ prompt_command ()
 	# set previous value for comparison next invocation
 	#
 	LOGCOUNTLAST=$histnum
+
+	# there's still a small race window where we might lose a WINCH
+	# event but at least it won't happen while we write logs, there
+	# really should be a way to do 'echo' that lets signals queue
+	# though instead of just interrupting the system call
+	#
+	((dowinch)) && kill -WINCH $$
 }
