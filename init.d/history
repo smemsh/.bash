@@ -1,6 +1,24 @@
 #
-# TODO this should be 'env' stanza or an 'env.d/' file
+# set up history variables and load in shell history
+#
+##############################################################################
 
+esetenv LOGBASE	        $HOME/var/log
+
+# we log these values in prompt_command(), should be sufficient
+# one-time on shell init (don't see them changing)
+#
+esetenv TTY_TYPE	${TERMINAL/\//}	# for `pts/X' strip off the `/'
+esetenv TTY_TYPE	${TERMINAL:0:3}	# `pts' or `tty'
+esetenv TTY_NUM		${TERMINAL:3}	# the raw number of the tty
+esetenv TTY_NUM		${TTY_NUM#/}	# strip leading `/' if exists (for pts)
+
+esetenv LOGFILE_BASH	$LOGBASE/history.$HOSTNAME
+esetenv LOGFILE_CMDS	$LOGBASE/cmdhist.$HOSTNAME
+
+# this needs to be set before history -r is done, it describes
+# the time format it was written in for the shell history parser
+#
 esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 
 # these aren't used anymore because we bypass the shell's own
@@ -27,12 +45,20 @@ esetenv HISTIGNORE	"f:f *:"					\
 			"11:12:13:14:15:16:17:18:19:20:"		\
 			"21:22:23:24:25:26:27:28:29:30"
 
-# This is still used by the shell to determine where to append
-# (-o histappend) or to overwrite (+o histappend) when it
-# exits; it then dumps the history contents here.  We are
-# doing it ourselves right now in $PROMPT_COMMAND so we turn
-# it off completely
+# these are still used by the shell to determine where to append
+# (-o histappend) or to overwrite (+o histappend) when it exits;
+# it then dumps the history contents here.  We are doing it
+# ourselves right now in $PROMPT_COMMAND so we turn it off
+# completely
 #
 #export HISTFILE=~/.bash_history
 #export HISTFILE=/dev/null
 unset HISTFILE
+
+shell_init_history ()
+{
+	local savedfmt="$HISTTIMEFORMAT"
+	HISTTIMEFORMAT=%s
+	history -cr $LOGFILE_BASH
+	HISTTIMEFORMAT="$savedfmt"
+}

@@ -8,53 +8,50 @@
 
 prompt_command ()
 {
-	# get path settings, etc
-	#
-	[[ "$AKRC" ]] || return 5
-	test -e $AKRC || return 10
-	test -r $AKRC || return 13
-	source $AKRC  || return 15
+	local histnum time_t command file
 
-	local num time_t command file
-
+	# TODO find a way to avoid callout to date()
 	local now_time_t="$(date +%s)"
 	local now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
 
-	# get dynamic akassoc vars
+	# these are the values that get written for our "extra" logs
+	# that have more information than ordinary bash history logs
 	#
-	AKLOGVALS=(
-		$AKASSOC
+	local logvals=(
+		$HOSTNAME
 		$now_timefmt
-		$AKTTY_TYPE
-		$AKTTY_NUM
+		$TTY_TYPE
+		$TTY_NUM
 		$SHLVL
-		$1 # passed by shell in `$PROMPT_COMMAND': previous command result code
+		$1 # passed by shell in `$PROMPT_COMMAND': previous
+		   # command result code
 	)
 
-	# read in the last command from bash's history
+	# read in last command from in-memory history, for saving on-disk
 	# note: must use raw read (with '-r') or '\n' etc will log as 'n'
+	# note: $HISTCMD cannot be used to keep track of cancels/dupes
+	#   (we keep $histnum instead) because it's not available in the
+	#   PROMPT_COMMAND function (it's always set to 1) so we get a
+	#   count from the loaded history list, the next one should
+	#   increment it
 	#
-	read -r num time_t command <<< "$(HISTTIMEFORMAT="%s "; history 1)"
+	read -r histnum time_t command <<< "$(
+		HISTTIMEFORMAT="%s "
+		history 1
+	)"
+	LOGLINE="${logvals[*]} $command"
+	LOGBASH="$(printf "#%u\n%s\n" "$time_t" "$command")"
 
-	# gather command and metadata that we'll write to log file
-	#
-	AKLOGLAST="$AKLOGLINE"
-	AKLOGLINE="${AKLOGVALS[*]} $command"
+	if [[ $LOGCOUNTLAST && $histnum != $LOGCOUNTLAST ]]
+	then
+		# history was incremented, so it's a real command (not
+		# the first prompt, a ctrl-c, or empty input), log it
+		#
+		echo "$LOGLINE" >> $LOGFILE_CMDS
+		echo "$LOGBASH" >> $LOGFILE_BASH
+	fi
 
-	# check that we haven't seen it already; this happens on empty command
-	# TODO: why the check against AKSTART? when can it happen?
+	# set previous value for comparison next invocation
 	#
-	[[ $AKLOGLAST == $AKLOGLINE ]] && return
-	((time_t < AKSTART)) && return
-
-	# now write them to the log files we maintain for akassoc
-	#
-	echo "$AKLOGLINE" >> $AKLOG_CMDS		# logfile1
-	echo "$AKLOGLINE" >> $AKLOG_MOST		# logfile2
-	for file in $AKLOG_FULL $AKLOG_BASH; do		# logfile3, logfile4
-		printf "#%u\n%s\n" \
-			"$time_t" \
-			"$command" \
-		>> $file
-	done
+	LOGCOUNTLAST=$histnum
 }

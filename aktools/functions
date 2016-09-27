@@ -23,6 +23,12 @@ akassoc ()
 	# preloaded before any new commands have entered the
 	# history
 	#
+	# note: after moving this out of bash 20160925083855
+	# it's no longer a condition in prompt_command(), where
+	# it was doing: ((time_t < AKSTART)) && return
+	# so in order for setting this to have any purpose that
+	# needs to be done again
+	#
 	AKSTART=$(date +%s)
 
 	# create the dirs and such our infrastructure uses
