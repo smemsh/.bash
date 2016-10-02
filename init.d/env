@@ -30,7 +30,7 @@ esetenv XDG_DATA_DIRS			/usr/local/share:/usr/share
 esetenv XDG_CONFIG_DIRS			/etc/xdg
 #esetenv XDG_RUNTIME_DIR
 
-esetenv HOSTFILE			~/var/ssh/completions
+esetenv HOSTFILE			~/var/bash/hostfile
 esetenv PROMPT_COMMAND			'prompt_command $?'
 
 # TODO: this is really just a readlink of /proc/self/fd/0
