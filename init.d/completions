@@ -20,23 +20,6 @@ shell_init_completions_file="
 	scp
 "
 
-###
-
-shell_init_completions_akassoc="
-	akanf
-	akto
-	ga
-	ganf
-"
-shell_init_completions_akdo="
-	akdo
-	akrename
-	akmerge
-"
-shell_init_completions_akwhich="
-	akc
-"
-
 ##############################################################################
 
 #
@@ -86,57 +69,13 @@ shell_init_completions_file ()
 	for cmd; do complete -A file $cmd; done
 }
 
-shell_init_completions_ak ()
-{
-	local aktype aksuffix akcmd
-
-	for aktype in ${!shell_init_completions_ak*}; do
-		for akcmd in ${!aktype}; do
-			aksuffix=${aktype##*_ak}
-			complete -F do_completions_ak$aksuffix $akcmd
-		done
-	done
-}
-
 ##############################################################################
 #
 # these are retained after we exit, used by the completion
 # routines themselves each time (ie we are complete -F)
 #
 
-do_completions_ak ()
-{
-	local completion_command="$1"
-	local to_complete=${COMP_WORDS[COMP_CWORD]}
-
-	if [[ "$to_complete" =~ : ]]
-	then
-		# we have already completed at least one
-		# level of hierarchy so just complete the
-		# whole rest of it
-		#
-		COMPREPLY=($(
-			eval "$completion_command" |
-			command grep ^"$to_complete"
-		))
-	else
-		# we are still completing the first
-		# component so only consider through the
-		# first hierarchy delimiter
-		#
-		COMPREPLY=($(
-			eval "$completion_command" |
-			awk -F : '{print $1}' |
-			uniq |
-			command grep ^"$to_complete"
-		))
-	fi
-}
-
-do_completions_akdo	() { do_completions_ak "akrecent";		     }
-do_completions_akassoc	() { do_completions_ak "(cd $AKBASE_ASSOC; ls -1t)"; }
-do_completions_akwhich	() { do_completions_ak "(cd $AKBASE_ASSOC; \
-						 ls -1dt $(<~/.akwhich):* )"; }
+# TODO what?
 
 ##############################################################################
 
