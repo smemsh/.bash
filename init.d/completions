@@ -33,12 +33,16 @@ shell_init_completions_file="
 shell_init_completions_host ()
 {
 	local cmd
-	local completion_infile=~/.ssh/known_hosts
-	local completion_outfile=$HOSTFILE
+	local infile=~/.ssh/known_hosts
+	local outfile=$HOSTFILE
 
-	if \
-		test ! -e $completion_outfile ||
-		test $completion_infile -nt $completion_outfile
+	if ! test -e $infile
+	then
+		# maybe anew host does not have any ssh known_hosts yet
+		true
+		return
+
+	elif test ! -e $outfile || test $infile -nt $outfile
 	then
 		echo "rebuilding completions"
 
@@ -52,7 +56,7 @@ shell_init_completions_host ()
 			for (alias in aliases)
 				printf("%s ", aliases[alias]);
 			printf("\n");
-		}' < $completion_infile >| $completion_outfile
+		}' < $infile >| $outfile
 	else
 		# use the cached completions
 		:
