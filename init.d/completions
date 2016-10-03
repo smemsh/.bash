@@ -36,11 +36,11 @@ shell_init_completions_host ()
 	local completion_infile=~/.ssh/known_hosts
 	local completion_outfile=$HOSTFILE
 
-	if test \
-		$completion_infile -nt $completion_outfile
+	if \
+		test ! -e $completion_outfile ||
+		test $completion_infile -nt $completion_outfile
 	then
-		echo -n make_host_completions: hosts known to ssh changed,
-		echo \ rebuilding completions
+		echo "rebuilding completions"
 
 		# generates an /etc/hosts format file out of
 		# known_hosts in order to be useful to
