@@ -148,7 +148,6 @@ esetenv EDITOR			$VISUAL
 
 esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
 esetenv BLOCK_SIZE		human-readable	        # df, du, ls
-esetenv BC_ENV_ARGS		"-ql $HOME/.bc"
 
 esetenv RI			"-f ansi"	        # ruby rdoc ri
 
@@ -360,6 +359,18 @@ shell_init_xdg_dirs ()
 	local v=$XDG_CONFIG_HOME/user-dirs.dirs
 	test -e $v && source $v
 	declare -x $(compgen -A variable XDG)
+}
+
+shell_init_bc ()
+{
+	esetenv BC_ENV_ARGS "-ql "
+	local bcbase="$HOME/.bc"
+	if test -d "$bcbase"
+	then esetenv BC_ENV_ARGS \
+		"$BC_ENV_ARGS " \
+		"$bcbase/rc.bc " \
+		"$bcbase/extensions.bc " \
+	; fi
 }
 
 source ~/.bash/initfuncs
