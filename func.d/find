@@ -1,5 +1,10 @@
 #
 
+ft () { local t=$1; shift; (($#)) || set -- .
+	find "$@" -mindepth 1 -type $t -printf %P\\n; }
+ff () { ft f "$@"; }
+fd () { ft d "$@"; }
+
 fxg ()
 {
 	(test $# -eq 0 || test $# -gt 2) && {
