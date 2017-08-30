@@ -201,7 +201,7 @@ esetenv NO_AT_BRIDGE                    1
 # rather than make a ~root/.ssh/config just for rsyncing
 # TODO find better place for this, perhaps ~root/ is better
 #
-esetenv RSYNC_RSH                       "ssh -p 22022"
+esetenv RSYNC_RSH                       ssh
 
 # TODO: use LESSOPEN, not LESSPIPE
 # TODO: needs to be looked at, including use of '||' and '-|' (see manual)
