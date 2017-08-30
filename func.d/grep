@@ -1,0 +1,6 @@
+#
+
+grepp   () { command grep --exclude-dir=.git -sr "$@"; }
+cgrepp  () { grepp --color=always "$@"; }
+greppl  () { grepp -l "$@"; }
+cgreppl () { cgrepp -l "$@"; }
