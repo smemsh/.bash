@@ -255,7 +255,10 @@ alias ggw               "GGBROWSER=vimb gg"
 
 alias gcpinit           "source /usr/share/google-cloud-sdk/completion.bash.inc"
 alias gce               "gcloud compute"
-alias gsh               "gcloud compute ssh --plain"
+alias gssh              "gcloud compute ssh --plain"
+alias gls               "gcloud compute instances list"
+alias grm               "gcloud compute instances delete"
+alias grmaddr           "gcloud compute addresses delete"
 
 alias ansplay           "ansible-playbook"
 alias yamlref           "elinks http://www.yaml.org/refcard.html"
