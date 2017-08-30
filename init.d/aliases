@@ -258,5 +258,6 @@ alias gce               "gcloud compute"
 alias gsh               "gcloud compute ssh --plain"
 
 alias ansplay           "ansible-playbook"
+alias yamlref           "elinks http://www.yaml.org/refcard.html"
 
 unset -f alias
