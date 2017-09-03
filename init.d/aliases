@@ -232,6 +232,7 @@ alias taskgc            "task rc.gc=on rc.verbose=nothing // list"
 ### uncategorized / TODO
 
 alias a                 "tmux attach"
+alias h                 "hostname"
 alias g			"elinks https://www.google.com/"
 alias cvim		"vim -S ~/.cvimrc" # secure vim without temp files
 alias lds		"ldapsearch -LLLx"
