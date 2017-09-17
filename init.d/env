@@ -163,7 +163,6 @@ esetenv CVS_RSH			ssh
 
 esetenv PDSH_RCMD_TYPE		ssh
 esetenv PDSH_MISC_MODULES	netgroup
-esetenv PDSH_SSH_ARGS		"-A"
 esetenv SSH_ASKPASS		/bin/true	        # for pdsh
 esetenv FANOUT                  9999                    # -f NNNN
 
