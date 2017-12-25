@@ -264,7 +264,7 @@ alias grmaddr           "gcloud compute addresses delete"
 alias ansplay           "ansible-playbook"
 alias yamlref           "elinks http://www.yaml.org/refcard.html"
 
-alias clpse             "dshbak -c"
+alias coll              "dshbak -c"
 alias pdshr             "pdsh -l root"
 
 unset -f alias
