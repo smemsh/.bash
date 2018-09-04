@@ -123,6 +123,7 @@ shell_init_prompt ()
 			" " \\
 			"\\\$(
 				rval=\\\${?}
+				((rval == 148)) && rval=0 # 128 + 20 (SIGTSTP)
 				[[ \\\$(compgen -A running) || \\\$(compgen -A stopped) ]]
 				jobsbool=\\\$?
 				if   ((rval == 0 && jobsbool == 0)); then printf \"\[$CLR_solid_bold_fgyellow_bgblack\]\"
