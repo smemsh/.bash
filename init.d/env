@@ -111,6 +111,10 @@ esetenv PERLLIB \
 #	/usr/local/lib/python2.3 \
 #;
 
+# python virtualenv likes to monkey with our prompt
+#
+esetenv VIRTUAL_ENV_DISABLE_PROMPT=1
+
 ###
 
 # grep 2.9 default on fedora 15 manual page says:

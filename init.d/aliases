@@ -267,4 +267,7 @@ alias yamlref           "elinks http://www.yaml.org/refcard.html"
 alias coll              "dshbak -c"
 alias pdshr             "pdsh -l root"
 
+alias activate          "source bin/activate"
+alias py                "python37 -q"
+
 unset -f alias
