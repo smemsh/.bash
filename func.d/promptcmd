@@ -70,4 +70,10 @@ prompt_command ()
 	# though instead of just interrupting the system call
 	#
 	((dowinch)) && kill -WINCH $$
+
+	# useful for printing our position in status line, with tmux
+	# status-interval 0, this avoids needing to poll, and happens
+	# synchronously too so no need to wait for normal polling lag
+	#
+	[[ $TMUX ]] && tmux refresh-client -S
 }

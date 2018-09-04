@@ -90,7 +90,11 @@ shell_init_prompt ()
 			" " \\
 			"\[$CLR_solid_bold_fgblue_bgblack\]" "j\\\$(
 				rval=\\\$?
-				njobs=\\\$(jobs | wc -l)
+				running=\"\\\$(wc -l <(compgen -A running))\"
+				stopped=\"\\\$(wc -l <(compgen -A stopped))\"
+				running=\\\${running%% *}
+				stopped=\\\${stopped%% *}
+				njobs=\\\$((running + stopped))
 				if ((njobs))
 				then printf %s%u \"\[$CLR_solid_bold_fgmagenta_bgblack\]\" \\\$njobs
 				else printf %s%u \"\[$CLR_solid_flat_fgcyan_bgblack\]\" \\\$njobs
@@ -119,7 +123,7 @@ shell_init_prompt ()
 			" " \\
 			"\\\$(
 				rval=\\\${?}
-				[[ \\\$(jobs) ]]
+				[[ \\\$(compgen -A running) || \\\$(compgen -A stopped) ]]
 				jobsbool=\\\$?
 				if   ((rval == 0 && jobsbool == 0)); then printf \"\[$CLR_solid_bold_fgyellow_bgblack\]\"
 				elif ((rval == 0 && jobsbool == 1)); then printf \"\[$CLR_solid_bold_fggreen_bgblack\]\"
