@@ -265,6 +265,7 @@ alias grm               "gcloud compute instances delete"
 alias grmaddr           "gcloud compute addresses delete"
 
 alias ansplay           "ansible-playbook"
+alias ansdoc            "ansible-doc"
 alias yamlref           "elinks http://www.yaml.org/refcard.html"
 
 alias coll              "dshbak -c"
