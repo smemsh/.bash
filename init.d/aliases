@@ -273,5 +273,6 @@ alias pdshr             "pdsh -l root"
 
 alias activate          "source bin/activate"
 alias py                "python37 -q"
+alias wd                "cd ~/work/src; cd"
 
 unset -f alias
