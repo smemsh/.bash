@@ -216,6 +216,7 @@ alias svndiffffff	"svn diff --diff-cmd=/usr/bin/diff -x -U\ 81 "
 ### ssh
 
 alias sshr		"ssh -ql root"
+alias sshn		"ssh -o controlpath=none"
 alias sshsvn		"SVN_SSH=\""					\
 				"ssh "					\
 					"-p 8080 "			\
