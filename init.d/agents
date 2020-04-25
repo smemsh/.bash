@@ -102,7 +102,7 @@ do_agent ()
 	#
 	if ((${#runafter[@]}))
 	then eval '"${runafter[@]}"' ||
-		{ err "bad runafter for $name"; return; }; fi
+		{ err "bad runafter ($?) for $name"; return; }; fi
 
 	echo "started new $name agent for host $HOSTNAME"
 }
