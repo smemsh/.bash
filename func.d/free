@@ -13,11 +13,17 @@ free ()
 	# and removes the "shared" column as obsolete
 	# (according to man page)
 	#
-	command free -o$szval \
-	| awk '{if (NR == 1) printf("- ") print }' \
-	| awk '{$5 = ""; print;}' \
-	| column -t
+	command free -$szval \
+	| sed -e s,buff.cache,cache, -e s,available,avail, \
+	| awk '
+		NR == 1   { printf("- %s\n", $0); next; }
+		/Swap/    { print; next; }
+		$5 == ""  { next; }
+		/^/       { print; }
+	' \
+	| column -t \
+	;
 }
 
-freem () { local szval=m free "$@"; }
-freeg () { local szval=g free "$@"; }
+freem () { local szval=m; free "$@"; }
+freeg () { local szval=g; free "$@"; }
