@@ -157,6 +157,8 @@ alias _grep		"command grep "				\
 
 alias cgrep		"_grep --color=always"
 alias rgrep		"_grep --directories=recurse"
+alias lgrep             "grep --line-buffered"
+alias legrep            "grep -E --line-buffered"
 
 ### mail
 
