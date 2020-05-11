@@ -1,8 +1,0 @@
-#
-
-gsshf () { gcloud compute ssh --plain "$@" -- -o StrictHostKeyChecking=false; }
-gprj  () { local cmd=get-value; [[ $1 ]] && cmd=set; gcloud config $cmd project $1; }
-glsi  () { gcloud compute --project=$1 images list --no-standard-images; }
-grmi  () { local prj=$1; shift; gcloud compute --project=$prj images delete "$@"; }
-gaddr () { local prj=$1; [[ $prj ]] && local prjvar="--project=$prj"
-	   gcloud compute $prjvar addresses list; }

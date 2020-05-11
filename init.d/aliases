@@ -266,11 +266,6 @@ alias aptpats           "elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
 alias ggw               "GGBROWSER=vimb gg"
 
 alias gcpinit           "source /usr/share/google-cloud-sdk/completion.bash.inc"
-alias gce               "gcloud compute"
-alias gssh              "gcloud compute ssh --plain"
-alias gls               "gcloud compute instances list"
-alias grm               "gcloud compute instances delete"
-alias grmaddr           "gcloud compute addresses delete"
 
 alias ansplay           "ansible-playbook"
 alias ansdoc            "ansible-doc"
