@@ -168,7 +168,8 @@ esetenv CVS_RSH			ssh
 esetenv PDSH_RCMD_TYPE		ssh
 esetenv PDSH_MISC_MODULES	netgroup
 esetenv SSH_ASKPASS		/bin/true	        # for pdsh
-esetenv FANOUT                  9999                    # -f NNNN
+esetenv FANOUT                  384                    # -f NNNN
+#esetenv FANOUT                  9999 # see github.com/chaos/pdsh #123
 
 # TODO: what is this and why?
 esetenv NCURSES_NO_PADDING	1
