@@ -1,6 +1,10 @@
 #
 
-grepp   () { command grep --exclude-dir=.git -sr "$@"; }
-cgrepp  () { grepp --color=always "$@"; }
-greppl  () { grepp -l "$@"; }
-cgreppl () { cgrepp -l "$@"; }
+grepp     () { command grep --exclude-dir=.git -sr "$@"; }
+greppy    () { grepp --include='*.py' "$@"; }
+greppl    () { grepp -l "$@"; }
+greppyl   () { greppy -l "$@"; }
+cgrepp    () { grepp --color=always "$@"; }
+cgreppy   () { greppy --color=always "$@"; }
+cgreppl   () { cgrepp -l "$@"; }
+cgreppyl  () { cgreppy -l "$@"; }
