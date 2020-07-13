@@ -6,5 +6,5 @@ greppl    () { grepp -l "$@"; }
 greppyl   () { greppy -l "$@"; }
 cgrepp    () { grepp --color=always "$@"; }
 cgreppy   () { greppy --color=always "$@"; }
-cgreppl   () { cgrepp -l "$@"; }
-cgreppyl  () { cgreppy -l "$@"; }
+cgreppl   () { cgrepp "$@"; }
+cgreppyl  () { cgreppy "$@"; }
