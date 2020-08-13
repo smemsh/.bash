@@ -167,6 +167,7 @@ esetenv CVS_RSH			ssh
 
 esetenv PDSH_RCMD_TYPE		ssh
 esetenv PDSH_MISC_MODULES	netgroup
+esetenv PDSH_REMOTE_PDCP_PATH   /usr/bin/pdcp           # ours is /usr/local
 esetenv SSH_ASKPASS		/bin/true	        # for pdsh
 esetenv FANOUT                  384                    # -f NNNN
 #esetenv FANOUT                  9999 # see github.com/chaos/pdsh #123
