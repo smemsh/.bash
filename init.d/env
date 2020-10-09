@@ -245,8 +245,6 @@ shell_init_arch_specific ()
 	;
 	psetenv shell_init_path_post	\
 		/usr/X11R6/bin		\
-		/usr/local/bin/ruby     \
-		/usr/local/bin/python   \
 	;
 	psetenv AWT_TOOLKIT		\
 		MToolkit		\
