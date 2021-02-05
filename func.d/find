@@ -47,9 +47,9 @@ fdn ()
 	local -x func=$FUNCNAME
 
 	(test $# -eq 0 || test $# -gt 2) && {
-		  echo "$func: requires optional base dir (arg1)" \
-		  	"and name pattern (arg2)"
-		  return 1
+		echo "$func: requires optional base dir (arg1)" \
+		"and name pattern (arg2)"
+		return 1
 	}
 	if test -z "$2"; then
 		directory=.
