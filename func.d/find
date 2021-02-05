@@ -62,7 +62,7 @@ fdn ()
 		\( -path "$directory"/.git -or -path "$directory"/venv \) \
 		-prune \
 		-or -${fdnarg:-name} \*"$1"\* \
-		-print
+		-print \
 	| sed s,^./,,
 }
 
