@@ -58,7 +58,10 @@ fdn ()
 		shift
 	fi
 
-	find "$directory"/ -${fdnarg:-name} \*"$1"\* 2>/dev/null
+	find "$directory"/ \
+		\( -path "$directory"/.git -or -path "$directory"/venv \) -prune \
+		-or -${fdnarg:-name} \*"$1"\* \
+		-print 2>/dev/null
 }
 
 #vim:syn=sh:
