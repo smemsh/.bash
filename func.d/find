@@ -59,7 +59,8 @@ fdn ()
 	fi
 
 	find "$directory"/ \
-		\( -path "$directory"/.git -or -path "$directory"/venv \) -prune \
+		\( -path "$directory"/.git -or -path "$directory"/venv \) \
+		-prune \
 		-or -${fdnarg:-name} \*"$1"\* \
 	| sed s,^./,,
 }
