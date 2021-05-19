@@ -282,6 +282,7 @@ shell_init_path ()
 {
 	psetenv PATH				\
 		$HOME/bin			\
+		$HOME/.local/bin                \
 		$shell_init_path_pre		\
 		$shell_init_path_generic	\
 		$shell_init_path_post		\
