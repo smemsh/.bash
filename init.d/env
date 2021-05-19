@@ -216,15 +216,8 @@ shell_init_arch_specific ()
 
 	(Linux) #########################
 
-	psetenv shell_init_path_post	\
-		/usr/X11R6/bin		\
-	;
 	psetenv AWT_TOOLKIT		\
 		MToolkit		\
-	;
-	psetenv LD_LIBRARY_PATH		\
-		$LD_LIBRARY_PATH	\
-		/usr/X11R6/lib		\
 	;
 	;;
 
