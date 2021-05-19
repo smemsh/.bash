@@ -216,9 +216,6 @@ shell_init_arch_specific ()
 
 	(Linux) #########################
 
-	psetenv shell_init_path_pre	\
-		/lib/upstart		\
-	;
 	psetenv shell_init_path_post	\
 		/usr/X11R6/bin		\
 	;
