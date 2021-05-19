@@ -87,30 +87,6 @@ esetenv PERLLIB \
 	/usr/local/lib/perl5/vendor_perl/5.8.8 \
 ;
 
-# XXX TODO trying this with python now too, maybe they've advanced enough that
-# they don't need me specifying this anymore, but probably not
-#
-#psetenv PYTHONPATH \
-#	/usr/local/lib/python2.7/site-packages		\
-#	/usr/local/lib/python2.6/site-packages		\
-#	/usr/local/lib/python2.5/site-packages		\
-#	/usr/local/lib/python2.5			\
-#	/usr/local/lib/python2.3			\
-#;
-# XXX UPDATE: now using pypi stored in /var/lib/pips
-#     (bind-mounted to /usr/local/lib/python<ver>) --smm20150116104635
-#
-# TODO: what about /usr/local/bin/python
-#       (like /usr/local/bin/ruby set in ~rubygems/.gemrc)
-#
-#esetenv PYTHONPATH \
-#	/usr/local/lib/python2.7/site-packages: \
-#	/usr/local/lib/python2.6/site-packages: \
-#	/usr/local/lib/python2.5/site-packages: \
-#	/usr/local/lib/python2.5: \
-#	/usr/local/lib/python2.3 \
-#;
-
 # python virtualenv likes to monkey with our prompt
 #
 esetenv VIRTUAL_ENV_DISABLE_PROMPT=1
