@@ -117,6 +117,8 @@ psetenv GREP_COLORS \
 
 ###
 
+esetenv TIMEFORMAT		"time: %0Rs"
+
 # overridden later if vim found
 esetenv VISUAL			vi
 esetenv EDITOR			$VISUAL
