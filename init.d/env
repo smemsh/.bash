@@ -117,8 +117,6 @@ psetenv GREP_COLORS \
 
 ###
 
-esetenv SCM			file://$HOME/var/scm
-
 # overridden later if vim found
 esetenv VISUAL			vi
 esetenv EDITOR			$VISUAL
