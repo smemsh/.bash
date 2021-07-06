@@ -28,3 +28,22 @@ ansenv ()
 		PATH=$newpath
 	fi
 }
+
+ansunenv ()
+{
+	local -a oldpath
+
+	unset ANSIBLE_REMOTE_USER
+	unset ANSIBLE_VAULT_PASSWORD_FILE
+	unset ANSVAULT_PGPFILE
+
+	if [[ $PATH =~ [[:space:]] ]]; then
+		echo "path cannot contain whitespace" >&2; false; return; fi
+
+	oldpath=(${PATH//:/$'\x20'})
+	for ((i = 0; i < ${#oldpath[@]}; i++)); do
+		if [[ ${oldpath[i]} =~ /setup/venv/bin ]]; then
+			unset "oldpath[$i]"; break; fi; done
+
+	PATH=$(IFS=:; echo "${oldpath[*]}")
+}
