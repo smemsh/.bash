@@ -1,4 +1,3 @@
-#!/bin/bash
 #
 # execute tmux with a specific arg set if no args are given
 # otherwise, pass the given arguments along and make no changes
