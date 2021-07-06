@@ -135,9 +135,6 @@ esetenv MANPAGER		"${PAGER}s"
 esetenv MANWIDTH		80
 esetenv MANHTMLPAGER            elinks                  # man2html
 
-esetenv CVSROOT			cvs.replaceme.com:/home/sysadmin/cvs
-esetenv CVS_RSH			ssh
-
 esetenv PDSH_RCMD_TYPE		ssh
 esetenv PDSH_MISC_MODULES	netgroup
 esetenv PDSH_REMOTE_PDCP_PATH   /usr/bin/pdcp           # ours is /usr/local
