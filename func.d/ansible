@@ -2,7 +2,8 @@
 
 ansenv ()
 {
-	local base
+	local base newpath vpath
+	local -a oldpath
 
 	if (($#)) && [[ $1 == work ]]
 	then base=$HOME/work/src/setup
@@ -12,4 +13,18 @@ ansenv ()
 	esetenv ANSIBLE_REMOTE_USER		config
 	esetenv ANSIBLE_VAULT_PASSWORD_FILE	$base/bin/ansvault
 	esetenv ANSVAULT_PGPFILE		$base/keys/vault/master.asc
+
+	if [[ $PATH =~ [[:space:]] ]]; then
+		echo "path cannot contain whitespace" >&2; false; return; fi
+
+	if ! [[ $PATH =~ :$base/venv/bin: ]]
+	then
+		oldpath=(${PATH//:/$'\x20'})
+		if [[ ${oldpath[0]} != $HOME/bin ]]; then
+			echo "path must start with ~/bin" >&2; false; return; fi
+		newpath=$HOME/bin:$base/venv/bin
+		for ((i = 1; i < ${#oldpath[@]}; i++)); do
+			newpath="$newpath:${oldpath[i]}"; done
+		PATH=$newpath
+	fi
 }
