@@ -1,0 +1,15 @@
+#
+
+ansenv ()
+{
+	local base
+
+	if (($#)) && [[ $1 == work ]]
+	then base=$HOME/work/src/setup
+	else base=$HOME/src/setup
+	fi
+
+	esetenv ANSIBLE_REMOTE_USER		config
+	esetenv ANSIBLE_VAULT_PASSWORD_FILE	$base/bin/ansvault
+	esetenv ANSVAULT_PGPFILE		$base/keys/vault/master.asc
+}

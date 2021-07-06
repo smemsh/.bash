@@ -153,12 +153,6 @@ esetenv PGUSER			postgres
 
 esetenv LDAPTLS_CACERT		$HOME/.cacerts
 
-esetenv ANSIBLE_REMOTE_USER	config
-
-esetenv ANSIBLE_VAULT_PASSWORD_FILE \
-				$HOME/src/setup/bin/ansvault
-esetenv ANSVAULT_PGPFILE	$HOME/src/setup/keys/vault/master.asc
-
 # now using separate pki user and ~pki --smm20150209114221
 # TODO: remove once this stabilizes
 #
