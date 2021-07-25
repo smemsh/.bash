@@ -122,6 +122,7 @@ esetenv TIMEFORMAT		"time: %0Rs"
 # overridden later if vim found
 esetenv VISUAL			vi
 esetenv EDITOR			$VISUAL
+esetenv BROWSER			elinks
 
 esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
 esetenv BLOCK_SIZE		human-readable	        # df, du, ls
