@@ -39,7 +39,8 @@ esetenv TERMINAL                        ${TERMINAL##*/dev/}
 # we need this to be set both in wm rcfile and bash, because sometimes we
 # launch gui stuff from the shell, but we'll gate behind x11 display env
 #
-[[ $DISPLAY ]] && FONTCONFIG_PATH=/etc/fonts
+[[ $DISPLAY ]] &&
+esetenv FONTCONFIG_PATH                 /etc/fonts
 
 ###
 
