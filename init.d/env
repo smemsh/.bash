@@ -19,17 +19,6 @@ unset MAIL MAILPATH MAILCHECK
 #
 export LC_TIME=C
 
-# these are the [ugly] XDG defaults; see also shell_init_xdg_dirs() below
-# (cf http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html)
-# TODO: move these all to a tree rooted at ~/.xdg/ or similar
-#
-esetenv XDG_DATA_HOME			~/.local/share
-esetenv XDG_CONFIG_HOME			~/.config
-esetenv XDG_CACHE_HOME			~/.cache
-esetenv XDG_DATA_DIRS			/usr/local/share:/usr/share
-esetenv XDG_CONFIG_DIRS			/etc/xdg
-#esetenv XDG_RUNTIME_DIR
-
 esetenv HOSTFILE			~/var/bash/hostfile
 esetenv PROMPT_COMMAND			'prompt_command $?'
 
@@ -315,16 +304,6 @@ shell_init_vim ()
 		export VISUAL=vim
 		export EDITOR=$VISUAL
 	fi
-}
-
-# TODO: unnecessary? think the defaults are all correct,
-# perhaps we did this to export them?
-#
-shell_init_xdg_dirs ()
-{
-	local v=$XDG_CONFIG_HOME/user-dirs.dirs
-	test -e $v && source $v
-	declare -x $(compgen -A variable XDG)
 }
 
 shell_init_bc ()
