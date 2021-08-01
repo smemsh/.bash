@@ -276,6 +276,7 @@ alias pdshr             "pdsh -l root"
 
 alias activate          "source bin/activate"
 alias py                "python3 -q"
+alias pydoc             "pydoc3"
 alias wd                "cd ~/work/src; cd"
 alias pht               "TZ=Asia/Manila date"
 
