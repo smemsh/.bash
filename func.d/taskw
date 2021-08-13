@@ -2,6 +2,14 @@
 # taskwarrior
 #
 
+# work around always defaulting to 80 columns when piping
+# note: ${COLUMNS:-80} not needed, blank value is default (which is 80)
+# todo: implement env var expansion in taskwarrior
+# also: #991
+#
+task () { `type -P task` rc.defaultwidth=$COLUMNS "$@"; }
+
 # for taskadd
+#
 taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
