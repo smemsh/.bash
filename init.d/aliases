@@ -236,7 +236,7 @@ alias sshsvn		"SVN_SSH=\""					\
 				"-o \"sendenv SVN_SSH\""
 
 ### taskwarrior
-alias taskgc            "task rc.gc=on rc.verbose=nothing // list"
+alias taskgc            "task rc.gc=on rc.verbose=nothing // list >/dev/null"
 
 ### uncategorized / TODO
 
