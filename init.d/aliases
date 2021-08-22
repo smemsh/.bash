@@ -161,8 +161,8 @@ alias _grep		"command grep "				\
 
 alias cgrep		"_grep --color=always"
 alias rgrep		"_grep --directories=recurse"
-alias lgrep             "grep --line-buffered"
-alias legrep            "grep -E --line-buffered"
+alias lgrep		"grep --line-buffered"
+alias legrep		"grep -E --line-buffered"
 
 ### mail
 
@@ -236,49 +236,49 @@ alias sshsvn		"SVN_SSH=\""					\
 				"-o \"sendenv SVN_SSH\""
 
 ### taskwarrior
-alias taskgc            "task rc.bulk=0 +DELETED purge; " \
+alias taskgc		"task rc.bulk=0 +DELETED purge; " \
 			"task rc.gc=on rc.verbose=nothing // list >/dev/null"
 
 ### uncategorized / TODO
 
-alias a                 "tmux attach"
-alias h                 "hostname"
-alias oda               "od -aAn"
+alias a			"tmux attach"
+alias h			"hostname"
+alias oda		"od -aAn"
 
 alias g			"elinks https://www.google.com/"
 alias cvim		"vim -S ~/.cvimrc" # secure vim without temp files
 alias lds		"ldapsearch -LLLx"
 alias mix		"alsamixer -c 0"
-alias eq                "alsamixer -D eq"
+alias eq		"alsamixer -D eq"
 #alias man		"pinfo -m"
 alias mann		"command man"
-alias manw              "MANWIDTH= command man"
+alias manw		"MANWIDTH= command man"
 alias rpn		"orpie"
 alias xrun		"DISPLAY=:0"
 alias vimhelp		"vim -c help"
 alias vimro		"vim -R"
 
-alias rel               "lsb_release -si"
-alias ncal              "ncal -Mw"
-alias xv                "pqiv -f"
-alias shred             "shred -zun 50"
+alias rel		"lsb_release -si"
+alias ncal		"ncal -Mw"
+alias xv		"pqiv -f"
+alias shred		"shred -zun 50"
 
-alias aptpats           "elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
-alias ggw               "GGBROWSER=vimb gg"
+alias aptpats		"elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
+alias ggw		"GGBROWSER=vimb gg"
 
-alias gcpinit           "source /usr/share/google-cloud-sdk/completion.bash.inc"
+alias gcpinit		"source /usr/share/google-cloud-sdk/completion.bash.inc"
 
-alias ansplay           "ansible-playbook"
-alias ansdoc            "ansible-doc"
-alias yamlref           "elinks http://www.yaml.org/refcard.html"
+alias ansplay		"ansible-playbook"
+alias ansdoc		"ansible-doc"
+alias yamlref		"elinks http://www.yaml.org/refcard.html"
 
-alias coll              "dshbak -c"
-alias pdshr             "pdsh -l root"
+alias coll		"dshbak -c"
+alias pdshr		"pdsh -l root"
 
-alias activate          "source bin/activate"
-alias py                "python3 -q"
-alias pydoc             "pydoc3"
-alias wd                "cd ~/work/src; cd"
-alias pht               "TZ=Asia/Manila date"
+alias activate		"source bin/activate"
+alias py		"python3 -q"
+alias pydoc		"pydoc3"
+alias wd		"cd ~/work/src; cd"
+alias pht		"TZ=Asia/Manila date"
 
 unset -f alias
