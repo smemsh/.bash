@@ -192,6 +192,9 @@ esetenv GCAL \
 
 esetenv LIBGUESTFS_CACHEDIR             /var/cache/libguestfs
 
+# share timewarrior db dir with taskwarrior, filenames do not collide
+esetenv TIMEWARRIORDB                   $HOME/.task
+
 ##############################################################################
 
 shell_init_arch_specific ()
