@@ -236,6 +236,8 @@ alias sshsvn		"SVN_SSH=\""					\
 				"-o \"sendenv SVN_SSH\""
 
 ### taskwarrior
+
+alias taskprjs		"task _unique project"
 alias taskgc		"task rc.bulk=0 +DELETED purge; " \
 			"task rc.gc=on rc.verbose=nothing // list >/dev/null"
 
