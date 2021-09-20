@@ -283,4 +283,13 @@ alias pydoc		"pydoc3"
 alias wd		"cd ~/work/src; cd"
 alias pht		"TZ=Asia/Manila date"
 
+alias fwup		"sudo sh -c '" \
+				"systemctl unmask fwupd polkit udisks2; " \
+				"systemctl start polkit udisks2; " \
+				"systemctl start fwupd; " \
+				"sudo fwupdmgr update; " \
+				"sudo systemctl stop fwupd polkit udisks2" \
+				"sudo systemctl mask fwupd polkit udisks2" \
+			"'"
+
 unset -f alias
