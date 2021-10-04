@@ -13,3 +13,17 @@ task () { `type -P task` rc.defaultwidth=$COLUMNS "$@"; }
 #
 taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
+
+# look in the fields we use that have text, default is only description
+# todo: should we also search label text? probably not since those are
+# more like "named dimensions"
+#
+taskgrep ()
+{
+	has="$1"; shift;
+	task \( \
+		project.has:"$has" or \
+		label.has:"$has" or \
+		description.has:"$has" \
+	\) "$@"
+}
