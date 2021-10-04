@@ -147,6 +147,7 @@ alias cutwrap		"expand | cut -b 1-\$COLUMNS"
 alias nowrap		"cutwrap "
 alias firstline		"head -1"
 alias lastline		"tail -1"
+alias header		"awk '/^\$/ {exit} {print}'"
 
 ### grep
 
