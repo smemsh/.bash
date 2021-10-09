@@ -27,3 +27,10 @@ taskgrep ()
 		description.has:"$has" \
 	\) "$@"
 }
+
+taskgc ()
+{
+	(($(task +DELETED _unique uuid | wc -l))) &&
+		task rc.bulk=0 +DELETED purge
+	task rc.gc=on rc.verbose=nothing // list >/dev/null
+}
