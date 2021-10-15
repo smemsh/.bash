@@ -47,6 +47,6 @@ taskgc ()
 timestat ()
 {
 	local all
-	[[ $1 == '-a' || $1 == '--all' ]] && { all=all; shift; }
+	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
 	timew summary "$@" :ids $all
 }
