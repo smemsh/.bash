@@ -7,7 +7,14 @@
 # todo: implement env var expansion in taskwarrior
 # also: #991
 #
-task () { `type -P task` rc.defaultwidth=$COLUMNS "$@"; }
+task ()
+{
+	for arg; do if [[ $arg == '--' ]]; then break
+	elif [[ $arg == '--version' ]]
+	then `type -P task` --version; return; fi; done
+
+	`type -P task` rc.defaultwidth=$COLUMNS "${@}"
+}
 
 # for taskadd
 #
