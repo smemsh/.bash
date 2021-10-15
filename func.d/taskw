@@ -41,3 +41,12 @@ taskgc ()
 		task rc.bulk=0 +DELETED purge
 	task rc.gc=on rc.verbose=nothing // list >/dev/null
 }
+
+### timewarrior
+
+timestat ()
+{
+	local all
+	[[ $1 == '-a' || $1 == '--all' ]] && { all=all; shift; }
+	timew summary "$@" :ids $all
+}

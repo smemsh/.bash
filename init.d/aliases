@@ -239,7 +239,6 @@ alias sshsvn		"SVN_SSH=\""					\
 ### taskwarrior
 
 alias taskprjs		"task _unique project"
-alias timestat		"timew sum :ids"
 
 ### uncategorized / TODO
 
