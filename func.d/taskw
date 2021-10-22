@@ -52,7 +52,7 @@ taskgc ()
 
 ### timewarrior
 
-timestat ()
+taskstat ()
 {
 	local all
 	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
