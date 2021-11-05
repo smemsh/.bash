@@ -240,6 +240,7 @@ alias sshsvn		"SVN_SSH=\""					\
 
 alias taskprjs		"task _unique project"
 alias taskredo		"timew move @1 \`date -Iseconds\`"
+alias cont              "timew continue"
 
 ### uncategorized / TODO
 
