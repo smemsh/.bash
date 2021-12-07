@@ -195,6 +195,9 @@ esetenv LIBGUESTFS_CACHEDIR             /var/cache/libguestfs
 # share timewarrior db dir with taskwarrior, filenames do not collide
 esetenv TIMEWARRIORDB                   $HOME/.task
 
+# for android Studio to display windows properly with ratpoison
+esetenv _JAVA_AWT_WM_NONREPARENTING     1
+
 ##############################################################################
 
 shell_init_arch_specific ()
