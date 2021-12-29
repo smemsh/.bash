@@ -1,0 +1,15 @@
+adbenv ()
+{
+	cd ~/platform-tools
+	PATH=$PWD:$PATH
+	LD_LIBRARY_PATH=$PWD/lib64:$LD_LIBRARY_PATH
+}
+
+studioenv ()
+{
+	cd ~/android-studio
+	export _JAVA_AWT_WM_NONREPARENTING=1 # todo: remove from rc since here?
+	export PATH=$PWD/jre/bin:$PATH
+	export ANDROID_SDK_ROOT=$HOME/android-studio-sdk
+	PATH=$HOME/android-studio-sdk/cmdline-tools/latest/bin:$PATH
+}
