@@ -1,0 +1,7 @@
+pip ()
+{
+	if [[ $1 == search ]]
+	then shift; pip_search "$@"
+	else command pip3 "$@"
+	fi
+}
