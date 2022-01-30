@@ -13,7 +13,7 @@ task ()
 	elif [[ $arg == '--version' ]]
 	then `type -P task` --version; return; fi; done
 
-	`type -P task` rc.defaultwidth=$COLUMNS "${@}"
+	`type -P task` rc.defaultwidth=$COLUMNS "$@"
 }
 
 # for taskadd
