@@ -15,6 +15,11 @@ task ()
 
 	`type -P task` rc.defaultwidth=$COLUMNS "$@"
 }
+taskl ()
+{
+	taskid=$1; shift
+	task $(taskid $taskid) "$@"
+}
 
 # for taskadd
 #
