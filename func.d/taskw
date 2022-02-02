@@ -15,9 +15,10 @@ task ()
 
 	`type -P task` rc.defaultwidth=$COLUMNS "$@"
 }
+
 taskl ()
 {
-	taskid=$1; shift
+	local taskid=$1; shift
 	task $(taskid $taskid) "$@"
 }
 
@@ -32,13 +33,13 @@ taskprj () { TASKPRJ="$@"; } # default project
 #
 taskgrep ()
 {
-	has="$1"; shift;
+	local has="$1"; shift;
 	if [[ $has =~ (([[:alnum:]_-]+/)+)([[:alnum:]_-]+)$ ]]; then
-		label=${BASH_REMATCH[3]}
-		project=${BASH_REMATCH[1]}
-		project=${project%/}
-		project=${project//\//.}
-		fqlfilter="or ( project:$project label:$label )"
+		local label=${BASH_REMATCH[3]}
+		local project=${BASH_REMATCH[1]}
+		local project=${project%/}
+		local project=${project//\//.}
+		local fqlfilter="or ( project:$project label:$label )"
 	fi
 	task \( \
 		project.has:"$has" or \
