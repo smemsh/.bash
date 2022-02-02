@@ -22,6 +22,19 @@ taskl ()
 	task $(taskid $taskid) "$@"
 }
 
+taskcur ()
+{
+	local tasknow=($(tasknow))
+	local status=${tasknow[1]}
+	local name=${tasknow[0]}
+
+	if [[ $status != 'started' ]]; then
+		echo "current task $name not engaged, aborting" >&2
+		false; return; fi
+
+	task $(taskid $name) "$@"
+}
+
 # for taskadd
 #
 taskaddl () { TASKADD="$*"; } # additional args (such as tags)
