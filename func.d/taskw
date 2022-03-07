@@ -77,3 +77,13 @@ taskstat ()
 	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
 	timew summary "$@" :ids $all
 }
+
+retimew ()
+{
+	local interval=${1:?}
+	declare -A labels=([untag]=${2:?} [tag]=${3:?})
+
+	for op in untag tag
+	do if ! timew $op $interval $(timewtags ${labels[$op]})
+	then echo "$op failure" >&2; false; return; fi; done
+}
