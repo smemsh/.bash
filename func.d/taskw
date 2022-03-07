@@ -80,10 +80,16 @@ taskstat ()
 
 retimew ()
 {
-	local interval=${1:?}
-	declare -A labels=([untag]=${2:?} [tag]=${3:?})
+	local -a intervals
+	local -A labels
+
+	while [[ $1 =~ ^@ ]]; do intervals+=($1); shift; done
+	if ! ((${#intervals}))
+	then echo "first args should be interval(s)" >&2; false; return; fi
+
+	labels=([untag]=${1:?} [tag]=${2:?})
 
 	for op in untag tag
-	do if ! timew $op $interval $(timewtags ${labels[$op]})
+	do if ! timew $op ${intervals[@]} $(timewtags ${labels[$op]})
 	then echo "$op failure" >&2; false; return; fi; done
 }
