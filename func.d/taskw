@@ -40,26 +40,16 @@ taskcur ()
 taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
 
-# look in the fields we use that have text, default is only description
-# todo: should we also search label text? probably not since those are
-# more like "named dimensions"
-#
+# look in more fields that have text, default is only description
 taskgrep ()
 {
-	local has="$1"; shift;
-	if [[ $has =~ (([[:alnum:]_-]+/)+)([[:alnum:]_-]+)$ ]]; then
-		local label=${BASH_REMATCH[3]}
-		local project=${BASH_REMATCH[1]}
-		local project=${project%/}
-		local project=${project//\//.}
-		local fqlfilter="or ( project:$project label:$label )"
-	fi
-	task \( \
-		project.has:"$has" or \
-		label.has:"$has" or \
-		description.has:"$has" \
-		$fqlfilter \
-	\) "$@"
+	local report
+
+	if [[ $1 == -a ]]
+	then report=all; shift
+	else report=next; fi
+
+	task $(taskids -a "$@") $report;
 }
 
 taskgc ()
