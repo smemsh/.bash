@@ -242,6 +242,13 @@ alias taskprjs		"task _unique project"
 alias taskredo		"timew move @1 \`date -Iseconds\`"
 alias taskcont		"timew continue"
 alias taskann		"taskcur annotate --"
+alias alltimes		"taskstat -a " \
+			"| grep time/ " \
+			"| awk -F time/ '{print \$2}' " \
+			"| awk '{print \$1}' " \
+			"| sort " \
+			"| uniq -c " \
+			"| sort -nrk 1,2"
 
 ### uncategorized / TODO
 
