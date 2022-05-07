@@ -53,7 +53,7 @@ taskgrep ()
 	else noteuuids=()
 	fi
 
-	task $(taskids -za "$@" ${noteuuids[@]}) all
+	task $(taskids -za -- "$@" ${noteuuids[@]}) all
 }
 
 taskgc ()
