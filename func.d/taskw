@@ -43,12 +43,8 @@ taskprj () { TASKPRJ="$@"; } # default project
 # look in more fields that have text, default is only description
 taskgrep ()
 {
-	local report pattern
+	local pattern
 	local -a patexprs rstpaths noteuuids
-
-	if [[ $1 == -a ]]
-	then report=all; shift
-	else report=next; fi
 
 	for pattern; do patexprs+=(-e "$pattern"); done
 	rstpaths=($(grep -Els "${patexprs[@]}" ~/.task/notes/*.rst))
@@ -57,7 +53,7 @@ taskgrep ()
 	else noteuuids=()
 	fi
 
-	task $(taskids -za "$@" ${noteuuids[@]}) $report
+	task $(taskids -za "$@" ${noteuuids[@]}) all
 }
 
 taskgc ()
