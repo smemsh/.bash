@@ -41,7 +41,8 @@ taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
 
 # look in more fields that have text, default is only description
-taskgrep ()
+taskgrepp () { taskgrep_report=all taskgrep "$@"; }
+taskgrep  ()
 {
 	local pattern
 	local -a patexprs rstpaths noteuuids
@@ -53,7 +54,7 @@ taskgrep ()
 	else noteuuids=()
 	fi
 
-	task $(taskids -za -- "$@" ${noteuuids[@]}) all
+	task $(taskids -za -- "$@" ${noteuuids[@]}) ${taskgrep_report:-next}
 }
 
 taskgc ()
