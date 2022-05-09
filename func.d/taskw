@@ -77,13 +77,16 @@ retimew ()
 {
 	local -a intervals
 	local -A labels
-	local op
+	local op label
 
 	while [[ $1 =~ ^@ ]]; do intervals+=($1); shift; done
 	if ! ((${#intervals}))
 	then echo "first args should be interval(s)" >&2; false; return; fi
 
 	labels=([untag]=${1:?} [tag]=${2:?})
+	for label in ${labels[@]}; do
+		if ! taskfql $label &>/dev/null; then
+			echo "label $l is bogus" >&2; false; return; fi; done
 
 	for op in untag tag
 	do if ! timew $op ${intervals[@]} $(timewtags ${labels[$op]})
