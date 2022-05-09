@@ -77,6 +77,7 @@ retimew ()
 {
 	local -a intervals
 	local -A labels
+	local op
 
 	while [[ $1 =~ ^@ ]]; do intervals+=($1); shift; done
 	if ! ((${#intervals}))
