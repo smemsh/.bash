@@ -41,6 +41,7 @@ taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
 
 # look in more fields that have text, default is only description
+taskgrepx () { taskgrep_report=export taskgrep "$@" | jq -r .; }
 taskgrepp () { taskgrep_report=all taskgrep "$@"; }
 taskgrep  ()
 {
