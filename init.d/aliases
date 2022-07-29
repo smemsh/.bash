@@ -238,6 +238,7 @@ alias sshsvn		"SVN_SSH=\""					\
 
 ### taskwarrior
 
+alias taskn             "task rc.hooks=0"
 alias taskprjs		"task _unique project"
 alias taskredo		"timew move @1 \`date -Iseconds\`"
 alias taskcont		"timew continue"
