@@ -1,0 +1,5 @@
+#
+# disable ctrl-s/ctrl-q xon/xoff, which often gets in the way
+# this is rarely useful, if ever, since we upgraded to a 2400 baud modem ;-)
+#
+stty -ixon &>/dev/null
