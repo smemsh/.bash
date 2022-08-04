@@ -82,6 +82,11 @@ taskgc ()
 
 ### timewarrior
 
+timedo ()
+{
+	taskw start time/${1:?}
+}
+
 taskstat ()
 {
 	local all
