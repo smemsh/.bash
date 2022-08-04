@@ -108,3 +108,31 @@ retimew ()
 	do if ! timew $op ${intervals[@]} $(timewtags ${labels[$op]})
 	then echo "$op failure" >&2; false; return; fi; done
 }
+
+# todo: do this in totals.py instead, making a new report.py,
+# adding tag counts and hierarchy counts
+#
+taskreport ()
+{
+	timew totals ${1:-:week} \
+	| grep / \
+	| awk '{print $2, $1}' \
+	| grep -v /$ \
+	| sort -nrk 1,1 \
+	| awk '
+	BEGIN { timeformat = "%3u:%02u:%02u" }
+	{
+		split($1, times, ":")
+		fql = $2
+		h = times[1]; m = times[2]; s = times[3]
+		hours += h; minutes += m; seconds += s
+		printf(timeformat " %s\n", h, m, s, fql)
+	}
+	END {
+		minutes = minutes + (int(seconds / 60))
+		seconds = seconds % 60
+		hours = hours + int(minutes / 60)
+		minutes = minutes % 60
+		printf(timeformat " <-- TOTAL\n", hours, minutes, seconds)
+	}'
+}
