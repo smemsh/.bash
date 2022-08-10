@@ -84,7 +84,7 @@ taskgc ()
 
 timedo ()
 {
-	taskw start time/${1:?}
+	timew start time/${1:?}
 }
 
 taskstat ()
