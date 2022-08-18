@@ -152,3 +152,11 @@ taskreport ()
 		printf(timeformat " <-- TOTAL\n", hours, minutes, seconds)
 	}'
 }
+
+taskdel ()
+{
+	taskn "${@:?}" delete &&
+	taskn "$@" purge &&
+	taskgc &&
+	taskgc # TODO: why needed twice? try again after 2.6.2
+}
