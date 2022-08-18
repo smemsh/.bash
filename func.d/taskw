@@ -84,6 +84,8 @@ taskgc ()
 
 timedo ()
 {
+	(($# > 1)) && { echo "zero or one arg" >&2; false; return; }
+	(($# == 0)) && set -- todo
 	timew start time/${1:?}
 }
 
