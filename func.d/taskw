@@ -94,24 +94,33 @@ taskstat ()
 	timew summary "$@" :ids $all
 }
 
-retimew ()
+timeredo ()
 {
-	local -a intervals
-	local -A labels
-	local op label
+	local n i ival
+	local -a ivals olds
 
-	while [[ $1 =~ ^@ ]]; do intervals+=($1); shift; done
-	if ! ((${#intervals}))
-	then echo "first args should be interval(s)" >&2; false; return; fi
+	while [[ $1 =~ ^@ ]]; do ivals+=($1); shift; done
+	n=${#ivals[@]}
+	if ((n == 0 || $# == 0)); then
+		echo "$FUNCNAME: overwrite tags for given intervals" >&2
+		echo " usage: $FUNCNAME [@interval]... [tag]..." >&2
+		false
+		return
+	fi
 
-	labels=([untag]=${1:?} [tag]=${2:?})
-	for label in ${labels[@]}; do
-		if ! taskfql $label &>/dev/null; then
-			echo "label $l is bogus" >&2; false; return; fi; done
-
-	for op in untag tag
-	do if ! timew $op ${intervals[@]} $(timewtags ${labels[$op]})
-	then echo "$op failure" >&2; false; return; fi; done
+	for ((i = 0; i < n; i++)); do
+		ival=${ivals[i]}
+		if (($(timew get dom.tracked.$n.tag.count))); then
+			olds=($(
+				timew get dom.tracked.$n.json |
+				jq -r '.tags[]'
+			))
+			if ! timew untag $ival "${olds[@]}"
+			then echo "untag failed" >&2; false; return; fi
+		fi
+		if ! timew tag $ival "$@"
+		then echo "tag failed" >&2; false; return; fi
+	done
 }
 
 # todo: do this in totals.py instead, making a new report.py,
