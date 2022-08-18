@@ -111,16 +111,16 @@ timeredo ()
 	fi
 
 	for ((i = 0; i < n; i++)); do
-		ival=${ivals[i]}
-		if (($(timew get dom.tracked.$n.tag.count))); then
+		ival=${ivals[i]#@}
+		if (($(timew get dom.tracked.$ival.tag.count))); then
 			olds=($(
-				timew get dom.tracked.$n.json |
+				timew get dom.tracked.$ival.json |
 				jq -r '.tags[]'
 			))
-			if ! timew untag $ival "${olds[@]}"
+			if ! timew untag @$ival "${olds[@]}"
 			then echo "untag failed" >&2; false; return; fi
 		fi
-		if ! timew tag $ival "$@"
+		if ! timew tag @$ival "$@"
 		then echo "tag failed" >&2; false; return; fi
 	done
 }
