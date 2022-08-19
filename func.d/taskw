@@ -185,3 +185,17 @@ timewk ()
 	esac
 	task calc $week
 }
+
+timevals ()
+{
+	local -a ivals
+	local lookupfql=$(taskfql ${1:-$(taskfql)})
+	[[ $lookupfql ]] || { false; return; }
+
+	for i in $(timew export $lookupfql | jq -r '.[].id')
+	do ivals+=($i); done
+
+	for ((i = 0; i < ${#ivals[@]}; i++))
+	do printf $'@%u\x20' ${ivals[i]}; done
+	if ((i)); then echo; fi
+}
