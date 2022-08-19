@@ -165,3 +165,11 @@ timetotal ()
 {
 	taskstat "$@" | sed '/^$/d' | tail -1 | awk '{print $1}'
 }
+
+timesince ()
+{
+	local duration=${1:?}
+	local start="$(task calc "${2:-"(now - $duration)"}")"
+	local end="$(task calc "$start" + "$duration")"
+	echo "$start" - "$end"
+}
