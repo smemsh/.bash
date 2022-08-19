@@ -158,7 +158,7 @@ taskdel ()
 	taskn "${@:?}" delete &&
 	taskn "$@" purge &&
 	taskgc &&
-	taskgc # TODO: why needed twice? try again after 2.6.2
+	taskgc # TODO: needed twice asof 2.6.2, see taskwarrior #2923
 }
 
 timetotal ()
