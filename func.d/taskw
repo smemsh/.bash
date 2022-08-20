@@ -156,9 +156,8 @@ taskreport ()
 taskdel ()
 {
 	taskn "${@:?}" delete &&
-	taskn "$@" purge &&
 	taskgc &&
-	taskgc # TODO: needed twice asof 2.6.2, see taskwarrior #2923
+	taskn "$@" purge
 }
 
 timetotal ()
