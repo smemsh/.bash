@@ -155,9 +155,8 @@ taskreport ()
 
 taskdel ()
 {
-	taskn "${@:?}" delete &&
-	taskgc &&
-	taskn "$@" purge
+	task rc.hooks=0 "${@:?}" delete && taskgc &&
+	task rc.hooks=0 "$@" purge
 }
 
 timetotal ()
