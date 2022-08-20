@@ -80,6 +80,12 @@ taskgc ()
 	task rc.gc=on rc.verbose=nothing // list >/dev/null
 }
 
+taskdel ()
+{
+	task rc.hooks=0 "${@:?}" delete && taskgc &&
+	task rc.hooks=0 "$@" purge
+}
+
 ### timewarrior
 
 timedo ()
@@ -151,12 +157,6 @@ taskreport ()
 		minutes = minutes % 60
 		printf(timeformat " <-- TOTAL\n", hours, minutes, seconds)
 	}'
-}
-
-taskdel ()
-{
-	task rc.hooks=0 "${@:?}" delete && taskgc &&
-	task rc.hooks=0 "$@" purge
 }
 
 timetotal ()
