@@ -75,8 +75,13 @@ tasknote ()
 
 taskrecent ()
 {
+	local desc
+	if [[ $1 == '-d' ]]; then shift; desc=true; else desc=false; fi
 	task export \
-	| jq -r --argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) '
+	| jq -r \
+		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
+		--argjson showdesc $desc \
+		'
 		sort_by(.modified) |
 		reverse |
 		.[] |
@@ -90,10 +95,15 @@ taskrecent ()
 		"\(.modified)"
 		+ "\t\(.label)"
 		+ "\t\(.project | gsub("\\."; "/"))/"
-		+ "\t\(.description))"
+		+ if $showdesc then "\t\(.description)" else "\t" end
 	' \
-	| awk -F $'\t' -v OFS=$'\t' '{print $2, $3, $4}' \
-	| column -s $'\t' -t
+	| awk -F $'\t' '{
+		for (i = 2; i <= NF; i++) printf("%s\t", $i)
+		print("\n")
+	}' \
+	| sed s,'\t$',, \
+	| column -s $'\t' -t \
+	;
 }
 
 taskgc ()
