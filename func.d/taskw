@@ -75,22 +75,44 @@ tasknote ()
 
 taskrecent ()
 {
-	local desc proj
+	local desc="false"
 
-	eval set -- $(getopt -n "${0##*/}" -o pd -l proj,desc -- "$@")
+	local opts # flag bits
+	declare fql=$((1<<1))
+	declare proj=$((1<<2))
+	declare label=$((1<<4))
+
+	# flag bit -> json bool
+	optbool () { (((opts & $1) == $1)) && v=true || v=false; printf $v; }
+
+	# 1/2
+	eval set -- $(getopt -n "${0##*/}" \
+		-o fpdlh -l fql,proj,label,desc,help -- "$@")
+
+	# 2/2
 	while true; do case $1 in
-	(-p|--proj) proj=true; shift;;
+	(-f|--fql) let "opts |= $fql"; shift;;
+	(-p|--proj) let "opts |= $proj"; shift;;
+	(-l|--label) let "opts |= $label"; shift;;
 	(-d|--desc) desc=true; shift;;
 	(-h|--help) echo "read script for usage" >&2; false; return;;
 	(--) shift; break;;
 	(*) echo "bad usage" >&2; false; return;;
 	esac; done
 
+	if ! (((opts & (opts - 1)) == 0))
+	then echo "fql/project/label exclude each other" >&2; false; return; fi
+
+	if ! ((opts)) # default display type if user didn't specify
+	then opts=$label; fi
+
 	task export \
 	| jq -r \
 		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
-		--argjson showproj ${proj:-false} \
-		--argjson showdesc ${desc:-false} \
+		--argjson showdesc $desc \
+		--argjson showfql `optbool $fql` \
+		--argjson showproj `optbool $proj` \
+		--argjson showlabel `optbool $label` \
 		'
 		sort_by(.modified) |
 		reverse |
@@ -101,14 +123,19 @@ taskrecent ()
 			; "\(.yy)-\(.mo)-\(.dd)T"
 			+ "\(.hh):\(.mm):\(.ss)Z"
 			) | fromdateiso8601 > $cutoff
-		) |
-		"\(.modified)"
-		+ if $showproj then "\t\(.label)\t\(.project | gsub("\\."; "/"))/"
-		  else "\t\(.project | gsub("\\."; "/"))/\(.label)" end
+		) | ""
+		+ if $showlabel
+		  then "\t\(.label)"
+		  elif $showproj
+		  then "\t\(.label)\t\(.project | gsub("\\."; "/"))/"
+		  elif $showfql
+		  then "\t\(.project | gsub("\\."; "/"))/\(.label)"
+		  else empty
+		  end
 		+ if $showdesc then "\t\(.description)" else "\t" end
 	' \
 	| awk -F $'\t' '{
-		for (i = 2; i <= NF; i++) printf("%s\t", $i)
+		for (i = 1; i <= NF; i++) printf("%s\t", $i)
 		print("\n")
 	}' \
 	| sed s,'\t$',, \
