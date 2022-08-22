@@ -73,6 +73,25 @@ tasknote ()
 				cat $file; fi; done; fi)
 }
 
+taskrecent ()
+{
+	task export \
+	| jq -r --argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) '
+		.[]
+		| select(.modified | gsub(
+			"(?<yy>\\d{4})(?<mo>\\d{2})(?<dd>\\d{2})T"
+			+ "(?<hh>\\d{2})(?<mm>\\d{2})(?<ss>\\d{2})Z"
+			; "\(.yy)-\(.mo)-\(.dd)T"
+			+ "\(.hh):\(.mm):\(.ss)Z")
+			| fromdateiso8601 > $cutoff
+		)
+		| "\(.modified) \(.project).\(.label)"
+		| gsub("\\."; "/")
+	' \
+	| sort -r \
+	| awk '{print $2}'
+}
+
 taskgc ()
 {
 	(($(task +DELETED _unique uuid | wc -l))) &&
