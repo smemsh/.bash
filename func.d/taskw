@@ -238,7 +238,7 @@ taskreport ()
 	}'
 }
 
-timetotal ()
+timesum ()
 {
 	taskstat "$@" | sed '/^$/d' | tail -1 | awk '{print $1}'
 }
