@@ -86,9 +86,13 @@ taskrecent ()
 			; "\(.yy)-\(.mo)-\(.dd)T"
 			+ "\(.hh):\(.mm):\(.ss)Z"
 			) | fromdateiso8601 > $cutoff
-		) | "\(.modified) \(.project | gsub("\\."; "/"))/\(.label)"
+		) |
+		"\(.modified)"
+		+ "\t\(.label)"
+		+ "\t\(.project | gsub("\\."; "/"))/"
 	' \
-	| awk '{print $2}'
+	| awk -F $'\t' -v OFS=$'\t' '{print $2, $3}' \
+	| column -s $'\t' -t
 }
 
 taskgc ()
