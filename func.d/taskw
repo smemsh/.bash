@@ -76,11 +76,19 @@ tasknote ()
 taskrecent ()
 {
 	local desc
-	if [[ $1 == '-d' ]]; then shift; desc=true; else desc=false; fi
+
+	eval set -- $(getopt -n "${0##*/}" -o d -l desc -- "$@")
+	while true; do case $1 in
+	(-d|--desc) desc=true; shift;;
+	(-h|--help) echo "read script for usage" >&2; false; return;;
+	(--) shift; break;;
+	(*) echo "bad usage" >&2; false; return;;
+	esac; done
+
 	task export \
 	| jq -r \
 		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
-		--argjson showdesc $desc \
+		--argjson showdesc ${desc:-false} \
 		'
 		sort_by(.modified) |
 		reverse |
