@@ -75,10 +75,11 @@ tasknote ()
 
 taskrecent ()
 {
-	local desc
+	local desc proj
 
-	eval set -- $(getopt -n "${0##*/}" -o d -l desc -- "$@")
+	eval set -- $(getopt -n "${0##*/}" -o pd -l proj,desc -- "$@")
 	while true; do case $1 in
+	(-p|--proj) proj=true; shift;;
 	(-d|--desc) desc=true; shift;;
 	(-h|--help) echo "read script for usage" >&2; false; return;;
 	(--) shift; break;;
@@ -88,6 +89,7 @@ taskrecent ()
 	task export \
 	| jq -r \
 		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
+		--argjson showproj ${proj:-false} \
 		--argjson showdesc ${desc:-false} \
 		'
 		sort_by(.modified) |
@@ -101,8 +103,8 @@ taskrecent ()
 			) | fromdateiso8601 > $cutoff
 		) |
 		"\(.modified)"
-		+ "\t\(.label)"
-		+ "\t\(.project | gsub("\\."; "/"))/"
+		+ if $showproj then "\t\(.label)\t\(.project | gsub("\\."; "/"))/"
+		  else "\t\(.project | gsub("\\."; "/"))/\(.label)" end
 		+ if $showdesc then "\t\(.description)" else "\t" end
 	' \
 	| awk -F $'\t' '{
