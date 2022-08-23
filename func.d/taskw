@@ -82,8 +82,8 @@ taskrecent ()
 	declare proj=$((1<<2))
 	declare label=$((1<<4))
 
-	# flag bit -> json bool
-	optbool () { (((opts & $1) == $1)) && v=true || v=false; printf $v; }
+	flag    () { (((opts & $1) == $1)); }
+	flagstr () { flag $1 && printf true || printf false; }
 
 	# 1/2
 	eval set -- $(getopt -n "${0##*/}" \
@@ -110,9 +110,9 @@ taskrecent ()
 	| jq -r \
 		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
 		--argjson showdesc $desc \
-		--argjson showfql `optbool $fql` \
-		--argjson showproj `optbool $proj` \
-		--argjson showlabel `optbool $label` \
+		--argjson showfql `flagstr $fql` \
+		--argjson showproj `flagstr $proj` \
+		--argjson showlabel `flagstr $label` \
 		'
 		sort_by(.modified) |
 		reverse |
