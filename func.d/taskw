@@ -259,6 +259,11 @@ timesince ()
 	echo "$start" - "$end"
 }
 
+timein ()
+{
+	task calc now + "$@"
+}
+
 timewk ()
 {
 	local week
