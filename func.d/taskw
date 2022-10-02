@@ -49,8 +49,13 @@ taskgrep  ()
 	local pattern
 	local -a patexprs rstpaths noteuuids
 
-	for pattern; do patexprs+=(-e "$pattern"); done
-	rstpaths=($(grep -Els "${patexprs[@]}" ~/.task/notes/*.rst))
+	if [[ $1 == -n || $1 == --nofiles ]]
+	then shift
+	else
+		for pattern; do patexprs+=(-e "$pattern"); done
+		rstpaths=($(grep -Els "${patexprs[@]}" ~/.task/notes/*.rst))
+	fi
+
 	if ((${#rstpaths[@]}))
 	then noteuuids=($(basename -s .rst ${rstpaths[@]}))
 	else noteuuids=()
