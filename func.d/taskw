@@ -302,7 +302,7 @@ timevals ()
 
 tasklast ()
 {
-	local curfql interval
+	local candidate curfql interval
 
 	fql_of_interval ()
 	{
