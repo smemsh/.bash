@@ -253,7 +253,12 @@ taskreport ()
 
 timesum ()
 {
-	taskstat "$@" | sed '/^$/d' | tail -1 | awk '{print $1}'
+	taskstat "$@" \
+	| sed '/^$/d' \
+	| tail -1 \
+	| awk '{print $1}' \
+	| grep -v ^No \
+	|| echo 0:00:00
 }
 
 timesince ()
