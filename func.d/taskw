@@ -328,5 +328,5 @@ tasklast ()
 		fi
 	done
 
-	echo timew continue @$interval
+	timew continue @$interval
 }
