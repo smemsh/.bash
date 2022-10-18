@@ -8,10 +8,18 @@ tmux ()
 	local defargs="new-session -l -v -A -2u -L / -n / -P"
 	local realexe=`type -P tmux`
 
+	# tell malloc() to use madvise(MADV_HUGEPAGE), which helps there
+	# to be less ptes, so forking is somewhat faster, which is good
+	# for tmux, especially with large amounts of scrollback, see
+	# tmux issue 3352.  this var should be unset in tmux so pane
+	# shells are not getting hugetlb malloc unless they ask
+	#
+	local -a envs=(GLIBC_TUNABLES=glibc.malloc.hugetlb=1)
+
 	# XXX TODO incomplete, so just always do the true case
 	#if (($#))
 	if true
-	then $realexe "$@"
-	else $realexe ${defargs[@]}
+	then (eval ${envs[@]} $realexe $@)
+	else (eval ${envs[@]} $realexe ${defargs[@]})
 	fi
 }
