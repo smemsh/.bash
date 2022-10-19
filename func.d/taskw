@@ -177,6 +177,12 @@ taskfield ()
 	| jq -r ".[].${2:?}"
 }
 
+taskopen ()
+{
+	(($# > 1)) && { echo "zer or one arg" >&2; false; return; }
+	`type -P taskopen` `taskid $1`
+}
+
 ### timewarrior
 
 timedo ()
