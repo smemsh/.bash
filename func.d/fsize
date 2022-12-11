@@ -26,3 +26,21 @@ fsize ()
 		"${h[i]}"
 	done
 }
+
+birth ()
+{
+	local f statout filename birthdate
+
+	if (($# == 0))
+	then echo "no args provided" >&2; false; return; fi
+
+	for f; do
+		statout="$(stat -c "%n:%W" "$f")"
+		if ! [[ $statout =~ ([^:]+):(.+)$ ]]
+		then echo "bad usage" >&2; false; return; fi
+		filename="${BASH_REMATCH[1]}"
+		birthdate="${BASH_REMATCH[2]}"
+		(($# > 1)) && printf "$filename: "
+		echo "$(date -d @"$birthdate" +$HISTTIMEFORMAT)"
+	done
+}
