@@ -209,6 +209,9 @@ shell_init_arch_specific ()
 	psetenv AWT_TOOLKIT		\
 		MToolkit		\
 	;
+	psetenv XDG_RUNTIME_DIR         \
+		/run/user/${UID:?}      \
+	;
 	;;
 
 	(SunOS) #########################
