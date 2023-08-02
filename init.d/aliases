@@ -273,7 +273,7 @@ alias vimro		"vim -R"
 alias rel		"lsb_release -si"
 alias ncal		"ncal -Mw"
 alias xv		"pqiv -f"
-alias xpdf		"xpdf -fullscreen"
+alias xpdf		"xpdf -z width -fullscreen"
 alias shred		"shred -zun 50"
 
 alias aptpats		"elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
