@@ -40,18 +40,48 @@ taskcur ()
 taskaddl () { TASKADD="$*"; } # additional args (such as tags)
 taskprj () { TASKPRJ="$@"; } # default project
 
-# look in more fields that have text, default is only description
-taskgrepu () { taskgrep_report=export taskgrep "$@" | jq -r '.[].uuid'; }
-taskgrepx () { taskgrep_report=export taskgrep "$@" | jq -r .; }
-taskgrepp () { taskgrep_report=all taskgrep "$@"; }
+# look in more fields that have text via taskget, and also in notes
+taskgrepu () { taskgrep -u "$@"; }
+taskgrepx () { taskgrep -x "$@"; }
+taskgrepp () { taskgrep -a "$@"; }
 taskgrep  ()
 {
-	local pattern
+	local pattern nofiles outuuid outjson
+	local report=next
+	local filter=cat
+
 	local -a patexprs rstpaths noteuuids
 
-	if [[ $1 == -n || $1 == --nofiles ]]
-	then shift
-	else
+	usage ()
+	{
+		cat <<- %
+		$FUNCNAME: search by taskget/rstnote; report or export
+		  -u output only matching task UUIDs
+		  -x output JSON export of matching tasks
+		  -a use 'all' report (matches include closed ones)
+		  -n do not look in rst notes of tasks for matching text
+		%
+	}
+
+	eval set -- $(getopt -n $FUNCNAME \
+	-o auxnh -l all,uuid,json,nofiles,help -- "$@")
+	while true; do case $1 in
+	(-a|--all)  report=all; shift;;
+	(-u|--uuid) report=export outuuid=1; shift;;
+	(-x|--json) report=export outjson=1; shift;;
+	(-n|--nofiles) nofiles=1; shift;;
+	(-h|--help) usage; true; return;;
+	(--) shift; break;;
+	(*) usage; false; return;;
+	esac; done
+
+	if ((outuuid && outjson))
+	then echo "uuid/json outputs mutually exclusive" >&2; false; return; fi
+
+	if ((outuuid || outjson)) && [[ $report == "all" ]]
+	then echo "all report excludes json/uuid format" >&2; false; return; fi
+
+	if ! ((nofiles)); then
 		for pattern; do patexprs+=(-e "$pattern"); done
 		rstpaths=($(grep -Els "${patexprs[@]}" ~/.task/notes/*.rst))
 	fi
@@ -61,7 +91,10 @@ taskgrep  ()
 	else noteuuids=()
 	fi
 
-	task $(taskids -za -- "$@" ${noteuuids[@]}) ${taskgrep_report:-next}
+	((outuuid)) && filter="jq -r '.[].uuid'"
+	((outjson)) && filter="jq -r ."
+	task $(taskids -za -- "$@" ${noteuuids[@]}) $report \
+	| eval "$filter"
 }
 
 tasknote ()
