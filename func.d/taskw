@@ -55,7 +55,9 @@ taskgrep  ()
 	usage ()
 	{
 		cat <<- %
-		$FUNCNAME: search by taskget/rstnote; report or export
+		usage: $FUNCNAME [option]... [searchpat]...
+
+		search by taskget and rstnote grep; report or export
 		  -u output only matching task UUIDs
 		  -x output JSON export of matching tasks
 		  -a use 'all' report (matches include closed ones)
@@ -74,6 +76,9 @@ taskgrep  ()
 	(--) shift; break;;
 	(*) usage; false; return;;
 	esac; done
+
+	if ! (($#))
+	then echo "must supply one or more patterns" >&2; false; return; fi
 
 	if ((outuuid && outjson))
 	then echo "uuid/json outputs mutually exclusive" >&2; false; return; fi
