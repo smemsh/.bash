@@ -221,6 +221,13 @@ taskopen ()
 	`type -P taskopen` `taskid $1`
 }
 
+taskrestart ()
+{
+	local t=`taskid $1`
+	task $t mod status:pending end: start:$(timewfmt $(now))
+	taskdo $t
+}
+
 ### timewarrior
 
 timedo ()
