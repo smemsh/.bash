@@ -293,14 +293,14 @@ alias py		"python3 -q"
 alias pydoc		"pydoc3"
 alias wd		"cd ~/work/src; cd"
 
-alias pht		"TZ=Asia/Manila date"
-alias ist               "TZ=Asia/Kolkata date"
-alias cdg               "TZ=Europe/Paris date"
-alias roc               "TZ=US/Eastern date"
-alias aus               "TZ=US/Central date"
-alias den               "TZ=US/Mountain date"
-alias sfo               "TZ=US/Pacific date"
-alias utc               "TZ=Etc/UTC date"
+alias pht		"TZ=Asia/Manila"
+alias ist               "TZ=Asia/Kolkata"
+alias cdg               "TZ=Europe/Paris"
+alias roc               "TZ=US/Eastern"
+alias aus               "TZ=US/Central"
+alias den               "TZ=US/Mountain"
+alias sfo               "TZ=US/Pacific"
+alias utc               "TZ=Etc/UTC"
 
 alias fwup		"sudo sh -c '" \
 				"systemctl unmask fwupd polkit udisks2; " \
