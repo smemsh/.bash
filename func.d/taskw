@@ -121,6 +121,8 @@ taskrecent ()
 	local desc="false"
 
 	local opts # flag bits
+	local current timechar timethis
+
 	declare fql=$((1<<1))
 	declare proj=$((1<<2))
 	declare label=$((1<<4))
@@ -149,8 +151,18 @@ taskrecent ()
 	if ! ((opts)) # default display type if user didn't specify
 	then opts=$label; fi
 
+	timewstr=$(timew export @1 | jq -r '
+		if .[].end then "=" else "*" end
+		+ (.[].tags | map(select(
+			.[0:1] != "+" and .[-1:] != "/")) | first)
+	')
+	timechar=${timewstr:0:1}
+	timefql=${timewstr:1}
+
 	task export \
 	| jq -r \
+		--arg timefql "$timefql" \
+		--arg timechar "$timechar" \
 		--argjson cutoff $(date -d $(task calc now - ${1:-24h}) +%s) \
 		--argjson showdesc $desc \
 		--argjson showfql `flagstr $fql` \
@@ -166,16 +178,30 @@ taskrecent ()
 			; "\(.yy)-\(.mo)-\(.dd)T"
 			+ "\(.hh):\(.mm):\(.ss)Z"
 			) | fromdateiso8601 > $cutoff
-		) | ""
+		) |
+		"\(.label)" as $lbl |
+		"\(.project | gsub("\\."; "/"))" as $prj |
+		($prj + "/" + $lbl) as $fql |
+		(
+			if (.status == "completed")
+			then "/"
+			elif ($fql == $timefql)
+			then $timechar
+			elif (.start != null)
+			then "\\"
+			else "-"
+			end
+		) as $statchar |
+		"\($statchar) "
 		+ if $showlabel
-		  then "\t\(.label)"
+		  then $lbl
 		  elif $showproj
-		  then "\t\(.label)\t\(.project | gsub("\\."; "/"))/"
+		  then $lbl + "\t" + $prj + "/"
 		  elif $showfql
-		  then "\t\(.project | gsub("\\."; "/"))/\(.label)"
-		  else empty
+		  then $fql
+		  else ""
 		  end
-		+ if $showdesc then "\t\(.description)" else "\t" end
+		+ if $showdesc then "\t\(.description)" else "" end
 	' \
 	| awk -F $'\t' '{
 		for (i = 1; i <= NF; i++) printf("%s\t", $i)
