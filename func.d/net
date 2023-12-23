@@ -1,0 +1,9 @@
+#
+
+ap ()
+{
+	local iface=${1:-wlan0}
+	iw dev $iface info 2>/dev/null \
+	| grep -P '^\s*ssid\s' \
+	| field 2
+}
