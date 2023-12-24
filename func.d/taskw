@@ -201,7 +201,7 @@ taskrecent ()
 		  then $fql
 		  else ""
 		  end
-		+ if $showdesc then "\t\(.description)" else "" end
+		+ if $showdesc then "\(.description)" else "" end
 	' \
 	| awk -F $'\t' '{
 		for (i = 1; i <= NF; i++) printf("%s\t", $i)
@@ -251,7 +251,7 @@ taskrestart ()
 {
 	local t=`taskid $1`
 	task $t mod status:pending end: start:$(timewfmt $(now))
-	taskdo $t
+	#taskdo $t # <-- see task e3400a1c, keeping commented out for now
 }
 
 ### timewarrior
