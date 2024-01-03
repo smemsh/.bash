@@ -1,0 +1,3 @@
+#
+
+restless () { rst2html "$@" | elinks -dump -dump-color-mode 3; }
