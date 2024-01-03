@@ -293,7 +293,7 @@ alias py		"python3 -q"
 alias pydoc		"pydoc3"
 alias wd		"cd ~/work/src; cd"
 
-alias pht		"TZ=Asia/Manila"
+alias mnl		"TZ=Asia/Manila"
 alias ist               "TZ=Asia/Kolkata"
 alias cdg               "TZ=Europe/Paris"
 alias roc               "TZ=US/Eastern"
