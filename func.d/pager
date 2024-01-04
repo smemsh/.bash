@@ -1,3 +1,10 @@
 #
 
-restless () { rst2html "$@" | elinks -dump -dump-color-mode 3 | less; }
+restless ()
+{
+	rst2html "$@" \
+	| elinks \
+		-dump \
+		-dump-color-mode 3 \
+	| less
+}
