@@ -201,7 +201,7 @@ taskrecent ()
 		  then $fql
 		  else ""
 		  end
-		+ if $showdesc then "\(.description)" else "" end
+		+ if $showdesc then "\t\(.description)" else "" end
 	' \
 	| awk -F $'\t' '{
 		for (i = 1; i <= NF; i++) printf("%s\t", $i)
