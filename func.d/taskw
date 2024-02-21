@@ -102,20 +102,6 @@ taskgrep  ()
 	| eval "$filter"
 }
 
-tasknote ()
-{
-	(rcfile=~/.taskopenrc; if test -e $rcfile; then
-		source $rcfile
-		results=($(taskgrepu "$@"))
-		nresults=${#results[@]}
-		for ((i = 0; i < nresults; i++)); do
-			uuid=${results[i]}
-			file=${NOTES_FOLDER:?}/$uuid.rst
-			if test -r $file; then
-				((nresults > 1)) && printf "==> %s\n" $uuid
-				cat $file; fi; done; fi)
-}
-
 taskrecent ()
 {
 	local desc="false"
