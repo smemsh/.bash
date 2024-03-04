@@ -59,7 +59,6 @@ refunc ()
 	if (($#))
 	then
 		# only read in the user-specified sourcefiles
-		#
 		for ((i = 1; i <= $#; i++)); do
 			if ! test -f ${!i}; then
 				echo "no such sourcefile ${!i}"
@@ -69,7 +68,6 @@ refunc ()
 		done
 	else
 		# default with no args: all function sourcefiles
-		#
 		for file in *; do source $file; done
 	fi
 
