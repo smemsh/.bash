@@ -9,21 +9,21 @@ mkdir -p $logdir
 
 debug_add_traplog ()
 {
-	local	type=$1
-	local	info="$2"
-	local	file=$logprefix/$type
+	local type=$1
+	local info="$2"
+	local file=$logprefix/$type
 
-	trap "							\
-		eval echo -n					\
-		\"$type: $info\"				\
-		>> $file					\
+	trap " \
+		eval echo -n \
+		\"$type: $info\" \
+		>> $file \
 	" RETURN
 }
 
-set	-							\
-calls	'$BASH_SOURCE/$FUNCNAME/$BASH_COMMAND'			\
-parms	'$BASH_ARGV'						\
-traps	'$(trap -l)'
+set - \
+calls '$BASH_SOURCE/$FUNCNAME/$BASH_COMMAND' \
+parms '$BASH_ARGV' \
+traps '$(trap -l)'
 
 while $#; do
 	eval $1="\${2\[@\]}"

@@ -43,7 +43,7 @@ alias fm		"fg -"
 alias fp		"fg +"
 
 alias realias		"source ~/.bash/init.d/aliases"
-alias rebind            "echo re-read-init-file | bind"
+alias rebind		"echo re-read-init-file | bind"
 alias recomplete	"source ~/.bash/init.d/completions"
 alias reenv		"source ~/.bash/setenv; source ~/.bash/init.d/env"
 alias reinit		"source ~/.bash/rc"
@@ -91,10 +91,10 @@ alias nowdatefmt	"date +\$HISTTIMEFORMAT"
 #alias count		"wc -l"
 #alias linecount	"wc -l"
 alias addrof		"gethostip -d"
-alias ipls		"ip addr ls | "                                 \
-				"grep 'inet.*/' | "                     \
-				"awk '{print \$2, \$NF}' | "            \
-				"column -t"                             \
+alias ipls		"ip addr ls | "					\
+				"grep 'inet.*/' | "			\
+				"awk '{print \$2, \$NF}' | "		\
+				"column -t"				\
 			;
 alias lastmodf		"ls -1t \$("					\
 				"find . "				\
@@ -239,7 +239,7 @@ alias sshsvn		"SVN_SSH=\""					\
 
 ### taskwarrior
 
-alias taskn             "task rc.hooks=0"
+alias taskn		"task rc.hooks=0"
 alias taskprjs		"task _unique project"
 alias taskredo		"timew move @1 \`date -Iseconds\`"
 alias taskcont		"timew continue"
@@ -294,13 +294,13 @@ alias pydoc		"pydoc3"
 alias wd		"cd ~/work/src; cd"
 
 alias mnl		"TZ=Asia/Manila"
-alias ist               "TZ=Asia/Kolkata"
-alias cdg               "TZ=Europe/Paris"
-alias roc               "TZ=US/Eastern"
-alias aus               "TZ=US/Central"
-alias den               "TZ=US/Mountain"
-alias sfo               "TZ=US/Pacific"
-alias utc               "TZ=Etc/UTC"
+alias ist		"TZ=Asia/Kolkata"
+alias cdg		"TZ=Europe/Paris"
+alias roc		"TZ=US/Eastern"
+alias aus		"TZ=US/Central"
+alias den		"TZ=US/Mountain"
+alias sfo		"TZ=US/Pacific"
+alias utc		"TZ=Etc/UTC"
 
 alias fwup		"sudo sh -c '" \
 				"systemctl unmask fwupd polkit udisks2; " \

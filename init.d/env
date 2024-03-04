@@ -25,16 +25,16 @@ esetenv PROMPT_COMMAND			'prompt_command $?'
 # TODO: this is really just a readlink of /proc/self/fd/0
 # (but that only works on linux), maybe we want this in OS-specific
 #
-esetenv TERMINAL                        $(tty)
+esetenv TERMINAL			$(tty)
 
 # TODO: why does gpg2 not simply use ttyname(STDIN_FILENO)?
 #
-esetenv GPG_TTY                         $TERMINAL
+esetenv GPG_TTY				$TERMINAL
 
 # this can occur in a chroot with different kinds of bind mounts
 # in which case it can be /any/path/leading/to/dev/ttyfoo
 #
-esetenv TERMINAL                        ${TERMINAL##*/dev/}
+esetenv TERMINAL			${TERMINAL##*/dev/}
 
 ###
 
@@ -51,8 +51,8 @@ psetenv LD_LIBRARY_PATH			\
 	/usr/local/lib			\
 ;
 
-psetenv GOPATH                          \
-	$HOME/go                        \
+psetenv GOPATH				\
+	$HOME/go			\
 ;
 
 # XXX TODO: hack for macports, not sure why it installs like this
@@ -115,23 +115,23 @@ esetenv BROWSER			elinks
 esetenv ELINKS_CONFDIR		$HOME/.elinks
 
 esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
-esetenv BLOCK_SIZE		human-readable	        # df, du, ls
+esetenv BLOCK_SIZE		human-readable		# df, du, ls
 
-esetenv RI			"-f ansi"	        # ruby rdoc ri
+esetenv RI			"-f ansi"		# ruby rdoc ri
 
 esetenv LYNX_CFG		$HOME/.lynxrc
 
 esetenv PAGER			"less -iRX"
 esetenv MANPAGER		"${PAGER}s"
 esetenv MANWIDTH		80
-esetenv MANHTMLPAGER            elinks                  # man2html
+esetenv MANHTMLPAGER		elinks			# man2html
 
 esetenv PDSH_RCMD_TYPE		ssh
 esetenv PDSH_MISC_MODULES	netgroup
-esetenv PDSH_REMOTE_PDCP_PATH   /usr/bin/pdcp           # ours is /usr/local
-esetenv SSH_ASKPASS		/bin/true	        # for pdsh
-esetenv FANOUT                  384                    # -f NNNN
-#esetenv FANOUT                  9999 # see github.com/chaos/pdsh #123
+esetenv PDSH_REMOTE_PDCP_PATH	/usr/bin/pdcp		# ours is /usr/local
+esetenv SSH_ASKPASS		/bin/true		# for pdsh
+esetenv FANOUT			384		       # -f NNNN
+#esetenv FANOUT			 9999 # see github.com/chaos/pdsh #123
 
 # TODO: what is this and why?
 esetenv NCURSES_NO_PADDING	1
@@ -147,34 +147,34 @@ esetenv LDAPTLS_CACERT		$HOME/.cacerts
 # now using separate pki user and ~pki --smm20150209114221
 # TODO: remove once this stabilizes
 #
-#esetenv EASYRSA_PKI            $HOME/pki
-#esetenv EASYRSA_VARS_FILE      $HOME/.pki/easy/rc
+#esetenv EASYRSA_PKI		$HOME/pki
+#esetenv EASYRSA_VARS_FILE	$HOME/.pki/easy/rc
 
 ###
 
 # man-db uses 'col' in pipe, which breaks pinfo
 #
-esetenv MAN_KEEP_FORMATTING             1
+esetenv MAN_KEEP_FORMATTING		1
 
 # we want our git env carefully constructed by only ourselves
 #
-esetenv GIT_CONFIG_NOSYSTEM             1
+esetenv GIT_CONFIG_NOSYSTEM		1
 
 # disables gtk3 warning when cannot reach dbus accessibility service
 #
-esetenv NO_AT_BRIDGE                    1
+esetenv NO_AT_BRIDGE			1
 
 # rather than make a ~root/.ssh/config just for rsyncing
 # TODO find better place for this, perhaps ~root/ is better
 #
-esetenv RSYNC_RSH                       ssh
+esetenv RSYNC_RSH			ssh
 
 # TODO: use LESSOPEN, not LESSPIPE
 # TODO: needs to be looked at, including use of '||' and '-|' (see manual)
 # TODO: there is an upstream version lesspipe.sh with many features
 #
 type -p lesspipe.sh &>/dev/null &&
-esetenv LESSPIPE		        "|lesspipe.sh %s"
+esetenv LESSPIPE			"|lesspipe.sh %s"
 esetenv LESS				"-nSQR#3"
 
 # tell redhat tools (eg 'service') not to use dbus and not to
@@ -191,11 +191,11 @@ esetenv GCAL \
 	"--iso-week-number=yes " \
 ;
 
-esetenv LIBGUESTFS_CACHEDIR             /var/cache/libguestfs
+esetenv LIBGUESTFS_CACHEDIR		/var/cache/libguestfs
 
 
 # for android Studio to display windows properly with ratpoison
-esetenv _JAVA_AWT_WM_NONREPARENTING     1
+esetenv _JAVA_AWT_WM_NONREPARENTING	1
 
 # taskwarrior / timewarrior
 source ~/.taskenv 2>/dev/null
@@ -211,8 +211,8 @@ shell_init_arch_specific ()
 	psetenv AWT_TOOLKIT		\
 		MToolkit		\
 	;
-	psetenv XDG_RUNTIME_DIR         \
-		/run/user/${UID:?}      \
+	psetenv XDG_RUNTIME_DIR		\
+		/run/user/${UID:?}	\
 	;
 	;;
 
@@ -280,7 +280,7 @@ shell_init_path ()
 {
 	psetenv PATH				\
 		$HOME/bin			\
-		$HOME/.local/bin                \
+		$HOME/.local/bin		\
 		$shell_init_path_pre		\
 		$shell_init_path_generic	\
 		$shell_init_path_post		\
