@@ -32,7 +32,7 @@ taskcur ()
 		echo "current task $name not engaged, aborting" >&2
 		false; return; fi
 
-	task $(taskid $name) "$@"
+	task $(taskid -xn $name) "$@"
 }
 
 # for taskadd
