@@ -8,7 +8,7 @@
 
 prompt_command ()
 {
-	local histnum time_t command file
+	local histnum time_t command file tmuxpid
 
 	# TODO find a way to avoid callout to date()
 	local now_time_t="$(date +%s)"
@@ -75,5 +75,9 @@ prompt_command ()
 	# status-interval 0, this avoids needing to poll, and happens
 	# synchronously too so no need to wait for normal polling lag
 	#
-	[[ $TMUX ]] && tmux refresh-client -S
+	if [[ $TMUX ]]; then
+		tmuxpid=${TMUX#*,}
+		tmuxpid=${tmuxpid%,*}
+		/proc/$tmuxpid/exe refresh-client -S
+	fi
 }
