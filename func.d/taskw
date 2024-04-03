@@ -251,13 +251,6 @@ timefill ()
 	timew move $1 $(timew get dom.tracked.${1#@}.start) :fill
 }
 
-taskstat ()
-{
-	local all
-	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
-	timew summary "$@" :ids $all
-}
-
 timeredo ()
 {
 	local n i ival
@@ -315,9 +308,16 @@ taskreport ()
 	}'
 }
 
+timestat ()
+{
+	local all
+	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
+	timew summary "$@" :ids $all
+}
+
 timesum ()
 {
-	taskstat "$@" \
+	timestat "$@" \
 	| sed '/^$/d' \
 	| tail -1 \
 	| awk '{print $1}' \
