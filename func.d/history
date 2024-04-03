@@ -78,3 +78,12 @@ hist ()
 	else history "$@"
 	fi
 }
+
+lhistory ()
+{
+	HISTTIMEFORMAT="${HISTTIMEFORMAT} " \
+	history \
+	| sort -sk 2,2 \
+	| tail -n ${1:-$((1 << 32))} \
+	| less -FX
+}

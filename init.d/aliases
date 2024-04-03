@@ -133,8 +133,6 @@ alias histadd		"history -s"
 alias rml		"histrmlast"
 alias rml2		"histrm2ndlast"
 alias rm2l		"histrm2ndlast"
-alias lhistory		"HISTTIMEFORMAT=\"\${HISTTIMEFORMAT} \" history | " \
-			"sort -sk 2,2 | less -FX"
 
 ### terminal
 
