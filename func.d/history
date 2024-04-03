@@ -84,6 +84,6 @@ lhistory ()
 	HISTTIMEFORMAT="${HISTTIMEFORMAT} " \
 	history \
 	| sort -sk 2,2 \
-	| tail -n ${1:-$((1 << 32))} \
+	| tail -n ${1:-$(((1 << 31) - 1))} \
 	| less -FX
 }
