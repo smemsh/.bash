@@ -310,8 +310,8 @@ taskreport ()
 
 timestat ()
 {
-	local all
-	[[ $1 == '-a' || $1 == '--all' ]] && { all=:all; shift; }
+	local all=:all
+	(($#)) && unset all
 	timew summary "$@" :ids $all
 }
 
