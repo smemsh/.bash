@@ -81,9 +81,13 @@ hist ()
 
 lhistory ()
 {
+	declare -i maxint
+	printf -v maxint %x -1
+	printf -v maxint %d 0x${maxint/f/7} # 9223372036854775807
+
 	HISTTIMEFORMAT="${HISTTIMEFORMAT} " \
 	history \
 	| sort -sk 2,2 \
-	| tail -n ${1:-$(((1 << 31) - 1))} \
+	| tail -n ${1:-$maxint} \
 	| less -FX
 }
