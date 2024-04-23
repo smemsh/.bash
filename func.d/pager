@@ -11,3 +11,8 @@ restless ()
 		-eval 'set document.browse.margin_width = 2' \
 	| less
 }
+
+restlinks ()
+{
+	elinks -force-html <(rst2html < ${1:?})
+}
