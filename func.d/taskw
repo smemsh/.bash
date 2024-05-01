@@ -275,7 +275,7 @@ timevals ()
 	if ((i)); then echo; fi
 }
 
-tasklast ()
+timelast ()
 {
 	local candidate curfql interval
 
