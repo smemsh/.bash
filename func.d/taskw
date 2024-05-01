@@ -229,6 +229,13 @@ timesum ()
 	|| echo 0:00:00
 }
 
+timecur ()
+{
+	task calc \
+		$(timew export @1 | jq -r '.[].start') - \
+		$(timewfmt $(now))
+}
+
 timesince ()
 {
 	local duration=${1:?}
