@@ -171,12 +171,11 @@ esetenv NO_AT_BRIDGE			1
 #
 esetenv RSYNC_RSH			ssh
 
-# TODO: use LESSOPEN, not LESSPIPE
 # TODO: needs to be looked at, including use of '||' and '-|' (see manual)
 # TODO: there is an upstream version lesspipe.sh with many features
 #
 type -p lesspipe.sh &>/dev/null &&
-esetenv LESSPIPE			"|lesspipe.sh %s"
+esetenv LESSOPEN			"|lesspipe.sh %s"
 esetenv LESS				"-nSQR#3"
 
 # tell redhat tools (eg 'service') not to use dbus and not to
