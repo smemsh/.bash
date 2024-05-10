@@ -123,7 +123,7 @@ esetenv RI			"-f ansi"		# ruby rdoc ri
 
 esetenv LYNX_CFG		$HOME/.lynxrc
 
-esetenv PAGER			"less -iRX"
+esetenv PAGER			"less"
 esetenv MANPAGER		"${PAGER}s"
 esetenv MANWIDTH		80
 esetenv MANHTMLPAGER		elinks			# man2html
