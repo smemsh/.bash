@@ -125,7 +125,7 @@ esetenv LYNX_CFG		$HOME/.lynxrc
 
 esetenv LESS			"-iSQRF#3"
 esetenv PAGER			"less"
-esetenv MANPAGER		"${PAGER}s"
+esetenv MANPAGER		"$PAGER -s"
 esetenv MANWIDTH		80
 esetenv MANHTMLPAGER		elinks			# man2html
 
