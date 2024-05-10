@@ -172,9 +172,7 @@ esetenv NO_AT_BRIDGE			1
 #
 esetenv RSYNC_RSH			ssh
 
-# TODO: needs to be looked at, including use of '||' and '-|' (see manual)
-# TODO: there is an upstream version lesspipe.sh with many features
-#
+# TODO https://github.com/wofr06/lesspipe
 type -p lesspipe.sh &>/dev/null &&
 esetenv LESSOPEN			"|lesspipe.sh %s"
 
