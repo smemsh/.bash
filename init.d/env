@@ -114,7 +114,6 @@ esetenv VISUAL			vi
 esetenv EDITOR			$VISUAL
 
 esetenv BROWSER			elinks
-esetenv ELINKS_CONFDIR		$HOME/.elinks
 
 esetenv COMP_WORDBREAKS		"${COMP_WORDBREAKS/:/}"
 esetenv BLOCK_SIZE		human-readable		# df, du, ls
