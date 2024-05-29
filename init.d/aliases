@@ -81,8 +81,6 @@ alias lsfile		"compgen -A file"
 alias lsdir		"compgen -A directory"
 alias lsarr		"compgen -A arrayvar"
 alias lstags		"grep '^[[:alnum:]_-]+:' Makefile"
-alias tree		"tree -CA | less -XEr"
-alias lstree		"tree "
 
 ### utility
 

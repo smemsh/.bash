@@ -1,0 +1,5 @@
+#
+
+lstree  () { tree "$@"; }
+dirtree () { tree -d "$@"; }
+tree    () { command tree -CA "$@" | less; }
