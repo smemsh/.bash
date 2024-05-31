@@ -2,4 +2,11 @@
 
 lstree  () { tree "$@"; }
 dirtree () { tree -d "$@"; }
-tree    () { command tree -CA "$@" | less; }
+tree    ()
+{
+	command tree \
+	-C \
+	-A \
+	"$@" \
+	| less
+}
