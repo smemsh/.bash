@@ -9,6 +9,7 @@ tree    ()
 	-a \
 	--noreport \
 	--charset utf8 \
+	-I .git \
 	"$@" \
 	| less
 }
