@@ -1,6 +1,6 @@
 #
 
-grepp     () { command grep --exclude-dir=.git --exclude-dir=venv -Psr "$@"; }
+grepp     () { command grep --exclude-dir=.git --exclude-dir=venv -Psrn "$@"; }
 greppy    () { grepp --include='*.py' "$@"; }
 greppl    () { grepp -l "$@"; }
 greppyl   () { greppy -l "$@"; }
