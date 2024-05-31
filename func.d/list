@@ -7,6 +7,7 @@ tree    ()
 	command tree \
 	-C \
 	-a \
+	--noreport \
 	--charset utf8 \
 	"$@" \
 	| less
