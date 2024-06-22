@@ -274,34 +274,3 @@ timevals ()
 	do printf $'@%u\x20' ${ivals[i]}; done
 	if ((i)); then echo; fi
 }
-
-timelast ()
-{
-	local candidate curfql interval
-
-	fql_of_interval ()
-	{
-		printf $(
-			timew export \
-			| jq -r ".[] | select(.id == ${1:?}) | .tags[]" \
-			| grep -v -e ^+ -e /$ \
-			| paste -sd,
-		)
-	}
-
-	curfql=$(fql_of_interval 1)
-	interval=2
-
-	# last interval different than the current one
-	while true; do
-		candidate=$(fql_of_interval $interval)
-		if [[ $candidate == $curfql ]]
-		then let interval++; continue
-		elif [[ $candidate ]]
-		then break # found it
-		else echo "cannot find last fql" >&2; false; return
-		fi
-	done
-
-	timew continue @$interval
-}
