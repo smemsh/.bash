@@ -214,8 +214,14 @@ taskreport ()
 
 timestat ()
 {
+	local i
 	local all=:all
-	(($#)) && unset all
+
+	for ((i = 1; i <= $#; i++)); do
+		[[ ${!i} =~ / ]] && continue # fql component
+		[[ ${!i} =~ ^\+ ]] && continue # taskw tag
+		unset all
+	done
 	timew summary "$@" :ids $all
 }
 
