@@ -140,13 +140,6 @@ taskrestart ()
 
 ### timewarrior
 
-timedo ()
-{
-	(($# > 1)) && { echo "zero or one arg" >&2; false; return; }
-	(($# == 0)) && set -- todo
-	timew start time/${1:?}
-}
-
 timefill ()
 {
 	(($# == 0)) && set -- @1
