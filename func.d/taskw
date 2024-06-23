@@ -222,10 +222,7 @@ timestat ()
 timesum ()
 {
 	timestat "$@" \
-	| sed '/^$/d' \
-	| tail -1 \
-	| awk '{print $1}' \
-	| grep -v ^No \
+	| awk 'BEGIN {r = 1} NF == 1 {print $1; r = 0} END {exit r}' \
 	|| echo 0:00:00
 }
 
