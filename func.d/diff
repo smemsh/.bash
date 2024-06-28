@@ -1,0 +1,13 @@
+#
+
+wdiff ()
+{
+	local esc_plus=`tput setaf 2`
+	local esc_minus=`tput setaf 1`
+	local esc_reset=`tput op`
+
+	command $FUNCNAME -n \
+		--start-delete="$esc_minus" --end-delete="$esc_reset" \
+		--start-insert="$esc_plus" --end-insert="$esc_reset" \
+	"$@"
+}
