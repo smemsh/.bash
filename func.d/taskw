@@ -16,12 +16,6 @@ task ()
 	`type -P task` rc.defaultwidth=$COLUMNS "$@"
 }
 
-taskl ()
-{
-	local taskid=$1; shift
-	task $(taskid $taskid) "$@"
-}
-
 taskcur ()
 {
 	local tasknow=($(tasknow))
