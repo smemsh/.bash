@@ -118,13 +118,6 @@ fqlfmt ()
 	}' | column -t
 }
 
-taskfield ()
-{
-	(($# == 2)) || { echo "wrong args" >&2; false; return; }
-	task $(taskid -x $1) export \
-	| jq -r ".[].${2:?}"
-}
-
 taskrestart ()
 {
 	local t=`taskid $1`
