@@ -81,9 +81,18 @@ hist ()
 
 lhistory ()
 {
-	HISTTIMEFORMAT="${HISTTIMEFORMAT} " \
-	history \
-	| sort -sk 2,2 \
+	local logdir
+	local -a logfiles
+
+	if [[ $1 == -a ]]
+	then
+		logdir=${LOGFILE_CMDS%/*}
+		logfiles=($logdir/cmdhist.*)
+		shift
+	else
+		logfiles=($LOGFILE_CMDS)
+	fi
+	sort -sk 2,2 <(cat "${logfiles[@]}") \
 	| tail -n ${1:-+1} \
 	| less -FX
 }
