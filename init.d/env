@@ -122,8 +122,6 @@ esetenv RI			"-f ansi"		# ruby rdoc ri
 
 esetenv LYNX_CFG		$HOME/.lynxrc
 
-esetenv GDBHISTFILE		$HOME/.gdb_history	# uses cwd if not set
-
 esetenv LESS			"-iSQRF#3"
 esetenv PAGER			"less"
 esetenv MANPAGER		"$PAGER -s"
