@@ -176,7 +176,7 @@ type -p lesspipe.sh &>/dev/null &&
 esetenv LESSOPEN			"|lesspipe.sh %s"
 
 # because our PS1 has a newline, see upstream PR 514
-esetenv LESS_ONESCREEN_OFFSET		1
+esetenv LESS_SHELL_LINES		2
 
 # tell redhat tools (eg 'service') not to use dbus and not to
 # use systemd and to stop dbus from launching automatically
