@@ -192,6 +192,7 @@ esetenv GCAL \
 	"--iso-week-number=yes " \
 ;
 
+# libvirt appliance cache
 esetenv LIBGUESTFS_CACHEDIR		/var/cache/libguestfs
 
 
