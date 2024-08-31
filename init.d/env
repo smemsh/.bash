@@ -40,10 +40,10 @@ esetenv TERMINAL			${TERMINAL##*/dev/}
 
 psetenv shell_init_path_generic		\
 	/usr/local/bin			\
-	/bin				\
-	/usr/bin			\
 	/usr/local/sbin			\
+	/bin				\
 	/sbin				\
+	/usr/bin			\
 	/usr/sbin			\
 ;
 psetenv LD_LIBRARY_PATH			\
