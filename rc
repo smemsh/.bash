@@ -5,7 +5,8 @@ histchars='!^#' # see ~/upsrc/bash/bash-history-bug and ~/.bash/init.d/goto
 ((BASH_VERSINFO >= 3)) || return 3
 cd ~/.bash || return 4
 
-export PATH=/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin
+export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin
 export LANG=en_US.UTF-8
 
 sources=(
