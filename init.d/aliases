@@ -212,27 +212,10 @@ alias permsave		"(cd /etc; sudo metastore -s /etc; cd \$OLDPWD)"
 alias permrestore	"(cd /etc; sudo metastore -ae /etc; cd \$OLDPWD)"
 alias permchk		"(cd /etc; sudo metastore -c /etc; cd \$OLDPWD)"
 
-### subversion
-
-alias svndifff		"svn diff --diff-cmd=/usr/bin/diff -x -U\ 3 "
-alias svndiffff		"svn diff --diff-cmd=/usr/bin/diff -x -U\ 9 "
-alias svndifffff	"svn diff --diff-cmd=/usr/bin/diff -x -U\ 27 "
-alias svndiffffff	"svn diff --diff-cmd=/usr/bin/diff -x -U\ 81 "
-
 ### ssh
 
 alias sshr		"ssh -ql root"
 alias sshn		"ssh -o controlpath=none"
-alias sshsvn		"SVN_SSH=\""					\
-				"ssh "					\
-					"-p 8080 "			\
-					"-l \$USER "			\
-			"\" ssh "					\
-				"-A "					\
-				"-X "					\
-				"-q "					\
-				"-R 8080:localhost:22 "			\
-				"-o \"sendenv SVN_SSH\""
 
 ### taskwarrior
 
