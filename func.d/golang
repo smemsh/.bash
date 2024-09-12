@@ -1,0 +1,6 @@
+#
+
+godoc ()
+{
+	go doc "$@" | less
+}
