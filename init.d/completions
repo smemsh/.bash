@@ -80,8 +80,8 @@ shell_init_completions_incus ()
 {
 	if [[ $(type -P incus) ]]
 	then
-		source <(incus completion bash)
-		complete -o default -F __start_incus incus sincus inc
+		source <(incus completion bash) &>/dev/null \
+		&& complete -o default -F __start_incus incus sincus inc
 	fi
 }
 
