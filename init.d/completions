@@ -36,6 +36,9 @@ shell_init_completions_host ()
 	local infile=~/.ssh/known_hosts
 	local outfile=$HOSTFILE
 
+	# TODO this is broken, FIXME
+	return
+
 	if ! test -e $infile
 	then
 		# maybe anew host does not have any ssh known_hosts yet
