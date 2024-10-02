@@ -240,6 +240,7 @@ alias alltimes		"timew export " \
 alias a			"tmux attach"
 alias h			"hostname"
 alias oda		"od -aAn"
+alias odax		"od -An -a -t x1"
 
 alias g			"elinks https://www.google.com/"
 alias cvim		"vim -S ~/.cvimrc" # secure vim without temp files
