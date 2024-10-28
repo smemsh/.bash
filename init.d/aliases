@@ -90,6 +90,7 @@ alias nowdatefmt	"date +\$HISTTIMEFORMAT"
 #alias count		"wc -l"
 #alias linecount	"wc -l"
 alias addrof		"gethostip -d"
+alias ping1		"ping -c  1"
 alias ipls		"ip addr ls | "					\
 				"grep 'inet.*/' | "			\
 				"awk '{print \$2, \$NF}' | "		\
