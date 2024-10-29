@@ -14,7 +14,6 @@ sources=(
 	${PS1:+setenv}
 	${PS1:+func.d/*}
 	${PS1:+term.d/*}
-	${PS1:+~/lib/sh/include}
 )
 
 for f in ${sources[@]}
@@ -22,9 +21,6 @@ do if test -f $f; then
 	if ! source $f; then
 		echo "$f: aborted $?" >&2
 		return 10; fi; fi; done
-
-[[ $PS1 && $(declare -F allinclude) ]] &&
-	: # allinclude
 
 unset f sources
 
