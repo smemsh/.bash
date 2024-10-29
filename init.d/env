@@ -334,7 +334,5 @@ shell_init_bc ()
 
 source ~/.bash/initfuncs
 
-# TODO: should we unset esetenv() and setenv() too? does it mean
-# they won't get re-defined later from libsh?
-#
+# TODO: should we unset esetenv() and setenv() too?
 unset -f psetenv
