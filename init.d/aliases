@@ -222,20 +222,6 @@ alias mounts            "findmnt -t nosquashfs" # snapd loopback mounts suck
 alias sshr		"ssh -ql root"
 alias sshn		"ssh -o controlpath=none"
 
-### taskwarrior
-
-alias taskn		"task rc.hooks=0"
-alias taskprjs		"task _unique project"
-alias taskredo		"timew move @1 \`date -Iseconds\`"
-alias taskann		"taskcur annotate --"
-alias cont		"timecont"
-alias alltimes		"timew export " \
-			"| jq -r '[.[].tags] | flatten | .[]' " \
-			"| grep ^time/ " \
-			"| sort " \
-			"| uniq -c " \
-			"| sort -nrk 1,2"
-
 ### uncategorized / TODO
 
 alias a			"tmux attach"
