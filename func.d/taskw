@@ -1,8 +1,0 @@
-#
-# taskwarrior
-#
-
-# for taskadd
-#
-taskaddl () { TASKADD="$*"; } # additional args (such as tags)
-taskprj () { TASKPRJ="$@"; } # default project
