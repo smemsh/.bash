@@ -173,8 +173,8 @@ esetenv NO_AT_BRIDGE			1
 esetenv RSYNC_RSH			ssh
 
 # TODO https://github.com/wofr06/lesspipe
-type -p lesspipe.sh &>/dev/null &&
-esetenv LESSOPEN			"|lesspipe.sh %s"
+type -p lesspipe.sh &>/dev/null && true
+#esetenv LESSOPEN			"|lesspipe.sh %s"
 
 # because our PS1 has a newline, see upstream PR 514
 esetenv LESS_SHELL_LINES		2
