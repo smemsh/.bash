@@ -89,7 +89,7 @@ shell_init_completions_incus ()
 
 ##############################################################################
 
-(($BASH_VERSINFO >= 5)) && source completions.bash5
+(($BASH_VERSINFO >= 5)) && source init.d/completions.bash5
 
 ##############################################################################
 #
