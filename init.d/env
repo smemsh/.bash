@@ -122,7 +122,7 @@ esetenv RI			"-f ansi"		# ruby rdoc ri
 
 esetenv LYNX_CFG		$HOME/.lynxrc
 
-esetenv LESS			"-iSQRF#3 --no-vbell"
+esetenv LESS			"-iSQRF#3"		# see also .rc/lessrc
 esetenv PAGER			"less"
 esetenv MANPAGER		"$PAGER -s"
 esetenv MANWIDTH		80
