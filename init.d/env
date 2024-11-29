@@ -140,6 +140,9 @@ esetenv FANOUT			384		       # -f NNNN
 esetenv NCURSES_NO_PADDING	1
 esetenv NCURSES_NO_SETBUF	1
 
+# coreutils uses this for outputs like from 'ls'
+esetenv QUOTING_STYLE		literal
+
 esetenv ORACLE_BASE		/var/oracle
 esetenv ORACLE_HOME		/opt/oracle/9i
 esetenv ORACLE_OWNER		oracle
