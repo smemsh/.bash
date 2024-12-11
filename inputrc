@@ -44,7 +44,7 @@ set print-completions-horizontally	off
 set skip-completed-text			off
 set completion-display-width		-1
 set completion-prefix-display-length	0
-set completion-query-items		100
+set completion-query-items		128
 
 # shell or app will set this themselves, but maybe we should?
 #set	history-size			2147483647
