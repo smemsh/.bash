@@ -82,14 +82,12 @@ shell_init_completions_incus ()
 
 	if [[ $(type -P incus) ]]
 	then
+		# from /usr/share/bash-completion/, incus completions expect
+		source init.d/completions.bash5
 		source <(incus completion bash) &>/dev/null \
 		&& complete -o default -F __start_incus incus sincus inc
 	fi
 }
-
-##############################################################################
-
-(($BASH_VERSINFO >= 5)) && source init.d/completions.bash5
 
 ##############################################################################
 #
