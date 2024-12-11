@@ -89,6 +89,13 @@ shell_init_completions_incus ()
 	fi
 }
 
+shell_init_completions_gcloud ()
+{
+	((BASH_VERSINFO < 5)) && return # TODO not sure this is necessary?
+	[[ $(type -P gcloud) ]] || return
+	source /usr/share/google-cloud-sdk/completion.bash.inc &>/dev/null
+}
+
 ##############################################################################
 #
 # these are retained after we exit, used by the completion
