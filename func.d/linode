@@ -1,0 +1,7 @@
+#
+
+linid ()
+{
+	lin linodes list --json \
+	| jq '.[] | select(.label == "'"$1"'").id'
+}
