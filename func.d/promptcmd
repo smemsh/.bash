@@ -73,7 +73,13 @@ prompt_command ()
 	# really should be a way to do 'echo' that lets signals queue
 	# though instead of just interrupting the system call
 	#
-	((dowinch)) && kill -WINCH $$ && dowinch=0
+	if ((dowinch))
+	then
+		trap WINCH
+		kill -WINCH $$
+		dowinch=0
+		trap dowinch=1 WINCH
+	fi
 
 	# useful for printing our position in status line, with tmux
 	# status-interval 0, this avoids needing to poll, and happens
