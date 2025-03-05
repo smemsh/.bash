@@ -34,7 +34,11 @@ prompt_command ()
 	# execution and apparently bash does not try to finish the 'echo'
 	# after it was interrupted (TODO: file upstream bug)
 	#
-	trap dowinch=1 WINCH
+	if ! [[ $dowinch ]]
+	then
+		dowinch=0
+		trap dowinch=1 WINCH
+	fi
 
 	# read in last command from in-memory history, for saving on-disk
 	# note: must use raw read (with '-r') or '\n' etc will log as 'n'
@@ -69,7 +73,7 @@ prompt_command ()
 	# really should be a way to do 'echo' that lets signals queue
 	# though instead of just interrupting the system call
 	#
-	((dowinch)) && kill -WINCH $$
+	((dowinch)) && kill -WINCH $$ && dowinch=0
 
 	# useful for printing our position in status line, with tmux
 	# status-interval 0, this avoids needing to poll, and happens
