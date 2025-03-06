@@ -3,6 +3,7 @@
 histchars='!^#' # see ~/upsrc/bash/bash-history-bug and ~/.bash/init.d/goto
 
 ((BASH_VERSINFO >= 3)) || return 3
+export BASH42=$((BASH_VERSINFO > 4 || BASH_VERSINFO[1] >= 2))
 export BASH50=$((BASH_VERSINFO >= 5))
 
 cd ~/.bash || return 4

@@ -9,10 +9,15 @@
 prompt_command ()
 {
 	local histnum time_t command file tmuxpid
+	local now_time_t now_timefmt
 
-	# TODO find a way to avoid callout to date()
-	local now_time_t="$(date +%s)"
-	local now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
+	if ((BASH42)); then
+		printf -v now_time_t "%(%s)T"
+		printf -v now_timefmt "%(${HISTTIMEFORMAT% })T" $now_time_t
+	else
+		now_time_t="$(date +%s)"
+		now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
+	fi
 
 	# these are the values that get written for our "extra" logs
 	# that have more information than ordinary bash history logs
