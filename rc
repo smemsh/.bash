@@ -3,6 +3,8 @@
 histchars='!^#' # see ~/upsrc/bash/bash-history-bug and ~/.bash/init.d/goto
 
 ((BASH_VERSINFO >= 3)) || return 3
+export BASH50=$((BASH_VERSINFO >= 5))
+
 cd ~/.bash || return 4
 bashrcpwd="$OLDPWD"
 
