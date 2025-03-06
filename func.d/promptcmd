@@ -61,7 +61,7 @@ prompt_command ()
 		history 1
 	)"
 	LOGLINE="${logvals[*]} $command"
-	LOGBASH="$(printf "#%u\n%s\n" "$time_t" "$command")"
+	printf -v LOGBASH "#%u\n%s\n" "$time_t" "$command"
 
 	if [[ $LOGCOUNTLAST && $histnum != $LOGCOUNTLAST ]]
 	then
