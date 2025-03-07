@@ -27,27 +27,6 @@ prompt_command ()
 		trap dowinch=1 WINCH
 	fi
 
-	if ((BASH42)); then
-		printf -v now_time_t "%(%s)T"
-		printf -v now_timefmt "%(${HISTTIMEFORMAT% })T" $now_time_t
-	else
-		now_time_t="$(date +%s)"
-		now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
-	fi
-
-	# these are the values that get written for our "extra" logs
-	# that have more information than ordinary bash history logs
-	#
-	local logvals=(
-		$HOSTNAME
-		$now_timefmt
-		$TTY_TYPE
-		$TTY_NUM
-		$SHLVL
-		$1 # passed by shell in `$PROMPT_COMMAND': previous
-		   # command result code
-	)
-
 	# read in last command from in-memory history, for saving on-disk
 	# note: must use raw read (with '-r') or '\n' etc will log as 'n'
 	# note: $HISTCMD cannot be used to keep track of cancels/dupes
@@ -56,12 +35,40 @@ prompt_command ()
 	#   count from the loaded history list, the next one should
 	#   increment it
 	#
-	read -r histnum time_t command <<< "$(
+	read -r histnum start_time_t command <<< "$(
 		HISTTIMEFORMAT="%s "
 		history 1
 	)"
+
+	if ((BASH42)); then
+		printf -v now_time_t "%(%s)T"
+		printf -v now_timefmt "%(${HISTTIMEFORMAT% })T" \
+			$now_time_t
+		printf -v start_timefmt "%(${HISTTIMEFORMAT% })T" \
+			$start_time_t
+	else
+		now_time_t="$(date +%s)"
+		now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
+		start_timefmt="$(date -d @$start_time_t +$HISTTIMEFORMAT)"
+	fi
+
+	# these are the values that get written for our "extra" logs
+	# that have more information than ordinary bash history logs
+	#
+	local logvals=(
+		$HOSTNAME
+		$start_timefmt
+		$now_timefmt
+		$((now_time_t - start_time_t))
+		$TTY_TYPE
+		$TTY_NUM
+		$SHLVL
+		$1 # passed by shell in `$PROMPT_COMMAND': previous
+		   # command result code
+	)
+
 	LOGLINE="${logvals[*]} $command"
-	printf -v LOGBASH "#%u\n%s\n" "$time_t" "$command"
+	printf -v LOGBASH "#%u\n%s\n" "$start_time_t" "$command"
 
 	if [[ $LOGCOUNTLAST && $histnum != $LOGCOUNTLAST ]]
 	then
