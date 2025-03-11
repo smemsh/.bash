@@ -37,6 +37,38 @@ prompt_command ()
 	#   count from the loaded history list, the next one should
 	#   increment it
 	#
+	# TODO: consider also PS0='$(my_precmd)' but this seems less
+	# useful because we can't do anything interesting only via side
+	# effects, if it has non-empty output that gets printed before
+	# the prompt.  this might be good if we want to do a second sqlite3
+	# insert at the beginning as a separate row before and after the
+	# command, but better would be to export the command start time
+	# in some variable in bash and keep a single insert at the
+	# prompt issuance.  better still would be to have the sqlite
+	# connection stay persistent by using a loadable builtin then we
+	# don't need to fork/exec sqlite3 at all
+	#
+	# TODO: consider also using ${...@P} transformation
+	#   $ datevar="\\D{$HISTTIMEFORMAT}"
+	#   $ echo ${datevar@P}
+	#  20250310221645
+	#
+	#   $ ttyvar=\\l
+	#   $ echo ${thisvar@P}; tty
+	#  90
+	#  /dev/pts/90
+	#
+	#   $ histnum="\\!"
+	#   $ echo ${histnum@P}
+	#  267132
+	#
+	#    $ cmdnum=\\#
+	#    $ echo ${cmdnum@P}
+	#   2
+	#
+	# TODO: consider adding PWD, OLDPWD, HOSTTYPE, DISPLAY,
+	# MACHTYPE, UID, WINDOWID, PPID, USER
+	#
 	read -r histnum start_time_t command <<< "$(
 		HISTTIMEFORMAT="%s "
 		history 1
