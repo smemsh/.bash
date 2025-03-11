@@ -9,7 +9,8 @@
 prompt_command ()
 {
 	local histnum time_t command file tmuxpid
-	local now_time_t now_timefmt
+	local start_timefmt now_timefmt
+	local start_time_t start_time_t
 
 	# was getting "bash: echo: write error: Interrupted system call"
 	# in the middle of this function because it's run while the
