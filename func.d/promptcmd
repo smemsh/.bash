@@ -112,6 +112,25 @@ prompt_command ()
 		#
 		echo "$LOGLINE" >> $LOGFILE_CMDS
 		echo "$LOGBASH" >> $LOGFILE_BASH
+
+		if ((BASHSQL)) && [ -w $LOGFILE_SQL ]
+		then sqlite3 $LOGFILE_SQL <<- %
+		BEGIN TRANSACTION;
+		INSERT INTO command_lines (
+		    hostname, command,
+		    start_time_t, end_time_t, duration_secs,
+		    ttytype_code_id, ttynum,
+		    shlvl, ret
+		)
+		VALUES (
+		    '$HOSTNAME', '${command//\'/\'\'}',
+		    $start_time_t, $now_time_t, $duration_secs,
+		    ${TTYTYPES[$TTY_TYPE]}, $TTY_NUM,
+		    $SHLVL, $1
+		);
+		COMMIT;
+		%
+		fi
 	fi
 
 	# set previous value for comparison next invocation

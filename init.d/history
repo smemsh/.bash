@@ -12,9 +12,11 @@ esetenv TTY_TYPE	${TERMINAL/\//}	# for `pts/X' strip off the `/'
 esetenv TTY_TYPE	${TERMINAL:0:3}	# `pts' or `tty'
 esetenv TTY_NUM		${TERMINAL:3}	# the raw number of the tty
 esetenv TTY_NUM		${TTY_NUM#/}	# strip leading `/' if exists (for pts)
+declare -xA TTYTYPES=(tty 1 pts 2)
 
 esetenv LOGFILE_BASH	$LOGBASE/history.$HOSTNAME
 esetenv LOGFILE_CMDS	$LOGBASE/cmdhist.$HOSTNAME
+esetenv LOGFILE_SQL	$LOGFILE_CMDS.sqlite3
 
 # this needs to be set before history -r is done, it describes
 # the time format it was written in for the shell history parser
@@ -66,4 +68,52 @@ shell_init_history ()
 	HISTTIMEFORMAT=%s
 	history -cr $LOGFILE_BASH
 	HISTTIMEFORMAT="$savedfmt"
+
+	if type -P sqlite3 &>/dev/null
+	then
+		BASHSQL=1
+		local flags="NOT NULL"
+		local int="INTEGER $flags"
+		local long="BIGINT $flags"
+		local text="TEXT $flags"
+	else
+		BASHSQL=0
+	fi
+	export BASHSQL
+
+	if [[ $PS1 ]] && ((BASHSQL)) && ! [ -e $LOGFILE_SQL ]
+	then sqlite3 $LOGFILE_SQL <<- %
+	BEGIN TRANSACTION;
+
+	CREATE TABLE IF NOT EXISTS tty_type_codes (
+	    ttytype_code_id INTEGER PRIMARY KEY,
+	    ttytype TEXT UNIQUE NOT NULL
+	);
+	INSERT OR IGNORE INTO tty_type_codes (ttytype_code_id, ttytype)
+	    VALUES (${TTYTYPES[tty]}, 'tty'), (${TTYTYPES[pts]}, 'pts');
+
+	CREATE TABLE IF NOT EXISTS command_lines (
+	    command_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	    command $text,
+	    hostname $text,
+	    duration_secs $long,
+	    start_time_t $long,
+	    end_time_t $long,
+	    shlvl $int,
+	    ret $int,
+	    ttynum $int,
+	    ttytype_code_id $int
+	        REFERENCES tty_type_codes(ttytype_code_id)
+	);
+
+	CREATE VIRTUAL TABLE IF NOT EXISTS command_lines_fts5
+	    USING fts5(
+	        command,
+	        content = command_lines,
+	        content_rowid = command_id
+	    );
+
+	COMMIT;
+	%
+	fi
 }
