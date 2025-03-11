@@ -111,7 +111,7 @@ prompt_command ()
 		# the first prompt, a ctrl-c, or empty input), log it
 		#
 		echo -E "$LOGLINE" >> $LOGFILE_CMDS
-		echo -E "$LOGBASH" >> $LOGFILE_BASH
+		echo -En "$LOGBASH" >> $LOGFILE_BASH
 
 		if ((BASHSQL)) && [ -w $LOGFILE_SQL ]
 		then sqlite3 $LOGFILE_SQL <<- %
