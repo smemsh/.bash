@@ -3,7 +3,7 @@
 #
 ##############################################################################
 
-esetenv LOGBASE	        $HOME/var/log
+esetenv LOGBASE		$HOME/var/log
 
 # we log these values in prompt_command(), should be sufficient
 # one-time on shell init (don't see them changing)
@@ -29,8 +29,14 @@ esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 # empty string means unlimited (docs say use negative values,
 # but empty string works on older shells)
 #
+# TODO: this comment makes no sense, if we are using
+# prompt_command() to do logging then these will not be used at
+# all.	however they may be used when loading history from the
+# history file, which we write to in parallel using bash
+# histfile syntax bypassing the cmdhist
+#
 esetenv HISTSIZE	""
-esetenv HISTFILESIZE    "$HISTSIZE"
+esetenv HISTFILESIZE	"$HISTSIZE"
 #esetenv HISTCONTROL	"ignorespace"
 esetenv HISTCONTROL	""
 esetenv HISTIGNORE	"f:f *:"					\
@@ -47,9 +53,8 @@ esetenv HISTIGNORE	"f:f *:"					\
 
 # these are still used by the shell to determine where to append
 # (-o histappend) or to overwrite (+o histappend) when it exits;
-# it then dumps the history contents here.  We are doing it
-# ourselves right now in $PROMPT_COMMAND so we turn it off
-# completely
+# it then dumps the history contents here. We are doing it ourselves
+# right now in $PROMPT_COMMAND so we turn it off completely
 #
 #export HISTFILE=~/.bash_history
 #export HISTFILE=/dev/null
