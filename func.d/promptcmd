@@ -110,8 +110,8 @@ prompt_command ()
 		# history was incremented, so it's a real command (not
 		# the first prompt, a ctrl-c, or empty input), log it
 		#
-		echo "$LOGLINE" >> $LOGFILE_CMDS
-		echo "$LOGBASH" >> $LOGFILE_BASH
+		echo -E "$LOGLINE" >> $LOGFILE_CMDS
+		echo -E "$LOGBASH" >> $LOGFILE_BASH
 
 		if ((BASHSQL)) && [ -w $LOGFILE_SQL ]
 		then sqlite3 $LOGFILE_SQL <<- %
