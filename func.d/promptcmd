@@ -11,6 +11,7 @@ prompt_command ()
 	local histnum time_t command file tmuxpid
 	local start_timefmt now_timefmt
 	local start_time_t start_time_t
+	local duration_secs
 
 	# was getting "bash: echo: write error: Interrupted system call"
 	# in the middle of this function because it's run while the
@@ -47,6 +48,7 @@ prompt_command ()
 			$now_time_t
 		printf -v start_timefmt "%(${HISTTIMEFORMAT% })T" \
 			$start_time_t
+		duration_secs=$((now_time_t - start_time_t))
 	else
 		now_time_t="$(date +%s)"
 		now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
@@ -60,7 +62,7 @@ prompt_command ()
 		$HOSTNAME
 		$start_timefmt
 		$now_timefmt
-		$((now_time_t - start_time_t))
+		$duration_secs
 		$TTY_TYPE
 		$TTY_NUM
 		$SHLVL
