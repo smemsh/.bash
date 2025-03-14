@@ -6,9 +6,6 @@ histchars='!^#' # see ~/upsrc/bash/bash-history-bug and ~/.bash/init.d/goto
 export BASH42=$((BASH_VERSINFO > 4 || BASH_VERSINFO[1] >= 2))
 export BASH50=$((BASH_VERSINFO >= 5))
 
-type -P sqlite3 &>/dev/null && BASHSQL=1 || BASHSQL=0
-export BASHSQL
-
 cd ~/.bash || return 4
 bashrcpwd="$OLDPWD"
 
