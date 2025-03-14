@@ -105,7 +105,8 @@ prompt_command ()
 	LOGLINE="${logvals[*]} $command"
 	printf -v LOGBASH "#%u\n%s\n" "$start_time_t" "$command"
 
-	if [[ $LOGCOUNTLAST && $histnum != $LOGCOUNTLAST ]]
+	if [[ $LOGCOUNTLAST && $histnum != $LOGCOUNTLAST ]] \
+		&& ((${#command})) # TODO where empty coming from? is rare
 	then
 		# history was incremented, so it's a real command (not
 		# the first prompt, a ctrl-c, or empty input), log it
