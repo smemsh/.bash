@@ -115,7 +115,7 @@ prompt_command ()
 		echo -En "$LOGBASH" >> $LOGFILE_BASH
 
 		if ((BASHSQL)) && [ -w $LOGFILE_SQL ]
-		then sqlite3 $LOGFILE_SQL <<- % &
+		then sqlite3 $LOGFILE_SQL <<- % & disown $!
 		BEGIN TRANSACTION;
 		INSERT INTO command_lines (
 		    hostname, command,
@@ -131,7 +131,6 @@ prompt_command ()
 		);
 		COMMIT;
 		%
-		disown # synchronous sqlite would slow the next prompt
 		fi
 	fi
 
@@ -159,6 +158,6 @@ prompt_command ()
 	if [[ $TMUX ]]; then
 		tmuxpid=${TMUX#*,}
 		tmuxpid=${tmuxpid%,*}
-		/proc/$tmuxpid/exe refresh-client -S & disown
+		/proc/$tmuxpid/exe refresh-client -S & disown $!
 	fi
 }
