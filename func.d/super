@@ -1,7 +1,7 @@
 #
 # this is just a convenience rather than typing it constantly
 #
-r () { sudo sh -c "${@}"; }
+r () { sudo bash -c "${@}"; }
 
 # todo: is there some existing section 8 command to do this?
 blkdel () { r "echo 1 > /sys/block/$1/device/delete"; }
