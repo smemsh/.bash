@@ -80,7 +80,7 @@ shell_init_completions_incus ()
 {
 	((BASH_VERSINFO < 5)) && return
 
-	if [[ $(type -P incus) ]] && [ -d .config/incus ]
+	if [[ $(type -P incus) ]] && [ -d ../.config/incus ]
 	then
 		# from /usr/share/bash-completion/, incus completions expect
 		source init.d/completions.bash5
