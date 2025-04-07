@@ -78,13 +78,13 @@ shell_init_completions_file ()
 
 shell_init_completions_linode ()
 {
-	if ((BASH_VERSINFO < 5)) && type -P linode-cli &>/dev/null
+	if ((BASH_VERSINFO >= 5)) && type -P linode-cli &>/dev/null
 	then source <(linode-cli completion bash); fi
 }
 
 shell_init_completions_incus ()
 {
-	if ((BASH_VERSINFO < 5)) && type -P incus &>/dev/null \
+	if ((BASH_VERSINFO >= 5)) && type -P incus &>/dev/null \
 		&& [ -d ../.config/incus ]
 	then
 		# from /usr/share/bash-completion/, incus completions expect
@@ -96,7 +96,7 @@ shell_init_completions_incus ()
 
 shell_init_completions_gcloud ()
 {
-	if ((BASH_VERSINFO < 5)) && type -P gcloud &>/dev/null
+	if ((BASH_VERSINFO >= 5)) && type -P gcloud &>/dev/null
 	then source /usr/share/google-cloud-sdk/completion.bash.inc &>/dev/null
 	fi
 }
