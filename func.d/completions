@@ -1,0 +1,9 @@
+#
+
+# activate extended bash completions that are a bit expensive
+completions ()
+{
+	BASH_COMPLETES=1
+	source ~/.bash/init.d/completions
+	unset BASH_COMPLETES
+}
