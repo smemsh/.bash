@@ -78,9 +78,8 @@ shell_init_completions_file ()
 
 shell_init_completions_incus ()
 {
-	((BASH_VERSINFO < 5)) && return
-
-	if [[ $(type -P incus) ]] && [ -d ../.config/incus ]
+	if ((BASH_VERSINFO < 5)) && type -P incus &>/dev/null \
+		&& [ -d ../.config/incus ]
 	then
 		# from /usr/share/bash-completion/, incus completions expect
 		source init.d/completions.bash5
@@ -91,9 +90,9 @@ shell_init_completions_incus ()
 
 shell_init_completions_gcloud ()
 {
-	((BASH_VERSINFO < 5)) && return # TODO not sure this is necessary?
-	[[ $(type -P gcloud) ]] || return
-	source /usr/share/google-cloud-sdk/completion.bash.inc &>/dev/null
+	if ((BASH_VERSINFO < 5)) && type -P gcloud &>/dev/null
+	then source /usr/share/google-cloud-sdk/completion.bash.inc &>/dev/null
+	fi
 }
 
 ##############################################################################
