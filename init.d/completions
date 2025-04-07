@@ -76,6 +76,12 @@ shell_init_completions_file ()
 	for cmd; do complete -A file $cmd; done
 }
 
+shell_init_completions_linode ()
+{
+	if ((BASH_VERSINFO < 5)) && type -P linode-cli &>/dev/null
+	then source <(linode-cli completion bash); fi
+}
+
 shell_init_completions_incus ()
 {
 	if ((BASH_VERSINFO < 5)) && type -P incus &>/dev/null \
