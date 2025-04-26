@@ -116,6 +116,18 @@ prompt_command ()
 
 		if ((BASHSQL)) && [ -w $LOGFILE_SQL ]
 		then sqlite3 $LOGFILE_SQL <<- % & disown $!
+		/*
+		 * retry for 3s if another process would block us.  we could
+		 * surround by ".mode off" and ".mode list" according to
+		 * https://sqlite.org/forum/info/633979ce307f1cc6 but this
+		 * does not work in u22 sqlite3 (3.37.2), it was added in
+		 * commit 5d88be8f488, first ancestor tag: version-3.38.0
+		 * instead we'll output to /dev/null for now.
+		 */
+		.output /dev/null
+		PRAGMA busy_timeout = 3000;
+		.output
+
 		BEGIN TRANSACTION;
 		INSERT INTO command_lines (
 		    hostname, command,
