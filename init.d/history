@@ -33,7 +33,7 @@ esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 #
 # TODO: this comment makes no sense, if we are using
 # prompt_command() to do logging then these will not be used at
-# all.	however they may be used when loading history from the
+# all.  however they may be used when loading history from the
 # history file, which we write to in parallel using bash
 # histfile syntax bypassing the cmdhist
 #
