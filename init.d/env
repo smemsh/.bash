@@ -220,9 +220,15 @@ shell_init_arch_specific ()
 	psetenv XDG_RUNTIME_DIR		\
 		/run/user/${UID:?}	\
 	;
-	[[ $TERMUX_VERSION ]] \
-	&& psetenv shell_init_path_pre \
-		/data/data/com.termux/files/usr/bin \
+	if [[ $TERMUX_VERSION ]]
+	then
+		psetenv shell_init_path_pre \
+			/data/data/com.termux/files/usr/bin \
+		;
+		psetenv LD_PRELOAD \
+			/data/data/com.termux/files/usr/lib/libtermux-exec.so \
+		;
+	fi
 	;;
 
 	(SunOS) #########################
