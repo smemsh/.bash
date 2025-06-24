@@ -37,7 +37,7 @@ esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 # history file, which we write to in parallel using bash
 # histfile syntax bypassing the cmdhist
 #
-esetenv HISTSIZE	"${TERMUX_VERSION:+-1}"  # empty bad android /bin/sh
+esetenv HISTSIZE	"${TERMUX__PREFIX:+-1}"  # empty bad android /bin/sh
 esetenv HISTFILESIZE	"$HISTSIZE"
 #esetenv HISTCONTROL	"ignorespace"
 esetenv HISTCONTROL	""
