@@ -12,6 +12,7 @@ prompt_command ()
 	local start_timefmt now_timefmt
 	local start_time_t start_time_t
 	local duration_secs
+	local tmuxbin tmuxpid
 
 	# was getting "bash: echo: write error: Interrupted system call"
 	# in the middle of this function because it's run while the
@@ -168,8 +169,14 @@ prompt_command ()
 	# synchronously too so no need to wait for normal polling lag
 	#
 	if [[ $TMUX ]]; then
-		tmuxpid=${TMUX#*,}
-		tmuxpid=${tmuxpid%,*}
-		/proc/$tmuxpid/exe refresh-client -S & disown $!
+		if [[ $TERMUX__PREFIX ]]; then
+			# /proc/pid/exe always runtime linker on android
+			tmuxbin=$TERMUX__PREFIX/bin/tmux
+		else
+			tmuxpid=${TMUX#*,}
+			tmuxpid=${tmuxpid%,*}
+			tmuxbin=/proc/$tmuxpid/exe
+		fi
+		$tmuxbin refresh-client -S & disown $!
 	fi
 }
