@@ -220,7 +220,8 @@ shell_init_arch_specific ()
 	psetenv XDG_RUNTIME_DIR		\
 		/run/user/${UID:?}	\
 	;
-	if [[ $TERMUX_VERSION && $TERMUX__PREFIX ]]
+	#if [[ $TERMUX_VERSION && $TERMUX__PREFIX ]]
+	if [[ $TERMUX__PREFIX ]]
 	then
 		psetenv shell_init_path_pre \
 			$TERMUX__PREFIX/bin \
