@@ -39,8 +39,7 @@ esetenv HISTTIMEFORMAT	'%Y%m%d%H%M%S '
 #
 esetenv HISTSIZE	"${TERMUX__PREFIX:+-1}"  # empty bad android /bin/sh
 esetenv HISTFILESIZE	"$HISTSIZE"
-#esetenv HISTCONTROL	"ignorespace"
-esetenv HISTCONTROL	""
+esetenv HISTCONTROL	"ignorespace"
 esetenv HISTIGNORE	"f:f *:"					\
 			"m:m *:"					\
 			"fg:fg *:"					\
