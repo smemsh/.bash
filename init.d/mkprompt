@@ -41,6 +41,16 @@ shell_init_prompt ()
 		#
 		######################################################################
 
+		# mainly for tmux, but st also has a patch.  the escape sequence is
+		# ignored on st without osc133 patch, also urxvt, xterm and termux.
+		# result through all expansions looks correct, ends up as:
+		#
+		#  $ printf "$PS0" | oda
+		#    \   [ esc   ]   1   3   3   ;   C esc   \   \   ]
+		#
+		local OSC_133_PROMPT="\\033]133;A\\033\\\\\\\\"
+		local OSC_133_OUTPUT="\\033]133;C\\033\\\\\\\\"
+
 		cat >| $outfile <<- .
 			#
 			# \"~/.bash/init.d/mkprompt\": source for editing, composes PS1
@@ -51,6 +61,7 @@ shell_init_prompt ()
 			# correct for the outermost [interactive] shell
 			#
 			esetenv PS1 \\
+			"\[$OSC_133_PROMPT\]" \\
 			"\[$CLR_solid_flat_fgwhite_bgblack\]" "\n" \\
 		.
 		if ((details))
@@ -141,6 +152,9 @@ shell_init_prompt ()
 			esetenv PS2 \\
 			"\[$CLR_solid_bold_fgyellow_bgblack\]" "" \\
 			"\[$CLR_solid_flat_fgwhite_bgblack\]" "   " \\
+			""
+			esetenv PS0 \\
+			"\[$OSC_133_OUTPUT\]" \\
 			""
 		.
 		fi
