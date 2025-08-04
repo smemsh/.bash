@@ -13,7 +13,8 @@ shell_init_prompt_dollar=${PROMPT_DOLLAR:-'1'}
 shell_init_prompt_details=${PROMPT_DETAILS:-'0'}
 shell_init_prompt_rebuild=${PROMPT_REBUILD:-'0'}
 
-export HOSTNAME=`hostname`
+[[ $HOSTNAME ]] || HOSTNAME=`hostname`
+export HOSTNAME
 
 ###
 
