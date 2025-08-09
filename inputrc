@@ -11,6 +11,7 @@ set keyseq-timeout 1
 #
 set bind-tty-special-chars		on
 set blink-matching-paren		on
+set enable-bracketed-paste		off
 set byte-oriented			off
 set convert-meta			on
 set echo-control-characters		on
