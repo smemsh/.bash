@@ -44,6 +44,7 @@ do_agent ()
 	# berkeley unix does not have a default template, so
 	# we have to supply one
 	#
+	test -d $HOME/tmp || mkdir $HOME/tmp
 	local tmpfile=`mktemp $HOME/tmp/tmp.XXXXXXXXXXXX`
 
 	# we don't want these to end up in the root shellfunc
