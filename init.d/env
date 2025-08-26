@@ -229,6 +229,7 @@ shell_init_arch_specific ()
 		psetenv LD_PRELOAD \
 			$TERMUX__PREFIX/lib/libtermux-exec.so \
 		;
+		esetenv TERMUX_HUSHLOGIN 1
 	fi
 	;;
 
