@@ -126,6 +126,7 @@ esetenv LESS			"-iSQRF#3"		# see also .rc/lessrc
 esetenv PAGER			"less"
 esetenv MANPAGER		"$PAGER -s"
 esetenv MANWIDTH		80
+esetenv MANROFFOPT		-c			# see gwsw/less 652
 esetenv GH_MDWIDTH		$MANWIDTH		# github cli
 esetenv MANHTMLPAGER		elinks			# man2html
 
