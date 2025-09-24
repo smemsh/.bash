@@ -287,4 +287,6 @@ alias fwup		"sudo sh -c '" \
 				"sudo systemctl mask fwupd polkit udisks2" \
 			"'"
 
+[[ $(type -P kubecolor) ]] && alias kubectl kubecolor
+
 unset -f alias
