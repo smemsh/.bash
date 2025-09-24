@@ -89,8 +89,6 @@ shell_init_completions_incus ()
 	if ((BASH_VERSINFO >= 5)) && type -P incus &>/dev/null \
 		&& [ -d ~/.config/incus ]
 	then
-		# from /usr/share/bash-completion/, incus completions expect
-		source ~/.bash/init.d/completions.bash5
 		source <(incus completion bash) &>/dev/null \
 		&& complete -o default -F __start_incus incus sincus inc
 	fi
@@ -117,6 +115,11 @@ shell_init_completions_gcloud ()
 # start completions fresh with a clean slate
 #
 complete -r
+
+# selected bits from /usr/share/bash-completion/, some golang auto-gen
+# completions expect a few of the functions to be available.
+#
+((BASH_VERSINFO >= 5)) && source ~/.bash/init.d/completions.bash5
 
 # run once and remove shell_init_foo() defined above
 #
