@@ -85,10 +85,8 @@ alias lstags		"grep '^[[:alnum:]_-]+:' Makefile"
 
 ### utility
 
+
 alias nowdatefmt	"date +\$HISTTIMEFORMAT"
-#alias wordcount	"wc -w"
-#alias count		"wc -l"
-#alias linecount	"wc -l"
 alias addrof		"gethostip -d"
 alias ping1		"ping -c  1"
 alias rtls		"ip route ls | hostfill -s";
