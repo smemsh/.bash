@@ -94,6 +94,15 @@ shell_init_completions_incus ()
 	fi
 }
 
+shell_init_completions_kubectl ()
+{
+	((BASH_COMPLETES)) || return
+	if ((BASH_VERSINFO >= 5)) && type -P kubectl &>/dev/null \
+		&& [ -r ~/.kube/config ]
+	then source <(kubectl completion bash) &>/dev/null
+	fi
+}
+
 shell_init_completions_gcloud ()
 {
 	((BASH_COMPLETES)) || return
