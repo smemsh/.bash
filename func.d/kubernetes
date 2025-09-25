@@ -1,0 +1,51 @@
+#
+
+k ()
+{
+	local i cmdword kubectl
+	local -a cmd
+
+	for ((i = 1; i <= $#; i++))
+	do [[ ${!i:0:1} == '-' ]] && continue || break; done
+	cmdword=${!i}
+	cmd=("${@:1:i}")
+
+	if ((i < $#))
+	then case $cmdword in
+	(get|delete|describe|events|wait|label|annotate)
+	[[ $KUBENS == all ]] \
+	&& cmd+=(-A) \
+	|| cmd+=(-n ${KUBENS:-default});&
+	(*) cmd+=("${@:i+1}");;
+	esac; fi
+
+	[[ $(type -P kubecolor) ]] && kubectl=kubecolor || kubectl=kubectl
+	$kubectl "${cmd[@]}"
+}
+
+krc ()
+{
+	(($#)) && { export KUBECONFIG=~/.kube/$1.yml; return; }
+	printf "$KUBECONFIG${KUBECONFIG:+'\n'}"
+}
+
+kns ()
+{
+	(($#)) && { export KUBENS=${1:?}; return; }
+	printf "$KUBENS${KUBENS:+\n}"
+}
+
+# this will be rarely used, for remaking the 'case' clause in k()
+knscmds ()
+{
+	for cmd in $(
+	kubectl --help \
+	| grep -E ^$'\x20+[a-z]' \
+	| field 1 \
+	| grep -v kubectl
+	)
+	do kubectl $cmd --help \
+	| grep -q -- --all-namespaces \
+	&& echo $cmd
+	done
+}
