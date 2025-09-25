@@ -100,7 +100,7 @@ shell_init_completions_kubectl ()
 	if ((BASH_VERSINFO >= 5)) && type -P kubectl &>/dev/null \
 		&& [ -d ~/.kube ]
 	then source <(kubectl completion bash) &>/dev/null \
-		&& complete -o default -o nospace -F __start_kubectl k
+		&& complete -o default -o nospace -F __start_kubectl k kubectl
 	fi
 }
 
