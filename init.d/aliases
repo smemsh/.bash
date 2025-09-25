@@ -252,6 +252,8 @@ alias ggw		"GGBROWSER=vimb gg"
 
 alias gcpinit		"source /usr/share/google-cloud-sdk/completion.bash.inc"
 
+alias dstat		"dool"
+
 alias ansplay		"ansible-playbook"
 alias ansdoc		"ansible-doc"
 alias yamlref		"elinks http://www.yaml.org/refcard.html"
