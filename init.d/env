@@ -189,6 +189,23 @@ esetenv LESS_SHELL_LINES		2
 #psetenv DBUS_SESSION_BUS_ADDRESS	:${USER:?}@${HOSTNAME:?}
 esetenv SYSTEMCTL_SKIP_REDIRECT		1
 
+# when systemd does paging itself, it doesn't handle tstp+cont
+# correctly, terminal is in a bogus state on cont, requiring enter to be
+# pressed to submit single keystrokes to the line discipline.  unclear
+# why this is happening, but answer was to not page it from within
+# systemctl/journalctl, then piping to less outside.  it works, but
+# requires a wrapper to default to using the pager without having to
+# manually append the "| less").  tried using all different options via
+# SYSTEMD_LESS, same behavior and it even happens when
+# SYSTEMD_PAGER=more, this is a systemd thing where its forked process
+# can't restore the terminal correctly after TSTP+CONT cycle, maybe it
+# has bogus handlers that the child inherits or something in the
+# meantime probably good to try being explicit about paging
+# TODO fix
+#
+esetenv SYSTEMD_COLORS			1
+esetenv SYSTEMD_PAGER			''
+
 # make 'gcal' format dates correctly
 #
 esetenv GCAL \
