@@ -26,7 +26,7 @@ k ()
 krc ()
 {
 	(($#)) && { export KUBECONFIG=~/.kube/$1.yml; return; }
-	printf "$KUBECONFIG${KUBECONFIG:+'\n'}"
+	printf "$KUBECONFIG${KUBECONFIG:+\n}"
 }
 
 kns ()
