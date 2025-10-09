@@ -104,6 +104,15 @@ shell_init_completions_kubectl ()
 	fi
 }
 
+shell_init_completions_helm ()
+{
+	((BASH_COMPLETES)) || return
+	((BASH_VERSINFO >= 5)) \
+	&& type -P helm &>/dev/null \
+	&& [ -d ~/.kube ] \
+	&& source <(helm completion bash) &>/dev/null
+}
+
 shell_init_completions_gcloud ()
 {
 	((BASH_COMPLETES)) || return
