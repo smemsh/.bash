@@ -12,6 +12,7 @@ k ()
 
 	if ((i < $#))
 	then case $cmdword in
+	(logs) cmd+=(-n ${KUBENS:-default});;&
 	(get|delete|describe|events|wait|label|annotate)
 	[[ $KUBENS == all ]] \
 	&& cmd+=(-A) \
