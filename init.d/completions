@@ -113,6 +113,15 @@ shell_init_completions_helm ()
 	&& source <(helm completion bash) &>/dev/null
 }
 
+shell_init_completions_cilium ()
+{
+	((BASH_COMPLETES)) || return
+	((BASH_VERSINFO >= 5)) \
+	&& type -P cilium &>/dev/null \
+	&& [ -d ~/.kube ] \
+	&& source <(cilium completion bash) &>/dev/null
+}
+
 shell_init_completions_gcloud ()
 {
 	((BASH_COMPLETES)) || return
