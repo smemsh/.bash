@@ -114,6 +114,14 @@ shell_init_completions_helm ()
 	&& source <(helm completion bash) &>/dev/null
 }
 
+shell_init_completions_gh ()
+{
+	((BASH_COMPLETES)) || return
+	((BASH_VERSINFO >= 5)) \
+	&& type -P gh &>/dev/null \
+	&& source <(gh completion -s bash) &>/dev/null
+}
+
 shell_init_completions_cilium ()
 {
 	((BASH_COMPLETES)) || return
