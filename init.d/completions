@@ -122,6 +122,14 @@ shell_init_completions_gh ()
 	&& source <(gh completion -s bash) &>/dev/null
 }
 
+shell_init_completions_flux ()
+{
+	((BASH_COMPLETES)) || return
+	((BASH_VERSINFO >= 5)) \
+	&& type -P flux &>/dev/null \
+	&& source <(flux completion bash) &>/dev/null
+}
+
 shell_init_completions_cilium ()
 {
 	((BASH_COMPLETES)) || return
