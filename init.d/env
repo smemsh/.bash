@@ -203,8 +203,14 @@ esetenv SYSTEMCTL_SKIP_REDIRECT		1
 # meantime probably good to try being explicit about paging
 # TODO fix
 #
-esetenv SYSTEMD_COLORS			1
 esetenv SYSTEMD_PAGER			''
+
+# despite not being documented in systemctl(1), the value 2 seems to be
+# like 1 except with an additional constraint that stdout must be a
+# terminal.  this is exactly the behavior we want but is probably
+# accidental since man page only says 0, 1, 16 and 256 are special
+#
+esetenv SYSTEMD_COLORS			2
 
 # make 'gcal' format dates correctly
 #
