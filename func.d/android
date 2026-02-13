@@ -1,8 +1,18 @@
+#
+
 adbenv ()
 {
-	cd ~/platform-tools
-	PATH=$PWD:$PATH
-	LD_LIBRARY_PATH=$PWD/lib64:$LD_LIBRARY_PATH
+	[[ $ANDROID_HOME \
+	|| $PATH == */platform-tools/* \
+	|| $LD_LIBRARY_PATH = */platform-tools/* ]] \
+	&& return
+
+	ANDROID_HOME=~/android
+	PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+	PATH=$ANDROID_HOME/platform-tools:$PATH
+	PATH=$ANDROID_HOME/emulator:$PATH
+	LD_LIBRARY_PATH=$ANDROID_HOME/platform-tools/lib64:$LD_LIBRARY_PATH
+	export PATH LD_LIBRARY_PATH
 }
 
 studioenv ()
