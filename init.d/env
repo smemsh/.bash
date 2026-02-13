@@ -223,8 +223,7 @@ esetenv GCAL \
 # libvirt appliance cache
 esetenv LIBGUESTFS_CACHEDIR		/var/cache/libguestfs
 
-
-# for android Studio to display windows properly with ratpoison
+# so java guis (like android studio) display windows properly in tiling wm
 esetenv _JAVA_AWT_WM_NONREPARENTING	1
 
 # taskwarrior / timewarrior

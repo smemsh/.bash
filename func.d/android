@@ -18,7 +18,7 @@ adbenv ()
 studioenv ()
 {
 	cd ~/android-studio
-	export _JAVA_AWT_WM_NONREPARENTING=1 # todo: remove from rc since here?
+	export _JAVA_AWT_WM_NONREPARENTING=1 # note: already set in master env
 	export PATH=$PWD/jre/bin:$PATH
 	export ANDROID_SDK_ROOT=$HOME/android-studio-sdk
 	PATH=$HOME/android-studio-sdk/cmdline-tools/latest/bin:$PATH
