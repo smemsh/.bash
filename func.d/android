@@ -4,7 +4,7 @@ adbenv ()
 {
 	[[ $ANDROID_HOME \
 	|| $PATH == */platform-tools/* \
-	|| $LD_LIBRARY_PATH = */platform-tools/* ]] \
+	|| $LD_LIBRARY_PATH == */platform-tools/* ]] \
 	&& return
 
 	ANDROID_HOME=~/android
