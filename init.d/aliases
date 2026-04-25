@@ -85,7 +85,7 @@ alias lstags		"grep '^[[:alnum:]_-]+:' Makefile"
 
 ### utility
 
-
+alias sst		"strace -qqq -e s='!all' -f"
 alias nowdatefmt	"date +\$HISTTIMEFORMAT"
 alias addrof		"gethostip -d"
 alias ping1		"ping -c 1"
