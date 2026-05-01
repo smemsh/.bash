@@ -90,6 +90,7 @@ alias nowdatefmt	"date +\$HISTTIMEFORMAT"
 alias addrof		"gethostip -d"
 alias ping1		"ping -c 1"
 alias rtls		"ip route ls | hostfill -s"
+alias lsblks		"lsblk -MT"
 alias ipls		"ip addr ls | "					\
 				"grep 'inet.*/' | "			\
 				"awk '{print \$2, \$NF}' | "		\
