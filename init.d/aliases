@@ -89,7 +89,7 @@ alias sst		"strace -qqq -e s='!all' -f"
 alias nowdatefmt	"date +\$HISTTIMEFORMAT"
 alias addrof		"gethostip -d"
 alias ping1		"ping -c 1"
-alias rtls		"ip route ls | hostfill -s";
+alias rtls		"ip route ls | hostfill -s"
 alias ipls		"ip addr ls | "					\
 				"grep 'inet.*/' | "			\
 				"awk '{print \$2, \$NF}' | "		\
