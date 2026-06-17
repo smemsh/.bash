@@ -5,6 +5,7 @@ grepp ()
 	command grep \
 	--exclude-dir=.git \
 	--exclude-dir=venv \
+	--exclude='*.iso' \
 	-Psrn "$@";
 }
 
