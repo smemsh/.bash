@@ -12,3 +12,9 @@ kns ()
 	(($#)) && { export KUBENS=${1:?}; return; }
 	printf "$KUBENS${KUBENS:+\n}"
 }
+
+reflux ()
+{
+	flux reconcile source git flux-system \
+	&& flux reconcile kustomization --all
+}
