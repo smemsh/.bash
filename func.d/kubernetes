@@ -15,6 +15,5 @@ kns ()
 
 reflux ()
 {
-	flux reconcile source git flux-system \
-	&& flux reconcile kustomization --all
+	flux reconcile kustomization flux-system --with-source
 }
