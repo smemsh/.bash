@@ -20,3 +20,11 @@ lsenvv ()
 	lsenv \
 	| grep -E -v -e '\(' -e / -e '^[^[:space:]]+[[:space:]]*$'
 }
+
+path ()
+{
+	local -a paths
+	IFS=: read -ra paths <<< "$PATH"
+	for ((i = 0; i < ${#paths[@]}; i++))
+	do echo "${paths[i]}"; done
+}
