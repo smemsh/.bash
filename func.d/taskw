@@ -1,0 +1,6 @@
+#
+
+legend ()
+{
+	grep ^${1:?} ~/.task/legend
+}
