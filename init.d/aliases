@@ -251,6 +251,7 @@ alias rel		"lsb_release -si"
 alias ncal		"ncal -Mw"
 alias xv		"pqiv -f"
 alias xpdf		"xpdf -z width -fullscreen"
+alias xwins		"xwininfo -int -root -children | grep -i"
 alias shred		"shred -zun 50"
 
 alias aptpats		"elinks /usr/share/doc/aptitude/html/en/ch02s04s05.html"
