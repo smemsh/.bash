@@ -155,6 +155,13 @@ shell_init_completions_gcloud ()
 	fi
 }
 
+shell_init_completions_jira ()
+{
+	((BASH_COMPLETES)) || return
+	((BASH_VERSINFO >= 5)) \
+	&& type -P acli &>/dev/null \
+	&& source <(acli completion bash) &>/dev/null
+}
 
 ##############################################################################
 #
