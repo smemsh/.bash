@@ -37,10 +37,10 @@ builtin unalias -a # for renames
 
 alias j			"jobs -l"
 alias lj		"jobs -l | fmt -ts | pycolor"
-alias m			"fg -"
+alias m			"fg %-"
 alias f			"fg"
-alias fm		"fg -"
-alias fp		"fg +"
+alias fm		"fg %-"
+alias fp		"fg %+"
 
 alias realias		"source ~/.bash/init.d/aliases"
 alias rebind		"echo re-read-init-file | bind"
