@@ -13,6 +13,14 @@ export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin
 export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin
 export LANG=en_US.UTF-8
 
+# for some reason we have to do this to get rid of the systemd one that gets
+# set from profile.d, it becomes an array with theirs first and then ours.
+# unclear why since we set at least PROMPT_COMMAND ourselves as a string, but
+# the profile.d scripts should already have been sourced at that point
+# TODO figure out why this is necessary
+#
+unset PS0 PROMPT_COMMAND
+
 sources=(
 	rc.d/*
 	${PS1:+setenv}
