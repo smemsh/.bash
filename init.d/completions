@@ -157,6 +157,12 @@ shell_init_completions_gcloud ()
 
 shell_init_completions_jira ()
 {
+	# temporarily disable because upstream seems to have broken
+	# "acli completion bash" such that it no longer works
+	#
+	true
+	return
+
 	((BASH_COMPLETES)) || return
 	((BASH_VERSINFO >= 5)) \
 	&& type -P acli &>/dev/null \
