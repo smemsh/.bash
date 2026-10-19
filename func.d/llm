@@ -1,0 +1,12 @@
+#
+
+aikey ()
+{
+	local keybase=~/var/secrets/aikeys
+	if (($#))
+	then export LLM_GEMINI_KEY=$(<$keybase/${1:?})
+	else
+		keyname=$(grep -m1 -lsr ${LLM_GEMINI_KEY:-none} $keybase)
+		echo ${keyname##*/}
+	fi
+}
