@@ -2,11 +2,66 @@
 
 aikey ()
 {
+	local keyname
 	local keybase=~/var/secrets/aikeys
-	if (($#))
-	then export LLM_GEMINI_KEY=$(<$keybase/${1:?})
-	else
-		keyname=$(grep -m1 -lsr ${LLM_GEMINI_KEY:-none} $keybase)
-		echo ${keyname##*/}
+
+	(($#)) && export LLM_GEMINI_KEY=$(<$keybase/${1:?})
+	keyname=$(grep -m1 -lsr ${LLM_GEMINI_KEY:-none} $keybase)
+	[[ $keyname ]] && echo ${keyname##*/}
+}
+
+aiset ()
+{
+	local name cid
+
+	cid="$(llm logs -n 1 | head -1 | field conversation: 2 | field 1)"
+	[[ $cid ]] && export LLM_SMEMSH_CID="$cid"
+}
+
+aiget ()
+{
+	local cmd
+	test -t 1 && cmd=echo || cmd=printf
+	$cmd "$LLM_SMEMSH_CID"
+}
+
+ainew ()
+{
+	unset LLM_SMEMSH_CID
+	ai "$@"
+}
+
+aicont ()
+{
+	aiset
+	ai "$@"
+}
+
+ai ()
+{
+	local isatty
+	local -a args=(llm)
+
+	test -t 1 && isatty=1 || isatty=0
+
+	if [[ $LLM_SMEMSH_CID ]]
+	then args+=(--cid $LLM_SMEMSH_CID)
+	else : # bomb "use ainew or aiset" TODO guard here or proceed?
+	fi
+
+	# if gathering an extract, do not render it
+	# TODO this is a hack, just always use json and act accordingly
+	#
+	for arg in "$@"
+	do [[ $arg == '-x' || $arg == '--xl' || $arg == '--help' ]] && isatty=0
+	done
+
+	[[ $LLM_GEMINI_KEY ]] || { echo "no set aikey" >&2; false; return; }
+
+	args+=(-t system-prompt-rgemini)
+
+	if ((isatty))
+	then "${args[@]}" "$@" | glow -s ~/.config/glow/dark-nomargin.json
+	else "${args[@]}" "$@"
 	fi
 }
