@@ -75,15 +75,17 @@ prompt_command ()
 		history 1
 	)"
 
+	#
+	((BASH42)) && printf -v now_time_t "%(%s)T" || now_time_t="$(date +%s)"
+	((start_time_t == 0)) && start_time_t=$now_time_t  # ie, new systems
+
 	if ((BASH42)); then
-		printf -v now_time_t "%(%s)T"
 		printf -v now_timefmt "%(${HISTTIMEFORMAT% })T" \
 			$now_time_t
 		printf -v start_timefmt "%(${HISTTIMEFORMAT% })T" \
 			$start_time_t
 		duration_secs=$((now_time_t - start_time_t))
 	else
-		now_time_t="$(date +%s)"
 		now_timefmt="$(date -d @$now_time_t +$HISTTIMEFORMAT)"
 		start_timefmt="$(date -d @$start_time_t +$HISTTIMEFORMAT)"
 	fi
