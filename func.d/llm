@@ -50,6 +50,12 @@ aicont ()
 	ai "$@"
 }
 
+aismarts () { export LLM_SMEMSH_SMARTS=${1:?}; }
+
+ai1 () { LLM_SMEMSH_SMARTS=1 ai "$@"; }
+ai2 () { LLM_SMEMSH_SMARTS=2 ai "$@"; }
+ai3 () { LLM_SMEMSH_SMARTS=3 ai "$@"; }
+
 ai ()
 {
 	local isatty
@@ -72,18 +78,29 @@ ai ()
 	if ! [[ $LLM_GEMINI_KEY || $CLAUDE_CODE_OAUTH_TOKEN ]]
 	then echo "no set aikey" >&2; false; return; fi
 
+	declare -A models=(
+		gemini_1 gemini/gemini-4-argon
+		gemini_2 gemini/gemini-3.8-flash
+		gemini_3 gemini/gemini-3.5-flash-lite
+		claude_1 anthropic/claude-fable-5-1
+		claude_2 anthropic/claude-opus-5-5
+		claude_3 anthropic/claude-sonnet-5-5
+	)
+
 	if [[ $LLM_GEMINI_KEY ]]
-	then args+=(
-		-m gemini/gemini-4-argon
-		-t system-prompt-rgemini
-	)
+	then
+		modelkey=gemini_${LLM_SMEMSH_SMARTS:-1}
+		args+=(-t system-prompt-rgemini)
+
 	elif [[ $CLAUDE_CODE_OAUTH_TOKEN ]]
-	then args+=(
-		-m anthropic/claude-fable-5-1
-		-t system-prompt-rgemini-claude
-	)
-	else echo "aikey bogus" >&2; false; return
+	then
+		modelkey=claude_${LLM_SMEMSH_SMARTS:-1}
+		args+=(-t system-prompt-rgemini-claude)
+	else
+		echo "aikey bogus" >&2; false; return
 	fi
+
+	args+=(-m ${models[$modelkey]})
 
 	if ((isatty))
 	then "${args[@]}" "$@" \
