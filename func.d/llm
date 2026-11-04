@@ -28,7 +28,8 @@ aiget ()
 ainew ()
 {
 	unset LLM_SMEMSH_CID
-	ai "$@"
+	ai "$@" || { echo "ainew failure" >&2; false; return; }
+	aiset
 }
 
 aicont ()
