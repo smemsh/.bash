@@ -86,7 +86,10 @@ ai ()
 	fi
 
 	if ((isatty))
-	then "${args[@]}" "$@" | glow -s ~/.config/glow/dark-nomargin.json
+	then "${args[@]}" "$@" \
+		| mdformat --wrap 80 - \
+		| glow -w 0 -s ~/.config/glow/dark-nomargin.json \
+		;
 	else "${args[@]}" "$@"
 	fi
 }
