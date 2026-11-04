@@ -5,8 +5,20 @@ aikey ()
 	local keyname
 	local keybase=~/var/secrets/aikeys
 
-	(($#)) && export LLM_GEMINI_KEY=$(<$keybase/${1:?})
-	keyname=$(grep -m1 -lsr ${LLM_GEMINI_KEY:-none} $keybase)
+	if (($#))
+	then
+		token=$(<$keybase/${1:?})
+		unset ANTHROPIC_API_KEY ANTHROPIC_API_TOKEN
+		if [[ ${1:?} =~ claude ]]
+		then
+			unset LLM_GEMINI_KEY
+			export CLAUDE_CODE_OAUTH_TOKEN=$token
+		else
+			unset CLAUDE_CODE_OAUTH_TOKEN
+			export LLM_GEMINI_KEY=$token
+		fi
+		keyname=$(readlink -f $keybase/$1)
+	fi
 	[[ $keyname ]] && echo ${keyname##*/}
 }
 
@@ -57,9 +69,21 @@ ai ()
 	do [[ $arg == '-x' || $arg == '--xl' || $arg == '--help' ]] && isatty=0
 	done
 
-	[[ $LLM_GEMINI_KEY ]] || { echo "no set aikey" >&2; false; return; }
+	if ! [[ $LLM_GEMINI_KEY || $CLAUDE_CODE_OAUTH_TOKEN ]]
+	then echo "no set aikey" >&2; false; return; fi
 
-	args+=(-t system-prompt-rgemini)
+	if [[ $LLM_GEMINI_KEY ]]
+	then args+=(
+		-m gemini/gemini-4-argon
+		-t system-prompt-rgemini
+	)
+	elif [[ $CLAUDE_CODE_OAUTH_TOKEN ]]
+	then args+=(
+		-m anthropic/claude-fable-5-1
+		-t system-prompt-rgemini-claude
+	)
+	else echo "aikey bogus" >&2; false; return
+	fi
 
 	if ((isatty))
 	then "${args[@]}" "$@" | glow -s ~/.config/glow/dark-nomargin.json
