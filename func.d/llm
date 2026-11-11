@@ -68,7 +68,7 @@ ai3 () { LLM_SMEMSH_SMARTS=3 ai "$@"; }
 
 ai ()
 {
-	local isatty
+	local isatty notools
 	local -a args=(llm)
 
 	test -t 1 && isatty=1 || isatty=0
@@ -81,8 +81,9 @@ ai ()
 	# if gathering an extract, do not render it
 	# TODO this is a hack, just always use json and act accordingly
 	#
-	for arg in "$@"
-	do [[ $arg == '-x' || $arg == '--xl' || $arg == '--help' ]] && isatty=0
+	for arg in "$@"; do
+	[[ $arg == '-x' || $arg == '--xl' || $arg == '--help' ]] && isatty=0
+	[[ $arg == '--schema' || $arg == '--schema-multi' ]] && notools=1
 	done
 
 	if ! [[ $LLM_GEMINI_KEY || $CLAUDE_CODE_OAUTH_TOKEN ]]
@@ -100,12 +101,34 @@ ai ()
 	if [[ $LLM_GEMINI_KEY ]]
 	then
 		modelkey=gemini_${LLM_SMEMSH_SMARTS:-1}
-		args+=(-t system-prompt-rgemini)
+		args+=(
+			-T GoogleSearch # server-side
+			-T URLContext   # server-side
+			-t system-prompt-rgemini
+		)
 
 	elif [[ $CLAUDE_CODE_OAUTH_TOKEN ]]
 	then
 		modelkey=claude_${LLM_SMEMSH_SMARTS:-1}
-		args+=(-t system-prompt-rgemini-claude)
+		args+=(
+			-t system-prompt-rgemini-claude
+		)
+		# these tools cannot be used together with --schema-multi in
+		# claude for some reason, the anthropic-llm does not support it
+		# according to the tool output when attempting it
+		# --smemsh-20261111102458
+		#
+		((notools)) || args+=(
+			#
+			# client-side via exa right now... claude supports
+			# server-side with WebSearch and WebFetch tools but
+			# they don't work, probably because the [server-side]
+			# sandbox is only accessible from the claude cli tool
+			# itself with some secret sauce
+			#
+			-T web_search
+			-T get_contents
+		)
 	else
 		echo "aikey bogus" >&2; false; return
 	fi
