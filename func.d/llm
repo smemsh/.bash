@@ -18,8 +18,18 @@ aikey ()
 			export LLM_GEMINI_KEY=$token
 		fi
 		keyname=$(readlink -f $keybase/$1)
+	else
+		if ! [[ $keyname ]]
+		then
+			if [[ $LLM_GEMINI_KEY ]]
+			then keyname=gemini-unknown-TODO
+			elif [[ $CLAUDE_CODE_OAUTH_TOKEN ]]
+			then keyname=claude-unknown-TODO
+			else keyname=nokey
+			fi
+		fi
 	fi
-	[[ $keyname ]] && echo ${keyname##*/}
+	echo ${keyname##*/}
 }
 
 aiset ()
