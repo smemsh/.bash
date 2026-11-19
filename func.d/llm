@@ -149,10 +149,14 @@ ai ()
 	args+=(-m ${models[$modelkey]})
 
 	if ((isatty))
-	then "${args[@]}" "$@" \
-		| mdformat --wrap 80 - \
-		| glow -w 0 -s ~/.config/glow/dark-nomargin.json \
-		;
+	then "${args[@]}" "$@" | mdrender
 	else "${args[@]}" "$@"
 	fi
+}
+
+mdrender ()
+{
+	mdformat --wrap 80 - \
+	| glow -w 0 -s ~/.config/glow/dark-nomargin.json \
+	;
 }
