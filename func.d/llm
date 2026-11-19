@@ -104,6 +104,13 @@ ai ()
 		claude_5 anthropic/claude-haiku-5-5
 	)
 
+	# default is 5, easy to hit with web_search, although unclear if this
+	# even applies to GoogleSearch, have not run into it at all with
+	# Gemini, but can't hurt to have this on there, if we hit 25 in
+	# practice, something is probably wrong...
+	#
+	args+=(--chain-limit 25)
+
 	if [[ $LLM_GEMINI_KEY ]]
 	then
 		modelkey=gemini_${LLM_SMEMSH_SMARTS:-1}
