@@ -156,7 +156,7 @@ ai ()
 
 mdrender ()
 {
-	mdformat --wrap 80 - \
+	mdformat --wrap 80 ${1:-'-'} \
 	| glow -w 0 -s ~/.config/glow/dark-nomargin.json \
 	;
 }
